@@ -1,0 +1,34 @@
+{
+  "name": "nodejs-test-service",
+  "version": "0.1.0",
+  "author": "John Tible <john@jtibble.com>",
+  "description": "a simple nodejs REST application + webserver",
+  "contributors": [ 
+    {
+      "name": "John Tibble",
+      "email": "john@jtible.com"
+    } 
+  ],
+  "scripts": {
+    "start": "node ./rest-api/restService.js",
+    "predeploy": "echo This will be run before deploying the app",
+    "postdeploy": "echo This will be run after deploying the app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jtibble/pabtc"
+  },
+  "keywords": [
+    "REST"
+  ],
+  "dependencies" : {
+	"express"	:  "*",
+	"nightwatch" : "*",
+	"mongojs": "*",
+	"node-uuid": "*",
+	"body-parser": "*"
+  },
+  "engines": {
+    "node": ">=0.6"
+  }
+}
