@@ -86,8 +86,7 @@ var config = {
 					responseBody.issues = [ 'Missing request body' ];
 					res.send( responseBody );
 				}
-				
-				// Validate incoming request body 
+				 
 				var tournamentName = req.body.name;
 				
 				if( !tournamentName ){
@@ -114,11 +113,44 @@ var config = {
 				} else {
 					responseBody = {
 						'sucess': true,
-						'data': [
-							{'tournamentId': tournamentId}
-						]
+						'data': {
+							'tournamentId': tournamentId
+						}						
 					};
 					console.log('Created tournament with id ' + tournamentId);
+					res.send( responseBody );
+				}
+				
+			}
+		},
+		{
+			'type': 'GET',
+			'name': 'tournaments',
+			'response': function(req, res) {
+				
+				var userId = req.get('UserId');
+				console.log('userid: ' + userId);
+				
+				if( !userId ){
+					responseBody.success = false;
+					responseBody.issues = [ 'Missing UserId header' ];
+					res.send( responseBody );
+				}				
+				
+				var tournamentList = storage.searchTournaments({}, userId);
+				
+				if( !tournamentList ){
+					responseBody.success = false;
+					responseBody.issues = [ 'Could not search tournaments' ];
+					res.send( responseBody );
+				} else {
+					responseBody = {
+						'sucess': true,
+						'data': {
+							'tournamentList': tournamentList
+						}						
+					};
+					console.log('Returned ' + Object.keys(tournamentList).length + ' tournaments');
 					res.send( responseBody );
 				}
 				

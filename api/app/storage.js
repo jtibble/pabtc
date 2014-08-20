@@ -61,6 +61,16 @@ module.exports = {
 		}
 	},
 	searchTournaments: function( searchInfo, userId ){
+		if( !searchInfo || !userId ){
+			return false;
+		}
+		
+		var storedUser = localDB.users[userId];
+		if( storedUser && storedUser.permissions && storedUser.permissions.read){
+			return localDB.tournaments;
+		} else {
+			return false;
+		}
 		
 	},
 	deleteTournament: function( id, userId ){
