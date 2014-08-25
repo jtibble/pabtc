@@ -49,16 +49,7 @@ module.exports = {
 					responseBody.success = false;
 					responseBody.issues = [ 'Missing user permissions' ];
 					res.send( responseBody );
-				}
-				/*
-				var userId = req.get('UserId');
-				console.log('userid: ' + userId);
-				
-				if( !userId ){
-					responseBody.success = false;
-					responseBody.issues = [ 'Missing UserId header' ];
-					res.send( responseBody );
-				}		*/		
+				}	
 				
 				var storedUser = storage.addUser( user );
 				
@@ -76,7 +67,7 @@ module.exports = {
 				}
 				
 			}
-		}/*,
+		},
 		{
 			'type': 'POST',
 			'name': 'tournaments/create',
@@ -102,7 +93,6 @@ module.exports = {
 				}
 				
 				var userId = req.get('UserId');
-				console.log('userid: ' + userId);
 				
 				if( !userId ){
 					responseBody.success = false;
@@ -128,7 +118,7 @@ module.exports = {
 				}
 				
 			}
-		},
+		}/*,
 		{
 			'type': 'GET',
 			'name': 'tournaments',
