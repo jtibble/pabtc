@@ -23,10 +23,11 @@
   ],
   "dependencies" : {
 	"express"	:  "*",
-	"nightwatch" : "*",
 	"mongojs": "*",
 	"node-uuid": "*",
-	"body-parser": "*"
+	"body-parser": "*",
+    "request": "2.40.0",
+    "mocha": "1.21.4"
   },
   "engines": {
     "node": ">=0.6"

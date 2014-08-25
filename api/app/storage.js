@@ -7,42 +7,6 @@ var localDB = {
 	users: {}
 };
 
-var fakeUsers = [
-		{
-			name: 'John Tibble',
-			permissions: {
-				'read': true,
-				'write': true,
-				'admin': true
-			}
-		},
-		{
-			name: 'Read User',
-			permissions: {
-				'read': true
-			}
-		},
-		{
-			name: 'Full (non-admin) User',
-			permissions: {
-				'read': true,
-				'write': true
-			}
-		},
-		{
-			name: 'Read User 2',
-			permissions: {
-				'read': true
-			}
-		},
-		{
-			name: 'No Permissions User',
-			permissions: {}
-		}
-];
-
-
-
 module.exports = {
 	addTournament: function(tournamentInfo, userId){
 		if( !tournamentInfo || !userId ){
@@ -71,7 +35,6 @@ module.exports = {
 		} else {
 			return false;
 		}
-		
 	},
 	deleteTournament: function( id, userId ){
 		
@@ -95,16 +58,4 @@ module.exports = {
 	}
 };
 
-console.log('Adding Users');
-
-for( var i in fakeUsers ){
-	var user = fakeUsers[i];
-	var storedUser = module.exports.addUser( user );
-	
-	if( storedUser ){
-		console.log('User \'' + storedUser.name + '\' stored in DB with id ' + storedUser.id);
-	} else {
-		console.log('Could not add user ' + user.name);	
-	}
-}
 

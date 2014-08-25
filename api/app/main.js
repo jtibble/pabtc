@@ -1,15 +1,12 @@
 var express = require('express');
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
+var request = require('request');
 
 //var mongojs = require('mongojs');
 //var db = mongojs('test');
 //var collection = db.collection('testCollection');
 
-var sys = require('sys');
-var exec = require('child_process').exec;
-
-var storage = require('./storage.js');
-
+var services = require('./services.js');
 
 var Service = function(config){
     var server = express();	
@@ -51,113 +48,5 @@ var Service = function(config){
     
 };
 
-
-var config = {
-	'staticContentPath': '/www',
-	'apiPath': '/api/v0/',
-	'endpoints': [
-		{
-			'type': 'POST',
-			'name': 'newReleaseHook',
-			'response': function(req, res) {
-				console.log('Received request to UPDATE REPOSITORY');
-				exec('git pull', function(error, stdout, stderr){
-					sys.puts( 'STDOUT:\n' + stdout );
-					sys.puts( 'STDERR:\n' + stderr );
-				});
-				var response = {
-					'sucess': true
-				};
-				res.send(response);
-			}
-		},
-		{
-			'type': 'POST',
-			'name': 'tournaments/create',
-			'response': function(req, res) {
-				
-				var responseBody = {
-					success: false,
-					issues: []
-				};
-				
-				if( !req.body ){
-					responseBody.success = false;
-					responseBody.issues = [ 'Missing request body' ];
-					res.send( responseBody );
-				}
-				 
-				var tournamentName = req.body.name;
-				
-				if( !tournamentName ){
-					responseBody.success = false;
-					responseBody.issues = [ 'Missing tournament name' ];
-					res.send( responseBody );
-				}
-				
-				var userId = req.get('UserId');
-				console.log('userid: ' + userId);
-				
-				if( !userId ){
-					responseBody.success = false;
-					responseBody.issues = [ 'Missing UserId header' ];
-					res.send( responseBody );
-				}				
-				
-				var tournamentId = storage.addTournament( req.body, userId );
-				
-				if( !tournamentId ){
-					responseBody.success = false;
-					responseBody.issues = [ 'Could not create tournament' ];
-					res.send( responseBody );
-				} else {
-					responseBody = {
-						'sucess': true,
-						'data': {
-							'tournamentId': tournamentId
-						}						
-					};
-					console.log('Created tournament with id ' + tournamentId);
-					res.send( responseBody );
-				}
-				
-			}
-		},
-		{
-			'type': 'GET',
-			'name': 'tournaments',
-			'response': function(req, res) {
-				
-				var userId = req.get('UserId');
-				console.log('userid: ' + userId);
-				
-				if( !userId ){
-					responseBody.success = false;
-					responseBody.issues = [ 'Missing UserId header' ];
-					res.send( responseBody );
-				}				
-				
-				var tournamentList = storage.searchTournaments({}, userId);
-				
-				if( !tournamentList ){
-					responseBody.success = false;
-					responseBody.issues = [ 'Could not search tournaments' ];
-					res.send( responseBody );
-				} else {
-					responseBody = {
-						'sucess': true,
-						'data': {
-							'tournamentList': tournamentList
-						}						
-					};
-					console.log('Returned ' + Object.keys(tournamentList).length + ' tournaments');
-					res.send( responseBody );
-				}
-				
-			}
-		}
-	]
-};
-
-var service = Service(config);
+var service = Service( services );
 service.createService();
