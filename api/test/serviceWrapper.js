@@ -3,13 +3,14 @@ var request = require('request');
 var tempData = {};
 
 module.exports = {
+    
     getLastUserId: function(){
         return tempData.lastUserId;
     },
     
     createUser: function( user, callback ){
         var options = {
-            url: 'http://localhost/api/v0/users/create',
+            url: 'http://localhost:8080/api/v0/users/create',
             method: 'POST',
             body: user,
             json: true
@@ -21,7 +22,7 @@ module.exports = {
     createTournament: function( tournament, userId, done ){
         
         var options = {
-            url: 'http://localhost/api/v0/tournaments/create',
+            url: 'http://localhost:8080/api/v0/tournaments/create',
             method: 'POST',
             body: tournament,
             headers: {

@@ -38,7 +38,7 @@ var Service = function (config) {
                 this.addEndpoint(serviceMethod, serviceName, serviceResponse);
             }
 
-            var port = process.env.PORT || 80;
+            var port = 8080;
             server.listen(port);
             console.log('%s listening at %s', server.name, port);
         }
