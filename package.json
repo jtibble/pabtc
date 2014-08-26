@@ -1,6 +1,6 @@
 {
-  "name": "nodejs-test-service",
-  "version": "0.1.0",
+  "name": "pabtc",
+  "version": "1.0.0",
   "author": "John Tible <john@jtibble.com>",
   "description": "a simple nodejs REST application + webserver",
   "contributors": [ 
@@ -10,9 +10,10 @@
     } 
   ],
   "scripts": {
-    "start": "node ./rest-api/restService.js",
-    "predeploy": "echo This will be run before deploying the app",
-    "postdeploy": "echo This will be run after deploying the app"
+    "test": "mocha api/",
+    //"start": "node ./rest-api/restService.js",
+    //"predeploy": "echo This will be run before deploying the app",
+    //"postdeploy": "echo This will be run after deploying the app"
   },
   "repository": {
     "type": "git",
