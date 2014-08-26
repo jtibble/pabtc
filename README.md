@@ -1,13 +1,12 @@
-PABTC
-[![Build Status](https://travis-ci.org/jtibble/pabtc.svg?branch=master)](https://travis-ci.org/jtibble/pabtc)
-=====
+PABTC [![Build Status](https://travis-ci.org/jtibble/pabtc.svg?branch=master)](https://travis-ci.org/jtibble/pabtc)
+===
 
 BTC Engine for Planetary Annihilation Tournaments
 
 
 Look at the Github issues for information about planned services: https://github.com/jtibble/pabtc/issues
 
-=====
+-----
 
 To Run REST API
 
@@ -17,7 +16,7 @@ To Run REST API
 
 3. Run 'node app/main.js' and the REST API will start on port 80
 
-To Run REST API TESTS (while REST API is running)
+[To Run REST API TESTS (while REST API is running)]
 
 4. Run 'npm install -g mocha'
 
