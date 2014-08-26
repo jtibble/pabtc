@@ -1,5 +1,5 @@
 PABTC
-https://travis-ci.org/jtibble/pabtc.svg?branch=develop-api
+[![Build Status](https://travis-ci.org/jtibble/pabtc.svg?branch=master)](https://travis-ci.org/jtibble/pabtc)
 =====
 
 BTC Engine for Planetary Annihilation Tournaments
