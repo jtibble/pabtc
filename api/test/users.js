@@ -7,13 +7,49 @@ describe('Users', function(){
             var user = {
                 name: 'John Tibble',
                 permissions: {
+                    'admin': true,
                     'read': true,
-                    'write': true,
-                    'admin': true
+                    'write': true
                 }
             };
+            
+            function callback(error, response, body) {
+                if (!error && response && response.statusCode == 200) {
+                    if( body.data && body.data.id ){
+                        done();
+                    } else {
+                        throw 'POST succeeded, but received bad data: ' + JSON.stringify(body);   
+                    }
+                } else {
+                    throw 'Failed to create user';
+                }
+            }
 
-            RESTService.createUser( user, done );
+            RESTService.createUser( user, callback );
+            
+        });
+    });
+    
+    describe('Create Incomplete User', function(){
+        it('Should return an error', function(done){
+            
+            var user = {
+                name: 'John Tibble' // missing permissions
+            };
+
+            function callback(error, response, body) {
+                if (!error && response && response.statusCode == 200) {
+                    if( body.data && body.data.id ){
+                        throw 'Failed to not create user';
+                    } else {
+                        done();   
+                    }
+                } else {
+                    throw 'Failed to not create user correctly';
+                }
+            }
+            
+            RESTService.createUser( user, callback);
             
         });
     });

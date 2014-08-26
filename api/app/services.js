@@ -5,9 +5,5 @@ var utilityServices = require('./services/utility.js');
 module.exports = {
     'staticContentPath': '/www',
     'apiPath': '/api/v0/',
-    'endpoints': [
-        userServices,
-        tournamentServices
-        //utilityServices
-    ]
+    'endpoints': userServices.concat(tournamentServices)
 };

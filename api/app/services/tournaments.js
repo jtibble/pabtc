@@ -1,57 +1,55 @@
 var storage = require('../storage.js');
+var requestValidator = require('./requestValidator.js');
 
-module.exports = {
-    'type': 'POST',
-    'name': 'tournaments/create',
-    'permission': 'write',
-    'response': function (req, res) {
+module.exports = [
+    {
+        'type': 'POST',
+        'name': 'tournaments/create',
+        'permission': 'write',
+        'response': function (req, res) {
 
-        var responseBody = {
-            success: false,
-            issues: []
-        };
+            var requiredProperties = ['name'];
 
-        if (!req.body) {
-            responseBody.success = false;
-            responseBody.issues = ['Missing request body'];
-            res.send(responseBody);
-        }
-
-        var tournamentName = req.body.name;
-
-        if (!tournamentName) {
-            responseBody.success = false;
-            responseBody.issues = ['Missing tournament name'];
-            res.send(responseBody);
-        }
-
-        var userId = req.get('UserId');
-
-        if (!userId) {
-            responseBody.success = false;
-            responseBody.issues = ['Missing UserId header'];
-            res.send(responseBody);
-        }
-
-        var tournamentId = storage.addTournament(req.body, userId);
-
-        if (!tournamentId) {
-            responseBody.success = false;
-            responseBody.issues = ['Could not create tournament'];
-            res.send(responseBody);
-        } else {
-            responseBody = {
-                'sucess': true,
-                'data': {
-                    'tournamentId': tournamentId
-                }
+            var responseBody = {
+                success: false,
+                issues: []
             };
-            console.log('Created tournament with id ' + tournamentId);
-            res.send(responseBody);
-        }
 
+            if ( !requestValidator.validate( req, requiredProperties )){
+                responseBody.success = false;
+                responseBody.issues = ['Missing request body properties. Check the API documentation.'];
+                res.send(responseBody);
+                return;
+            }
+            
+            var userId = req.get('UserId');
+
+            if (!userId) {
+                responseBody.success = false;
+                responseBody.issues = ['Missing UserId header'];
+                res.send(responseBody);
+            }
+
+            var tournamentId = storage.addTournament(req.body, userId);
+
+            if (!tournamentId) {
+                responseBody.success = false;
+                responseBody.issues = ['Could not create tournament'];
+                res.send(responseBody);
+            } else {
+                responseBody = {
+                    'sucess': true,
+                    'data': {
+                        'tournamentId': tournamentId
+                    }
+                };
+                console.log('Created tournament with id ' + tournamentId);
+                res.send(responseBody);
+            }
+
+        }
     }
-};
+];
 
 /*,
 		{
