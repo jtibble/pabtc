@@ -1,36 +1,33 @@
 {
-  "name": "pabtc",
-  "version": "1.0.0",
-  "author": "John Tible <john@jtibble.com>",
-  "description": "a simple nodejs REST application + webserver",
-  "contributors": [ 
-    {
-      "name": "John Tibble",
-      "email": "john@jtible.com"
-    } 
-  ],
-  "scripts": {
-    "test": "mocha api/",
-    //"start": "node ./rest-api/restService.js",
-    //"predeploy": "echo This will be run before deploying the app",
-    //"postdeploy": "echo This will be run after deploying the app"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/jtibble/pabtc"
-  },
-  "keywords": [
-    "REST"
-  ],
-  "dependencies" : {
-	"express"	:  "*",
-	"mongojs": "*",
-	"node-uuid": "*",
-	"body-parser": "*",
-    "request": "2.40.0",
-    "mocha": "1.21.4"
-  },
-  "engines": {
-    "node": ">=0.6"
-  }
+    "name": "pabtc",
+    "version": "1.0.0",
+    "author": "John Tible <john@jtibble.com>",
+    "description": "BTC Engine for Planetary Annihilation Tournaments",
+    "contributors": [
+        {
+            "name": "John Tibble",
+            "email": "john@jtible.com"
+        }
+    ],
+    "scripts": {
+        "test": "mocha ./api/test"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/jtibble/pabtc"
+    },
+    "keywords": [
+        "REST"
+    ],
+    "dependencies": {
+        "express": "*",
+        "mongojs": "*",
+        "node-uuid": "*",
+        "body-parser": "*",
+        "request": "2.40.0",
+        "mocha": "1.21.4"
+    },
+    "engines": {
+        "node": ">=0.6"
+    }
 }
