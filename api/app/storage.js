@@ -15,23 +15,61 @@ var localDB = {
 };
 
 module.exports = {
-    addTournament: function (tournamentInfo, userId) {
-        if (!tournamentInfo || !userId) {
-            return false;
-        }
-        
-        //var promise = 
-        
-        var callback = function( error, value ){
-            var user = value[0];
-            debugger;
+    getUserAsync: function (userId) {
+
+        console.log('getUserAsync');
+        var deferred = Q.defer();
+
+        var callback = function (error, value) {
+            console.log('user found');
+            if (value && value.length) {
+                var user = value[0];
+                deferred.resolve(user);
+            } else {
+                deferred.reject('Could not retrieve user from db by id');
+            }
         };
 
-        var storedUser = usersCollection.find({_id: userId}, callback);
-        
-        
+        usersCollection.find({
+            _id: userId
+        }, callback);
+
+        return deferred.promise;
+
     },
-    searchTournaments: function (searchInfo, userId) {
+    addTournamentAsync: function (tournamentInfo, userId) {
+
+        var deferred = Q.defer();
+
+        if (!tournamentInfo || !userId) {
+            deferred.reject('Improper call to addTournamentAsync');
+        }
+
+        var checkUserCanWrite = function (user) {
+            if (user && user.permissions && (user.permissions.write || users.permissions.write)) {
+                return true;
+            } else {
+                return false;
+            }
+        };
+
+        this.getUserAsync(userId).then(function (user) {
+            console.log('checking if user can write to db');
+            debugger;
+            if (checkUserCanWrite(user)) {
+                console.log('saving tourney to db now');
+                tournamentsCollection.save(tournamentInfo, function(error, value){
+                    console.log('resolving addTournamentAsync deferred');
+                    deferred.resolve(value);
+                });
+            } else {
+                deferred.reject('User did not have permission to create tournament.');
+            }
+        });
+
+        return deferred.promise;
+    },
+    /*searchTournaments: function (searchInfo, userId) {
         if (!searchInfo || !userId) {
             return false;
         }
@@ -45,7 +83,7 @@ module.exports = {
     },
     deleteTournament: function (id, userId) {
 
-    },
+    },*/
 
     addUser: function (userConfig) {
         if (!userConfig) {
@@ -55,15 +93,16 @@ module.exports = {
         userConfig._id = UUID.v4({
             rng: UUID.nodeRNG
         });
-        
-        usersCollection.save( userConfig );
+
+        usersCollection.save(userConfig);
 
         return userConfig;
-    },
+    }
+    /*,
     deleteUser: function (id) {
 
     },
     searchUsers: function (searchInfo) {
 
-    }
+    }*/
 };

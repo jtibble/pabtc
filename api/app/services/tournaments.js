@@ -30,23 +30,23 @@ module.exports = [
                 res.send(responseBody);
             }
 
-            var tournamentId = storage.addTournament(req.body, userId);
-
-            if (!tournamentId) {
+            console.log('trying to add tournament to db');
+            
+            var tournamentPromise = storage.addTournamentAsync( req.body, userId );
+            
+            var successCallback = function(tournament){
+                responseBody.success = true;
+                responseBody.data = tournament;
+                res.send(responseBody);
+            };
+            
+            var errorCallback = function(error){
                 responseBody.success = false;
                 responseBody.issues = ['Could not create tournament'];
                 res.send(responseBody);
-            } else {
-                responseBody = {
-                    'sucess': true,
-                    'data': {
-                        'tournamentId': tournamentId
-                    }
-                };
-                console.log('Created tournament with id ' + tournamentId);
-                res.send(responseBody);
-            }
-
+            };
+            
+            tournamentPromise.then(successCallback, errorCallback);
         }
     }
 ];
