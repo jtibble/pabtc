@@ -1,8 +1,10 @@
+var Q = require('q');
 var UUID = require('node-uuid');
 
-//var mongojs = require('mongojs');
-//var db = mongojs('test');
-//var collection = db.collection('testCollection');
+var mongojs = require('mongojs');
+var db = mongojs('test');
+var usersCollection = db.collection('users');
+var tournamentsCollection = db.collection('tournaments');
 
 
 console.log('Initializing Storage');
@@ -17,19 +19,17 @@ module.exports = {
         if (!tournamentInfo || !userId) {
             return false;
         }
+        
+        //var promise = 
+        
+        var callback = function( error, value ){
+            var user = value[0];
+            debugger;
+        };
 
-        var storedUser = localDB.users[userId];
-        if (storedUser && storedUser.permissions && storedUser.permissions.write) {
-
-            tournamentInfo.id = UUID.v4({
-                rng: UUID.nodeRNG
-            });
-            localDB.tournaments[tournamentInfo.id] = tournamentInfo;
-            return tournamentInfo.id;
-
-        } else {
-            return false;
-        }
+        var storedUser = usersCollection.find({_id: userId}, callback);
+        
+        
     },
     searchTournaments: function (searchInfo, userId) {
         if (!searchInfo || !userId) {
@@ -52,10 +52,11 @@ module.exports = {
             return false;
         }
 
-        userConfig.id = UUID.v4({
+        userConfig._id = UUID.v4({
             rng: UUID.nodeRNG
         });
-        localDB.users[userConfig.id] = userConfig;
+        
+        usersCollection.save( userConfig );
 
         return userConfig;
     },
