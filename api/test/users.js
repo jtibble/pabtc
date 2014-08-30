@@ -15,7 +15,7 @@ describe('Users', function(){
             
             function callback(error, response, body) {
                 if (!error && response && response.statusCode == 200) {
-                    if( body.data && body.data.id ){
+                    if( body.data && body.data._id ){
                         done();
                     } else {
                         throw 'POST succeeded, but received bad data: ' + JSON.stringify(body);   
@@ -39,7 +39,7 @@ describe('Users', function(){
 
             function callback(error, response, body) {
                 if (!error && response && response.statusCode == 200) {
-                    if( body.data && body.data.id ){
+                    if( body.data && body.data._id ){
                         throw 'Failed to not create user';
                     } else {
                         done();   

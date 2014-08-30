@@ -17,14 +17,14 @@ describe('Tournaments', function(){
             
             function callback(error, response, body) {
                 if (!error && response && response.statusCode == 200) {
-                    if( body.data && body.data.id ){
+                    if( body.data && body.data._id ){
                        
                         // When the user has been created, continue creating the tournament
                         var tournament = {
                             name: 'Test Tournament'
                         };
 
-                        RESTService.createTournament( tournament, body.data.id, done );
+                        RESTService.createTournament( tournament, body.data._id, done );
                         
                     } else {
                         throw 'POST succeeded, but received bad data: ' + JSON.stringify(body);   

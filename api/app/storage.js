@@ -45,6 +45,11 @@ module.exports = {
         
         var userFetchedCallback = function(user){
             if (user && user.permissions && (user.permissions.write || user.permissions.write)) {
+                
+                tournamentInfo._id = UUID.v4({
+                    rng: UUID.nodeRNG
+                });
+                
                 tournamentsCollection.save(tournamentInfo, function(error, tournament){
                     deferred.resolve(tournament);
                 });
