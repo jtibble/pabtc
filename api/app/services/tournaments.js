@@ -29,8 +29,6 @@ module.exports = [
                 responseBody.issues = ['Missing UserId header'];
                 res.send(responseBody);
             }
-
-            console.log('trying to add tournament to db');
             
             var tournamentPromise = storage.addTournamentAsync( req.body, userId );
             
@@ -42,7 +40,7 @@ module.exports = [
             
             var errorCallback = function(error){
                 responseBody.success = false;
-                responseBody.issues = ['Could not create tournament'];
+                responseBody.issues = [error];
                 res.send(responseBody);
             };
             

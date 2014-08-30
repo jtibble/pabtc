@@ -17,11 +17,9 @@ var localDB = {
 module.exports = {
     getUserAsync: function (userId) {
 
-        console.log('getUserAsync');
         var deferred = Q.defer();
 
         var callback = function (error, value) {
-            console.log('user found');
             if (value && value.length) {
                 var user = value[0];
                 deferred.resolve(user);
@@ -44,28 +42,22 @@ module.exports = {
         if (!tournamentInfo || !userId) {
             deferred.reject('Improper call to addTournamentAsync');
         }
-
-        var checkUserCanWrite = function (user) {
-            if (user && user.permissions && (user.permissions.write || users.permissions.write)) {
-                return true;
-            } else {
-                return false;
-            }
-        };
-
-        this.getUserAsync(userId).then(function (user) {
-            console.log('checking if user can write to db');
-            debugger;
-            if (checkUserCanWrite(user)) {
-                console.log('saving tourney to db now');
-                tournamentsCollection.save(tournamentInfo, function(error, value){
-                    console.log('resolving addTournamentAsync deferred');
-                    deferred.resolve(value);
+        
+        var userFetchedCallback = function(user){
+            if (user && user.permissions && (user.permissions.write || user.permissions.write)) {
+                tournamentsCollection.save(tournamentInfo, function(error, tournament){
+                    deferred.resolve(tournament);
                 });
             } else {
-                deferred.reject('User did not have permission to create tournament.');
+                deferred.reject('User ' + user._id + ' does not have permission to create tournament.');
             }
-        });
+        };
+        
+        var userFetchFailedCallback = function(message){
+            deferred.reject('Could not find user');
+        };
+
+        this.getUserAsync(userId).then( userFetchedCallback, userFetchFailedCallback );
 
         return deferred.promise;
     },
