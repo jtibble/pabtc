@@ -6,3 +6,4 @@ before_script:
   - "pm2 start api/app/main.js --name pabtc-api"
 after_script:
   - "pm2 stop all"
+services: mongodb
