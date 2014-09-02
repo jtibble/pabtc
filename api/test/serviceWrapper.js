@@ -33,8 +33,8 @@ module.exports = {
 
         function callback(error, response, body) {
             if (!error && response && response.statusCode == 200) {
-                if( body.data && body.data.tournamentId ){
-                    console.log('Tournament created with id ' + body.data.tournamentId);
+                if( body.data && body.data._id ){
+                    console.log('Tournament created with id ' + body.data._id);
                     done();
                 } else {
                     throw 'POST succeeded, but received bad data: ' + JSON.stringify(body);   
