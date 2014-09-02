@@ -15,18 +15,53 @@ describe('Tournaments', function(){
                 }
             };
             
-            function callback(error, response, body) {
-                assert( !error && response && response.statusCode == 200); 
-                assert( body && body.data && body.data._id );
-
+            function CreateTournament(user){
                 var tournament = {
                     name: 'Test Tournament'
                 };
-
-                RESTService.createTournament( tournament, body.data._id, done );  
-            }
+                
+                RESTService.createTournament( tournament, user._id ).then( function(tournament){
+                    if( tournament && tournament._id ){
+                        done();  
+                    } else {
+                        done('bad tournament data');   
+                    }
+                });
+            };
             
-            RESTService.createUser(adminUser, callback);
+            RESTService.createUser(adminUser).then( CreateTournament, function(){ 
+                done('could not create user');
+            });
+        });
+    }); 
+    describe('Create Basic Tournament - Insufficient Permissions', function(){
+        it('Should fail to create a tournament', function(done){
+            
+            // Create user that will then create tournament
+            var adminUser = {
+                name: 'Un-Privileged User',
+                permissions: {
+                    'read': true
+                }
+            };
+            
+            function CreateTournament(user){
+                var tournament = {
+                    name: 'Test Tournament'
+                };
+                
+                RESTService.createTournament( tournament, user._id ).then( function(tournament){
+                    if( tournament && tournament._id ){
+                        done('created tournament, which is incorrect');  
+                    } else {
+                        done();   
+                    }
+                });
+            };
+            
+            RESTService.createUser(adminUser).then( CreateTournament, function(){ 
+                done('could not create user');
+            });
         });
     });   
 });

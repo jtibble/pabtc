@@ -1,14 +1,13 @@
 var request = require('request');
+var Q = require('q');
 
 var tempData = {};
 
 module.exports = {
     
-    getLastUserId: function(){
-        return tempData.lastUserId;
-    },
-    
-    createUser: function( user, callback ){
+    createUser: function( user ){
+        var deferred = Q.defer();
+        
         var options = {
             url: 'http://localhost:8080/api/v0/users/create',
             method: 'POST',
@@ -16,34 +15,45 @@ module.exports = {
             json: true
         };
 
-        request( options, callback );
+        request( options, function(error, response, body){
+            if( error ){
+                deferred.reject(error);
+                return;
+            }
+            
+            if( response && response.statusCode == 200 && body ){
+                deferred.resolve(body.data);
+                return;
+            }
+        });
+        
+        return deferred.promise;
     },
     
-    createTournament: function( tournament, userId, done ){
+    createTournament: function( tournament, userId ){
+        
+        var deferred = Q.defer();
         
         var options = {
             url: 'http://localhost:8080/api/v0/tournaments/create',
             method: 'POST',
             body: tournament,
             headers: {
-                UserId: userId  
+                UserId: userId
             },
             json: true
         };
 
-        function callback(error, response, body) {
-            if (!error && response && response.statusCode == 200) {
-                if( body.data && body.data._id ){
-                    console.log('Tournament created with id ' + body.data._id);
-                    done();
-                } else {
-                    throw 'POST succeeded, but received bad data: ' + JSON.stringify(body);   
-                }
-            } else {
-                throw 'Failed to create tournament';
+        request( options, function(error, response, body){
+            if( error ){
+                deferred.reject(error);
             }
-        }
-
-        request( options, callback ); 
+            
+            if( response && response.statusCode == 200 && body ){
+                deferred.resolve(body.data);
+            }
+        }); 
+        
+        return deferred.promise;
     }
 };

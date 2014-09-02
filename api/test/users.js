@@ -13,20 +13,17 @@ describe('Users', function(){
                 }
             };
             
-            function callback(error, response, body) {
-                if (!error && response && response.statusCode == 200) {
-                    if( body.data && body.data._id ){
-                        done();
-                    } else {
-                        throw 'POST succeeded, but received bad data: ' + JSON.stringify(body);   
-                    }
+            function callback(user) {
+                if( user && user._id ){
+                    done();
                 } else {
-                    throw 'Failed to create user';
+                    done('request succeeded, but received bad user data: ' + JSON.stringify(user));   
                 }
             }
 
-            RESTService.createUser( user, callback );
-            
+            RESTService.createUser( user ).then( callback, function(error){
+                done(error);
+            });
         });
     });
     
@@ -34,23 +31,21 @@ describe('Users', function(){
         it('Should return an error', function(done){
             
             var user = {
-                name: 'John Tibble' // missing permissions
+                name: 'John Tibble' // Missing permissions
             };
-
-            function callback(error, response, body) {
-                if (!error && response && response.statusCode == 200) {
-                    if( body.data && body.data._id ){
-                        throw 'Failed to not create user';
-                    } else {
-                        done();   
-                    }
+            
+            function callback(user) {
+                console.log('callback called');
+                if( user && user._id ){
+                    done('user created, which is incorrect');
                 } else {
-                    throw 'Failed to not create user correctly';
+                    done();
                 }
             }
-            
-            RESTService.createUser( user, callback);
-            
+
+            RESTService.createUser( user ).then( callback, function(error){
+                done(error);
+            });
         });
     });
 });
