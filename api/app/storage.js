@@ -15,17 +15,44 @@ var localDB = {
 };
 
 module.exports = {
+
+    addUserAsync: function (userConfig) {
+        var deferred = Q.defer();
+        
+        if (!userConfig) {
+            deferred.reject('No userconfig provided');
+        }
+        
+        userConfig.dateCreated = (new Date()).toISOString();
+
+        userConfig._id = UUID.v4({
+            rng: UUID.nodeRNG
+        });
+        
+        usersCollection.save(userConfig, function(error, value){
+            if( error ){
+                deferred.reject('could not create user');
+            } else {
+                deferred.resolve(value);
+            }
+        });
+
+        return deferred.promise;
+    },
+                  
     getUserAsync: function (userId) {
 
         var deferred = Q.defer();
 
         var callback = function (error, value) {
-            if (!value){
+            if (error || !value){
                 deferred.reject('getUserAsync('+userId+') returned no value');
+                return;
             }
             
             if (!value.length) {
                 deferred.reject('getUserAsync('+userId+') returned no results');
+                return;
             }
             
             deferred.resolve(value[0]);
@@ -38,6 +65,7 @@ module.exports = {
         return deferred.promise;
 
     },
+    
     addTournamentAsync: function (tournamentInfo, userId) {
 
         var deferred = Q.defer();
@@ -68,21 +96,5 @@ module.exports = {
         this.getUserAsync(userId).then( userFetchedCallback, userFetchFailedCallback );
 
         return deferred.promise;
-    },
-
-    addUser: function (userConfig) {
-        if (!userConfig) {
-            return false;
-        }
-        
-        userConfig.dateCreated = (new Date()).toISOString();
-
-        userConfig._id = UUID.v4({
-            rng: UUID.nodeRNG
-        });
-
-        usersCollection.save(userConfig);
-
-        return userConfig;
     }
 };

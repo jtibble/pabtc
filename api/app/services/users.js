@@ -19,22 +19,23 @@ module.exports = [
                 res.send(responseBody);
                 return;
             }
-
-            var storedUser = storage.addUser( req.body );
-
-            if (!storedUser) {
+            
+            var successCallback = function(user){
+                responseBody = {
+                    'sucess': true,
+                    'data': user
+                };
+                console.log('Created user ' + user.name + ' with id ' + user._id);
+                res.send(responseBody);
+            };
+            
+            var errorCallback = function(error){
                 responseBody.success = false;
                 responseBody.issues = ['Could not create user'];
                 res.send(responseBody);
-            } else {
-                responseBody = {
-                    'sucess': true,
-                    'data': storedUser
-                };
-                console.log('Created user ' + storedUser.name + ' with id ' + storedUser._id);
-                res.send(responseBody);
-            }
+            };
 
+            storage.addUserAsync( req.body ).then(successCallback, errorCallback);
         }
     }
 ];
