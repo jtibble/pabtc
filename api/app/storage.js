@@ -20,12 +20,15 @@ module.exports = {
         var deferred = Q.defer();
 
         var callback = function (error, value) {
-            if (value && value.length) {
-                var user = value[0];
-                deferred.resolve(user);
-            } else {
-                deferred.reject('Could not retrieve user from db by id');
+            if (!value){
+                deferred.reject('getUserAsync('+userId+') returned no value');
             }
+            
+            if (!value.length) {
+                deferred.reject('getUserAsync('+userId+') returned no results');
+            }
+            
+            deferred.resolve(value[0]);
         };
 
         usersCollection.find({
@@ -59,33 +62,20 @@ module.exports = {
         };
         
         var userFetchFailedCallback = function(message){
-            deferred.reject('Could not find user');
+            deferred.reject('Could not find user. ' + message);
         };
 
         this.getUserAsync(userId).then( userFetchedCallback, userFetchFailedCallback );
 
         return deferred.promise;
     },
-    /*searchTournaments: function (searchInfo, userId) {
-        if (!searchInfo || !userId) {
-            return false;
-        }
-
-        var storedUser = localDB.users[userId];
-        if (storedUser && storedUser.permissions && storedUser.permissions.read) {
-            return localDB.tournaments;
-        } else {
-            return false;
-        }
-    },
-    deleteTournament: function (id, userId) {
-
-    },*/
 
     addUser: function (userConfig) {
         if (!userConfig) {
             return false;
         }
+        
+        userConfig.dateCreated = (new Date()).toISOString();
 
         userConfig._id = UUID.v4({
             rng: UUID.nodeRNG
@@ -95,11 +85,4 @@ module.exports = {
 
         return userConfig;
     }
-    /*,
-    deleteUser: function (id) {
-
-    },
-    searchUsers: function (searchInfo) {
-
-    }*/
 };
