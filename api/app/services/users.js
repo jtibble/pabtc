@@ -31,7 +31,7 @@ module.exports = [
                     'sucess': true,
                     'data': storedUser
                 };
-                console.log('Created user with id ' + storedUser._id);
+                console.log('Created user ' + storedUser.name + ' with id ' + storedUser._id);
                 res.send(responseBody);
             }
 

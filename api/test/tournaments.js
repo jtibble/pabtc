@@ -1,4 +1,5 @@
 var RESTService = require('./serviceWrapper.js');
+var assert = require('assert');
 
 describe('Tournaments', function(){
     describe('Create Basic Tournament', function(){
@@ -14,28 +15,18 @@ describe('Tournaments', function(){
                 }
             };
             
-            
             function callback(error, response, body) {
-                if (!error && response && response.statusCode == 200) {
-                    if( body.data && body.data._id ){
-                       
-                        // When the user has been created, continue creating the tournament
-                        var tournament = {
-                            name: 'Test Tournament'
-                        };
+                assert( !error && response && response.statusCode == 200); 
+                assert( body && body.data && body.data._id );
 
-                        RESTService.createTournament( tournament, body.data._id, done );
-                        
-                    } else {
-                        throw 'POST succeeded, but received bad data: ' + JSON.stringify(body);   
-                    }
-                } else {
-                    throw 'Failed to create user';
-                }
+                var tournament = {
+                    name: 'Test Tournament'
+                };
+
+                RESTService.createTournament( tournament, body.data._id, done );  
             }
             
             RESTService.createUser(adminUser, callback);
-            
         });
     });   
 });
