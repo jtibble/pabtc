@@ -37,5 +37,32 @@ module.exports = [
 
             storage.addUserAsync( req.body ).then(successCallback, errorCallback);
         }
+    },
+    {
+        'type': 'GET',
+        'name': 'users',
+        'response': function (req, res) {
+
+            var responseBody = {
+                success: false,
+                issues: []
+            };
+
+            var successCallback = function(usersList){
+                responseBody = {
+                    'sucess': true,
+                    'data': usersList
+                };
+                res.send(responseBody);
+            };
+            
+            var errorCallback = function(error){
+                responseBody.success = false;
+                responseBody.issues = ['Could not get usersList'];
+                res.send(responseBody);
+            };
+
+            storage.getUsersAsync( req.body ).then(successCallback, errorCallback);
+        }
     }
 ];

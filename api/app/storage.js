@@ -70,6 +70,23 @@ module.exports = {
         return deferred.promise;
 
     },
+    getUsersAsync: function(){
+
+        var deferred = Q.defer();
+
+        var callback = function (error, usersList) {
+            if (error){
+                deferred.reject('could not retrieve usersList from db');
+            } else {
+                deferred.resolve(usersList);
+            }
+            return;
+        };
+
+        usersCollection.find({}, callback);
+
+        return deferred.promise;
+    },
     
     addTournamentAsync: function (tournamentInfo, userId) {
 

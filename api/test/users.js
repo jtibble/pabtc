@@ -47,6 +47,44 @@ describe('Users', function(){
             });
         });
     });
+    
+    describe('Get Users', function(){
+        it('Should get list of users', function(done){
+            
+            var user = {
+                name: 'John Tibble',
+                permissions: {
+                    'admin': true,
+                    'read': true,
+                    'write': true
+                }
+            };
+            
+            function callback(user) {
+                if( user && user._id ){
+                    
+                    function UsersListCallback( usersList ){
+                        if( usersList && usersList.length ){
+                            done();
+                        } else {
+                            done( 'bad data for usersList' );   
+                        }
+                    };
+                    
+                    RESTService.getUsersAsync().then(UsersListCallback, function(){
+                        done('could not get users from REST service');
+                    });
+                    
+                } else {
+                    done('request succeeded, but received bad user data: ' + JSON.stringify(user));   
+                }
+            }
+
+            RESTService.createUser( user ).then( callback, function(error){
+                done(error);
+            });
+        });
+    });
 });
 
 
