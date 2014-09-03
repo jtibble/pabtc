@@ -61,23 +61,17 @@ describe('Users', function(){
             };
             
             function callback(user) {
-                if( user && user._id ){
-                    
-                    function UsersListCallback( usersList ){
-                        if( usersList && usersList.length ){
-                            done();
-                        } else {
-                            done( 'bad data for usersList' );   
-                        }
-                    };
-                    
-                    RESTService.getUsersAsync().then(UsersListCallback, function(){
-                        done('could not get users from REST service');
-                    });
-                    
-                } else {
-                    done('request succeeded, but received bad user data: ' + JSON.stringify(user));   
-                }
+                function UsersListCallback( usersList ){
+                    if( usersList && usersList.length ){
+                        done();
+                    } else {
+                        done( 'bad data for usersList' );   
+                    }
+                };
+
+                RESTService.getUsersAsync().then(UsersListCallback, function(){
+                    done('could not get users from REST service');
+                });  
             }
 
             RESTService.createUser( user ).then( callback, function(error){
@@ -86,24 +80,3 @@ describe('Users', function(){
         });
     });
 });
-
-
-/* var moreUsers = [
-        {
-            name: 'Read User',
-            permissions: {
-                'read': true
-            }
-        },
-        {
-            name: 'Full (non-admin) User',
-            permissions: {
-                'read': true,
-                'write': true
-            }
-        },
-        {
-            name: 'No Permissions User',
-            permissions: {}
-        }
-];*/

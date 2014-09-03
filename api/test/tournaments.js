@@ -85,25 +85,17 @@ describe('Tournaments', function(){
                 };
                 
                 RESTService.createTournament( tournament, user._id ).then( function(tournament){
-                    if( tournament && tournament._id ){
-                        
-                        function GetTournaments(tournamentsList){
-                            if( tournamentsList && tournamentsList.length ){
-                                done();
-                            } else {
-                                done('bad tournament data');
-                            }
-                        };
-                        
-                        // Now that tournament has been created, try to find it again
-                        RESTService.getTournamentsAsync().then( GetTournaments, function(){
-                            done('could not fetch tournaments from service');
-                        });
-                        
-                        
-                    } else {
-                        done('bad tournament data');   
-                    }
+                    function GetTournaments(tournamentsList){
+                        if( tournamentsList && tournamentsList.length ){
+                            done();
+                        } else {
+                            done('bad tournament data');
+                        }
+                    };
+
+                    RESTService.getTournamentsAsync().then( GetTournaments, function(){
+                        done('could not fetch tournaments from service');
+                    });
                 });
             };
             

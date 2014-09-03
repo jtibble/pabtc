@@ -1,12 +1,16 @@
 var request = require('request');
 var Q = require('q');
 
-var tempData = {};
+var serviceURL = 'http://localhost:8080/api/v0/';
 
 module.exports = {
     
     makeRequestAsync: function( options ){
         var deferred = Q.defer();
+        
+        options.url = serviceURL + options.endpoint;
+        options.json = true;
+        
         request( options, function(error, response, body){
             if( !error && response && response.statusCode == 200 && body ){
                 deferred.resolve(body.data);
@@ -21,10 +25,9 @@ module.exports = {
     
     createUser: function( user ){
         var options = {
-            url: 'http://localhost:8080/api/v0/users/create',
+            endpoint: 'users/create',
             method: 'POST',
-            body: user,
-            json: true
+            body: user
         };
         
         return this.makeRequestAsync( options );
@@ -32,9 +35,8 @@ module.exports = {
     
     getUsersAsync: function(){
         var options = {
-            url: 'http://localhost:8080/api/v0/users',
-            method: 'GET',
-            json: true
+            endpoint: 'users',
+            method: 'GET'
         };
         
         return this.makeRequestAsync( options );
@@ -42,13 +44,12 @@ module.exports = {
     
     createTournament: function( tournament, userId ){
         var options = {
-            url: 'http://localhost:8080/api/v0/tournaments/create',
+            endpoint: 'tournaments/create',
             method: 'POST',
             body: tournament,
             headers: {
                 UserId: userId
-            },
-            json: true
+            }
         };
         
         return this.makeRequestAsync( options );
@@ -56,9 +57,8 @@ module.exports = {
     
     getTournamentsAsync: function(){
         var options = {
-            url: 'http://localhost:8080/api/v0/tournaments',
-            method: 'GET',
-            json: true
+            endpoint: 'tournaments',
+            method: 'GET'
         };
         
         return this.makeRequestAsync( options );
