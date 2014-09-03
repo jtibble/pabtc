@@ -35,7 +35,6 @@ describe('Users', function(){
             };
             
             function callback(user) {
-                console.log('callback called');
                 if( user && user._id ){
                     done('user created, which is incorrect');
                 } else {

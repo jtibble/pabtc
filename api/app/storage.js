@@ -101,5 +101,19 @@ module.exports = {
         this.getUserAsync(userId).then( userFetchedCallback, userFetchFailedCallback );
 
         return deferred.promise;
+    },
+    getTournamentsAsync: function(){
+        
+        var deferred = Q.defer();
+        
+        tournamentsCollection.find({}, function(error, tournamentsList){
+            if( !error && tournamentsList ){
+                deferred.resolve( tournamentsList );
+            } else {
+                deferred.reject( 'Could not fetch tournaments' );
+            }
+        });
+        
+        return deferred.promise;
     }
 };

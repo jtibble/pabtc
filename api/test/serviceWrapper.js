@@ -55,5 +55,28 @@ module.exports = {
         }); 
         
         return deferred.promise;
+    },
+    
+    getTournamentsAsync: function(){
+        
+        var deferred = Q.defer();
+        
+        var options = {
+            url: 'http://localhost:8080/api/v0/tournaments',
+            method: 'GET',
+            json: true
+        };
+
+        request( options, function(error, response, body){
+            if( error ){
+                deferred.reject(error);
+            }
+            
+            if( response && response.statusCode == 200 && body ){
+                deferred.resolve(body.data);
+            }
+        });
+        
+        return deferred.promise;
     }
 };

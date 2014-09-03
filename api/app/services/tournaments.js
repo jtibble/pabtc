@@ -5,16 +5,15 @@ module.exports = [
     {
         'type': 'POST',
         'name': 'tournaments/create',
-        'permission': 'write',
         'response': function (req, res) {
-
-            var requiredProperties = ['name'];
 
             var responseBody = {
                 success: false,
                 issues: []
             };
-
+            
+            var requiredProperties = ['name'];
+            
             if ( !requestValidator.validate( req, requiredProperties )){
                 responseBody.success = false;
                 responseBody.issues = ['Missing request body properties. Check the API documentation.'];
@@ -28,6 +27,7 @@ module.exports = [
                 responseBody.success = false;
                 responseBody.issues = ['Missing UserId header'];
                 res.send(responseBody);
+                return;
             }
             
             var tournamentPromise = storage.addTournamentAsync( req.body, userId );
@@ -46,42 +46,32 @@ module.exports = [
             
             tournamentPromise.then(successCallback, errorCallback);
         }
+    },
+    {
+        'type': 'GET',
+        'name': 'tournaments',
+        'response': function (req, res) {
+
+            var responseBody = {
+                success: false,
+                issues: []
+            };
+            
+            var tournamentPromise = storage.getTournamentsAsync();
+            
+            var successCallback = function(tournamentsList){
+                responseBody.success = true;
+                responseBody.data = tournamentsList;
+                res.send(responseBody);
+            };
+            
+            var errorCallback = function(error){
+                responseBody.success = false;
+                responseBody.issues = [error];
+                res.send(responseBody);
+            };
+            
+            tournamentPromise.then(successCallback, errorCallback);
+        }
     }
 ];
-
-/*,
-		{
-			'type': 'GET',
-			'name': 'tournaments',
-			'response': function(req, res) {
-				
-                var responseBody = {};
-                
-				var userId = req.get('UserId');
-				console.log('userid: ' + userId);
-				
-				if( !userId ){
-					responseBody.success = false;
-					responseBody.issues = [ 'Missing UserId header' ];
-					res.send( responseBody );
-				}				
-				
-				var tournamentList = storage.searchTournaments({}, userId);
-				
-				if( !tournamentList ){
-					responseBody.success = false;
-					responseBody.issues = [ 'Could not search tournaments' ];
-					res.send( responseBody );
-				} else {
-					responseBody = {
-						'sucess': true,
-						'data': {
-							'tournamentList': tournamentList
-						}						
-					};
-					console.log('Returned ' + Object.keys(tournamentList).length + ' tournaments');
-					res.send( responseBody );
-				}
-				
-			}
-		}*/
