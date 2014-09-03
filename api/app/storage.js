@@ -6,8 +6,13 @@ var db = mongojs('test');
 var usersCollection = db.collection('users');
 var tournamentsCollection = db.collection('tournaments');
 
-
-console.log('Initializing Storage');
+db.runCommand({ping:1}, function(err, res) {
+    if(!err && res.ok){
+        console.log("MongoDB connection successful");
+    } else {
+        throw 'Failed to connect to MongoDB: check that it\'s running';   
+    }
+});
 
 var localDB = {
     tournaments: {},
