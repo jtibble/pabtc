@@ -5,60 +5,42 @@ var tempData = {};
 
 module.exports = {
     
-    createUser: function( user ){
+    makeRequestAsync: function( options ){
         var deferred = Q.defer();
-        
+        request( options, function(error, response, body){
+            if( !error && response && response.statusCode == 200 && body ){
+                deferred.resolve(body.data);
+                return;
+            } else {
+                deferred.reject(error);
+            }
+            return;    
+        });
+        return deferred.promise;
+    },
+    
+    createUser: function( user ){
         var options = {
             url: 'http://localhost:8080/api/v0/users/create',
             method: 'POST',
             body: user,
             json: true
         };
-
-        request( options, function(error, response, body){
-            if( error ){
-                deferred.reject(error);
-                return;
-            }
-            
-            if( response && response.statusCode == 200 && body ){
-                deferred.resolve(body.data);
-                return;
-            }
-        });
         
-        return deferred.promise;
+        return this.makeRequestAsync( options );
     },
     
     getUsersAsync: function(){
-        
-        var deferred = Q.defer();
-        
         var options = {
             url: 'http://localhost:8080/api/v0/users',
             method: 'GET',
             json: true
         };
-
-        request( options, function(error, response, body){
-            if( error ){
-                deferred.reject(error);
-                return;
-            }
-            
-            if( response && response.statusCode == 200 && body ){
-                deferred.resolve(body.data);
-                return;
-            }
-        });
         
-        return deferred.promise;
+        return this.makeRequestAsync( options );
     },
     
     createTournament: function( tournament, userId ){
-        
-        var deferred = Q.defer();
-        
         var options = {
             url: 'http://localhost:8080/api/v0/tournaments/create',
             method: 'POST',
@@ -68,40 +50,17 @@ module.exports = {
             },
             json: true
         };
-
-        request( options, function(error, response, body){
-            if( error ){
-                deferred.reject(error);
-            }
-            
-            if( response && response.statusCode == 200 && body ){
-                deferred.resolve(body.data);
-            }
-        }); 
         
-        return deferred.promise;
+        return this.makeRequestAsync( options );
     },
     
     getTournamentsAsync: function(){
-        
-        var deferred = Q.defer();
-        
         var options = {
             url: 'http://localhost:8080/api/v0/tournaments',
             method: 'GET',
             json: true
         };
-
-        request( options, function(error, response, body){
-            if( error ){
-                deferred.reject(error);
-            }
-            
-            if( response && response.statusCode == 200 && body ){
-                deferred.resolve(body.data);
-            }
-        });
         
-        return deferred.promise;
+        return this.makeRequestAsync( options );
     }
 };
