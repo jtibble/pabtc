@@ -45,31 +45,24 @@ module.exports = {
         return deferred.promise;
     },
                   
-    getUserAsync: function (userId) {
+    getUserByIdAsync: function (userId) {
 
         var deferred = Q.defer();
 
         var callback = function (error, value) {
-            if (error || !value){
-                deferred.reject('getUserAsync('+userId+') returned no value');
-                return;
+            if (error || !value || !value.length){
+                deferred.reject('no user found');
+            } else {
+                deferred.resolve(value[0]);
             }
-            
-            if (!value.length) {
-                deferred.reject('getUserAsync('+userId+') returned no results');
-                return;
-            }
-            
-            deferred.resolve(value[0]);
         };
 
-        usersCollection.find({
-            _id: userId
-        }, callback);
+        usersCollection.find({ _id: userId }, callback);
 
         return deferred.promise;
 
     },
+    
     getUsersAsync: function(){
 
         var deferred = Q.defer();
@@ -99,13 +92,12 @@ module.exports = {
         var userFetchedCallback = function(user){
             if (user && user.permissions && (user.permissions.write || user.permissions.write)) {
                 
-                tournamentInfo._id = UUID.v4({
-                    rng: UUID.nodeRNG
-                });
+                tournamentInfo._id = UUID.v4({ rng: UUID.nodeRNG });
                 
                 tournamentsCollection.save(tournamentInfo, function(error, tournament){
                     deferred.resolve(tournament);
                 });
+                
             } else {
                 deferred.reject('User ' + user._id + ' does not have permission to create tournament.');
             }
@@ -115,10 +107,11 @@ module.exports = {
             deferred.reject('Could not find user. ' + message);
         };
 
-        this.getUserAsync(userId).then( userFetchedCallback, userFetchFailedCallback );
+        this.getUserByIdAsync(userId).then( userFetchedCallback, userFetchFailedCallback );
 
         return deferred.promise;
     },
+    
     getTournamentsAsync: function(){
         
         var deferred = Q.defer();
