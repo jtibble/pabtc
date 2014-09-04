@@ -4,7 +4,9 @@ PABTC [![Build Status](https://travis-ci.org/jtibble/pabtc.svg?branch=master)](h
 BTC Engine for Planetary Annihilation Tournaments
 
 
-Look at the Github issues for information about planned services: https://github.com/jtibble/pabtc/issues
+Look at the Github issues for information about existing (and planned) services: https://github.com/jtibble/pabtc/issues
+Tests demonstrating existing services can be found at https://github.com/jtibble/pabtc/blob/master/api/test/serviceWrapper.js
+
 
 -----
 
@@ -12,12 +14,12 @@ To Run REST API
 
 1. Clone Project to your local machine
 
-2. NPM Install in /api/ folder
+2. 'npm install' in project root
 
-3. Run 'node app/main.js' and the REST API will start on port 80
+3. Install mongodb and run it on the default port ('mongod --dbpath C:\temp')
 
-[To Run REST API TESTS (while REST API is running)]
+4. 'node api/app/main.js' and the REST API will start on port 8080
 
-4. Run 'npm install -g mocha'
+To Run Tests
 
-5. Run 'mocha'
+5. 'npm test'
