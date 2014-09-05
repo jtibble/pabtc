@@ -29,8 +29,9 @@ describe('Tournaments', function(){
                 });
             };
             
+            
             RESTService.createUser(adminUser).then( CreateTournament, function(){ 
-                done('could not create user');
+                done('could not create user: ' + error);
             });
         });
     }); 
@@ -61,7 +62,7 @@ describe('Tournaments', function(){
             };
             
             RESTService.createUser(adminUser).then( CreateTournament, function(){ 
-                done('could not create user');
+                done('could not create user: ' + error);
             });
         });
     });   
@@ -93,14 +94,14 @@ describe('Tournaments', function(){
                         }
                     };
 
-                    RESTService.getTournamentsAsync().then( GetTournaments, function(){
+                    RESTService.getTournaments().then( GetTournaments, function(){
                         done('could not fetch tournaments from service');
                     });
                 });
             };
             
             RESTService.createUser(adminUser).then( CreateTournament, function(){ 
-                done('could not create user');
+                done('could not create user: ' + error);
             });
         });
     });

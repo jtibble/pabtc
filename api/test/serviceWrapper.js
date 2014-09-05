@@ -16,7 +16,7 @@ module.exports = {
                 deferred.resolve(body.data);
                 return;
             } else {
-                deferred.reject(error);
+                deferred.reject('service returned ' + response.statusCode);
             }
             return;    
         });
@@ -33,7 +33,7 @@ module.exports = {
         return this.makeRequestAsync( options );
     },
     
-    getUsersAsync: function(){
+    getUsers: function(){
         var options = {
             endpoint: 'users',
             method: 'GET'
@@ -55,7 +55,7 @@ module.exports = {
         return this.makeRequestAsync( options );
     },
     
-    getTournamentsAsync: function(){
+    getTournaments: function(){
         var options = {
             endpoint: 'tournaments',
             method: 'GET'

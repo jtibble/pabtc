@@ -6,7 +6,7 @@ var services = require('./services.js');
 
 var Service = function (config) {
     var server = express();
-    server.use(bodyParser.json())
+    server.use(bodyParser.json());
     server.use(express.static(__dirname + config.staticContentPath));
 
     var apiPath = config.apiPath;

@@ -22,7 +22,7 @@ describe('Users', function(){
             }
 
             RESTService.createUser( user ).then( callback, function(error){
-                done(error);
+                done('could not create user: ' + error);
             });
         });
     });
@@ -43,7 +43,7 @@ describe('Users', function(){
             }
 
             RESTService.createUser( user ).then( callback, function(error){
-                done(error);
+                done('could not create user: ' + error);
             });
         });
     });
@@ -69,13 +69,13 @@ describe('Users', function(){
                     }
                 };
 
-                RESTService.getUsersAsync().then(UsersListCallback, function(){
+                RESTService.getUsers().then(UsersListCallback, function(){
                     done('could not get users from REST service');
                 });  
             }
 
             RESTService.createUser( user ).then( callback, function(error){
-                done(error);
+                done('could not create user: ' + error);
             });
         });
     });
