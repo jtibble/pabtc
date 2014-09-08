@@ -67,7 +67,7 @@ describe('Tournaments', function(){
         });
     });   
     
-    describe('Get Tournaments', function(){
+    describe('Get Tournaments List', function(){
         it('Should return list of tournaments', function(done){
             
             // Create user that will then create tournament
@@ -95,6 +95,44 @@ describe('Tournaments', function(){
                     };
 
                     RESTService.getTournaments().then( GetTournaments, function(){
+                        done('could not fetch tournaments from service');
+                    });
+                });
+            };
+            
+            RESTService.createUser(adminUser).then( CreateTournament, function(){ 
+                done('could not create user: ' + error);
+            });
+        });
+    });
+    describe('Get Tournament', function(){
+        it('Should return a specific tournament', function(done){
+            
+            // Create user that will then create tournament
+            var adminUser = {
+                name: 'Writing User',
+                permissions: {
+                    'read': true,
+                    'write': true,
+                    'admin': true
+                }
+            };
+            
+            function CreateTournament(user){
+                var tournament = {
+                    name: 'Test Tournament'
+                };
+                
+                RESTService.createTournament( tournament, user._id ).then( function(tournament){
+                    function GetTournaments(tournamentsList){
+                        if( tournamentsList && tournamentsList.length ){
+                            done();
+                        } else {
+                            done('bad tournament data');
+                        }
+                    };
+
+                    RESTService.getTournaments(tournament._id).then( GetTournaments, function(){
                         done('could not fetch tournaments from service');
                     });
                 });

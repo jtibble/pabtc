@@ -48,7 +48,7 @@ describe('Users', function(){
         });
     });
     
-    describe('Get Users', function(){
+    describe('Get Users List', function(){
         it('Should get list of users', function(done){
             
             var user = {
@@ -70,6 +70,38 @@ describe('Users', function(){
                 };
 
                 RESTService.getUsers().then(UsersListCallback, function(){
+                    done('could not get users from REST service');
+                });  
+            }
+
+            RESTService.createUser( user ).then( callback, function(error){
+                done('could not create user: ' + error);
+            });
+        });
+    });
+    
+    describe('Get Users', function(){
+        it('Should get a specific user', function(done){
+            
+            var user = {
+                name: 'John Tibble',
+                permissions: {
+                    'admin': true,
+                    'read': true,
+                    'write': true
+                }
+            };
+            
+            function callback(user) {
+                function UsersListCallback( usersList ){
+                    if( usersList && usersList.length && usersList.length == 1 ){
+                        done();
+                    } else {
+                        done( 'bad data for usersList' );   
+                    }
+                };
+
+                RESTService.getUsers(user._id).then(UsersListCallback, function(){
                     done('could not get users from REST service');
                 });  
             }

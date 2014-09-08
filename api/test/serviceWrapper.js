@@ -33,11 +33,15 @@ module.exports = {
         return this.makeRequestAsync( options );
     },
     
-    getUsers: function(){
+    getUsers: function(id){
         var options = {
             endpoint: 'users',
             method: 'GET'
         };
+        
+        if( id ){
+            options.endpoint += '/' + id;
+        }
         
         return this.makeRequestAsync( options );
     },
@@ -55,11 +59,15 @@ module.exports = {
         return this.makeRequestAsync( options );
     },
     
-    getTournaments: function(){
+    getTournaments: function(id){
         var options = {
             endpoint: 'tournaments',
             method: 'GET'
         };
+        
+        if( id ){
+            options.endpoint += '/' + id;
+        }
         
         return this.makeRequestAsync( options );
     }
