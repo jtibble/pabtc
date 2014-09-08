@@ -63,7 +63,7 @@ module.exports = {
 
     },
     
-    getUsersAsync: function(){
+    getUsersAsync: function(id){
 
         var deferred = Q.defer();
 
@@ -75,8 +75,13 @@ module.exports = {
             }
             return;
         };
-
-        usersCollection.find({}, callback);
+        
+        var searchQuery = {};
+        if( id ){
+            searchQuery._id = id;
+        }
+        
+        usersCollection.find(searchQuery, callback);
 
         return deferred.promise;
     },
@@ -93,6 +98,8 @@ module.exports = {
             if (user && user.permissions && (user.permissions.write || user.permissions.write)) {
                 
                 tournamentInfo._id = UUID.v4({ rng: UUID.nodeRNG });
+                tournamentInfo.dateCreated = (new Date()).toISOString();
+                tournamentInfo.createdBy = user._id;
                 
                 tournamentsCollection.save(tournamentInfo, function(error, tournament){
                     deferred.resolve(tournament);
@@ -112,11 +119,17 @@ module.exports = {
         return deferred.promise;
     },
     
-    getTournamentsAsync: function(){
+    getTournamentsAsync: function(id){
         
         var deferred = Q.defer();
         
-        tournamentsCollection.find({}, function(error, tournamentsList){
+        var searchQuery = {};
+        if( id ){
+            console.log('looking in db for tournament id='+id);
+            searchQuery._id = id;
+        }
+        
+        tournamentsCollection.find(searchQuery, function(error, tournamentsList){
             if( !error && tournamentsList ){
                 deferred.resolve( tournamentsList );
             } else {

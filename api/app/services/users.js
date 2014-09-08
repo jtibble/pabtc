@@ -4,35 +4,30 @@ var requestValidator = require('./requestValidator.js');
 module.exports = [
     {
         'type': 'POST',
-        'name': 'users/create',
+        'name': 'users',
         'response': function (req, res) {
             var requiredProperties = ['name', 'permissions'];
 
-            var responseBody = {
-                success: false,
-                issues: []
-            };
+            var responseBody = {};
 
             if ( !requestValidator.validate( req, requiredProperties )){
                 responseBody.success = false;
                 responseBody.issues = ['Missing request body properties. Check the API documentation.'];
-                res.send(responseBody);
+                res.status(400).send(responseBody);
                 return;
             }
             
             var successCallback = function(user){
-                responseBody = {
-                    'sucess': true,
-                    'data': user
-                };
+                user.href= 'http://localhost:8080/api/v0/users/' + user._id;
+                
                 console.log('Created user ' + user.name + ' with id ' + user._id);
-                res.send(responseBody);
+                res.status(201).send(user);
             };
             
             var errorCallback = function(error){
                 responseBody.success = false;
-                responseBody.issues = ['Could not create user'];
-                res.send(responseBody);
+                    responseBody = {message: 'Could not create user'};
+                res.status(500).send(responseBody);
             };
 
             storage.addUserAsync( req.body ).then(successCallback, errorCallback);
@@ -40,29 +35,30 @@ module.exports = [
     },
     {
         'type': 'GET',
-        'name': 'users',
+        'name': 'users/:id',
         'response': function (req, res) {
 
-            var responseBody = {
-                success: false,
-                issues: []
-            };
+            if( req.params && req.params.id ){
+                console.log('Requested users/' + req.params.id);
+            }
+            
+            var responseBody = {};
 
             var successCallback = function(usersList){
-                responseBody = {
-                    'sucess': true,
-                    'data': usersList
-                };
-                res.send(responseBody);
+                if( usersList && usersList.length){
+                    res.send(usersList);
+                } else {
+                    responseBody = {message: 'Could not find user/users'};
+                    res.status(404).send(responseBody);
+                }
             };
             
             var errorCallback = function(error){
-                responseBody.success = false;
-                responseBody.issues = ['Could not get usersList'];
-                res.send(responseBody);
+                responseBody.issues = ['Could not find user/users'];
+                res.status(404).send(responseBody);
             };
 
-            storage.getUsersAsync( req.body ).then(successCallback, errorCallback);
+            storage.getUsersAsync( req.params.id ).then(successCallback, errorCallback);
         }
     }
 ];

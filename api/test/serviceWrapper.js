@@ -12,11 +12,11 @@ module.exports = {
         options.json = true;
         
         request( options, function(error, response, body){
-            if( !error && response && response.statusCode == 200 && body ){
-                deferred.resolve(body.data);
+            if( !error && response ){
+                deferred.resolve(body);
                 return;
             } else {
-                deferred.reject('service returned ' + response.statusCode);
+                deferred.reject('service returned HTTP ' + response.statusCode);
             }
             return;    
         });
@@ -25,7 +25,7 @@ module.exports = {
     
     createUser: function( user ){
         var options = {
-            endpoint: 'users/create',
+            endpoint: 'users',
             method: 'POST',
             body: user
         };
@@ -44,7 +44,7 @@ module.exports = {
     
     createTournament: function( tournament, userId ){
         var options = {
-            endpoint: 'tournaments/create',
+            endpoint: 'tournaments',
             method: 'POST',
             body: tournament,
             headers: {

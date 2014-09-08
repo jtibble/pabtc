@@ -4,20 +4,16 @@ var requestValidator = require('./requestValidator.js');
 module.exports = [
     {
         'type': 'POST',
-        'name': 'tournaments/create',
+        'name': 'tournaments',
         'response': function (req, res) {
 
-            var responseBody = {
-                success: false,
-                issues: []
-            };
+            var responseBody = {};
             
             var requiredProperties = ['name'];
             
             if ( !requestValidator.validate( req, requiredProperties )){
-                responseBody.success = false;
                 responseBody.issues = ['Missing request body properties. Check the API documentation.'];
-                res.send(responseBody);
+                res.status(400).send(responseBody);
                 return;
             }
             
@@ -26,16 +22,15 @@ module.exports = [
             if (!userId) {
                 responseBody.success = false;
                 responseBody.issues = ['Missing UserId header'];
-                res.send(responseBody);
+                res.status(401).send(responseBody);
                 return;
             }
             
             var tournamentPromise = storage.addTournamentAsync( req.body, userId );
             
             var successCallback = function(tournament){
-                responseBody.success = true;
-                responseBody.data = tournament;
-                res.send(responseBody);
+                tournament.href = 'http://localhost:8080/api/v0/tournaments/' + tournament._id;
+                res.status(201).send(tournament);
             };
             
             var errorCallback = function(error){
@@ -49,26 +44,32 @@ module.exports = [
     },
     {
         'type': 'GET',
-        'name': 'tournaments',
+        'name': 'tournaments/:id',
         'response': function (req, res) {
 
+            if( req.params && req.params.id ){
+                console.log('Requested tournaments/' + req.params.id);
+            }
+            
             var responseBody = {
                 success: false,
                 issues: []
             };
             
-            var tournamentPromise = storage.getTournamentsAsync();
+            var tournamentPromise = storage.getTournamentsAsync(req.params.id);
             
             var successCallback = function(tournamentsList){
-                responseBody.success = true;
-                responseBody.data = tournamentsList;
-                res.send(responseBody);
+                if( tournamentsList && tournamentsList.length ){
+                    res.status(200).send(tournamentsList);
+                } else {
+                    res.status(404).send('Could not find tournament/tournaments');   
+                }
             };
             
             var errorCallback = function(error){
                 responseBody.success = false;
                 responseBody.issues = [error];
-                res.send(responseBody);
+                res.status(500).send(responseBody);
             };
             
             tournamentPromise.then(successCallback, errorCallback);
