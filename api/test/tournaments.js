@@ -105,6 +105,7 @@ describe('Tournaments', function(){
             });
         });
     });
+    
     describe('Get Tournament', function(){
         it('Should return a specific tournament', function(done){
             
@@ -125,7 +126,7 @@ describe('Tournaments', function(){
                 
                 RESTService.createTournament( tournament, user._id ).then( function(tournament){
                     function GetTournaments(tournamentsList){
-                        if( tournamentsList && tournamentsList.length ){
+                        if( tournamentsList && tournamentsList.length && tournamentsList.length == 1 ){
                             done();
                         } else {
                             done('bad tournament data');

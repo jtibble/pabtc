@@ -33,6 +33,7 @@ module.exports = {
         userConfig._id = UUID.v4({
             rng: UUID.nodeRNG
         });
+        userConfig.href= 'http://localhost:8080/api/v0/users/' + userConfig._id;
         
         usersCollection.save(userConfig, function(error, value){
             if( error ){
@@ -100,6 +101,7 @@ module.exports = {
                 tournamentInfo._id = UUID.v4({ rng: UUID.nodeRNG });
                 tournamentInfo.dateCreated = (new Date()).toISOString();
                 tournamentInfo.createdBy = user._id;
+                tournamentInfo.href = 'http://localhost:8080/api/v0/tournaments/' + tournamentInfo._id;
                 
                 tournamentsCollection.save(tournamentInfo, function(error, tournament){
                     deferred.resolve(tournament);
@@ -125,7 +127,6 @@ module.exports = {
         
         var searchQuery = {};
         if( id ){
-            console.log('looking in db for tournament id='+id);
             searchQuery._id = id;
         }
         

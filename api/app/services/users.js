@@ -17,9 +17,7 @@ module.exports = [
                 return;
             }
             
-            var successCallback = function(user){
-                user.href= 'http://localhost:8080/api/v0/users/' + user._id;
-                
+            var successCallback = function(user){                
                 console.log('Created user ' + user.name + ' with id ' + user._id);
                 res.status(201).send(user);
             };
@@ -35,7 +33,7 @@ module.exports = [
     },
     {
         'type': 'GET',
-        'name': 'users/:id',
+        'name': 'users/:id?',
         'response': function (req, res) {
 
             if( req.params && req.params.id ){
