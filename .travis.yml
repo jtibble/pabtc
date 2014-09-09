@@ -3,7 +3,7 @@ node_js:
   - "0.10"
 before_script:
   - "npm install -g pm2"
-  - "pm2 start api/app/main.js --name pabtc-api -e err.log -o out.log"
+  - "pm2 start service/main.js --name pabtc-api -e err.log -o out.log"
   - "sleep 3"
 after_script:
   - "pm2 stop all"
