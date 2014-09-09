@@ -28,7 +28,28 @@ app.controller('LandingController', function ($scope, FrameworkAJAX) {
         console.log('error getting tournaments');
     });
     
+    $scope.Actions = {};
+    
+    $scope.Actions.createUser = function(){
+        var newUserRequest = {
+            method: 'POST',
+            url: '/api/v0/users',
+            data: {
+                name: 'UI User'
+            }
+        };
+        FrameworkAJAX.sendRequest(newUserRequest, function(data){
+            console.log('user created');
+        }, function(){
+            console.log('error creating new user');
+        });
+        
+    };
+    
 });
+
+
+
 
 app.provider('FrameworkAJAX', function(){
 	return {
