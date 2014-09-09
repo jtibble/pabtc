@@ -6,7 +6,7 @@ module.exports = [
         'type': 'POST',
         'name': 'users',
         'response': function (req, res) {
-            var requiredProperties = ['name', 'permissions'];
+            var requiredProperties = ['name'];
 
             var responseBody = {};
 
@@ -61,6 +61,40 @@ module.exports = [
             };
 
             storage.getUsersAsync( req.params.id ).then(successCallback, errorCallback);
+        }
+    },
+    {
+        'type': 'POST',
+        'name': 'users/:id/generateAPIKey',
+        'response': function (req, res) {
+
+            var responseBody = {};
+			
+            if( !req.params || !req.params.id ){
+				responseBody = {message: 'UserID is required to create an API Key'};
+				res.status(400).send(responseBody);
+            }
+
+            var successCallback = function(APIKey){
+				console.log(APIKey);
+                if( APIKey ){
+					responseBody = {
+						message: 'WARNING: This API key can only be generated once. If you lose it, you will need to create a new account. No exceptions.',
+						key: APIKey
+					};
+					res.status(201).send(responseBody);
+                } else {
+                	responseBody.issues = ['Error Creating API Key', error];
+                    res.status(500).send(responseBody);
+                }
+            };
+            
+            var errorCallback = function(error){
+                responseBody.issues = ['Error Creating API Key', error];
+                res.status(500).send(responseBody);
+            };
+
+            storage.createAPIKey( req.params.id ).then(successCallback, errorCallback);
         }
     }
 ];
