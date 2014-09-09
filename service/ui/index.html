@@ -10,7 +10,7 @@
         <!-- USERS TABLE -->
         <hr>
         <h3>Users</h3>
-        <table>
+        <table ng-show="Model.users.length">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -43,15 +43,21 @@
         <!-- USERS TABLE -->
         <hr>
         <h3>Tournaments</h3>
-        <table>
+        <table ng-show="Model.tournaments.length">
             <thead>
                 <tr>
                     <th>Name</th>
+                    <th>Date Created</th>
+                    <th>HREF</th>
+                    <th>Created By</th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="tournament in Model.tournaments">
                     <td>{{tournament.name}}</td>
+                    <td>{{tournament.dateCreated}}</td>
+                    <td><a href="{{tournament.href}}">{{tournament.href}}</a></td>
+                    <td><a href="{{tournament.createdBy}}">{{tournament.createdBy}}</a></td>
                 </tr>
             </tbody>
         </table>
