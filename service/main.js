@@ -8,7 +8,7 @@ var tournamentServices = require('./api/services/tournaments.js');
 var utilityServices = require('./api/services/utility.js');
 
 var servicesConfig = {
-    'staticContentPath': '/public',
+    'staticContentPath': '/ui',
     'apiPath': '/api/v0/',
     'endpoints': userServices.concat(tournamentServices)
 };
@@ -17,7 +17,7 @@ var Service = function (config) {
     var server = express();
     server.use(bodyParser.json());
     console.log('dirname: ' + __dirname);
-    server.use(express.static('../ui'/*config.staticContentPath)*/));
+    server.use(express.static(__dirname + config.staticContentPath));
 
     var apiPath = config.apiPath;
     console.log('Creating Services');
