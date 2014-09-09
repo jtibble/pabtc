@@ -43,7 +43,39 @@ app.controller('LandingController', function ($scope, FrameworkAJAX) {
         }, function(){
             console.log('error creating new user');
         });
-        
+    };
+    
+    $scope.Actions.generateAPIKey = function(userId){
+        var APIKeyRequest = {
+            method: 'POST',
+            url: '/api/v0/users/' + userId + '/generateAPIKey',
+            data: {
+                name: 'UI User'
+            }
+        };
+        FrameworkAJAX.sendRequest(APIKeyRequest, function(data){
+            console.log('API key created');
+        }, function(){
+            console.log('error creating API Key');
+        });
+    };
+    
+    $scope.Actions.createTournament = function(APIKey){
+        var APIKeyRequest = {
+            method: 'POST',
+            url: '/api/v0/tournaments',
+            data: {
+                name: 'UI Tournament'
+            },
+            headers: {
+                APIKey: APIKey
+            }
+        };
+        FrameworkAJAX.sendRequest(APIKeyRequest, function(data){
+            console.log('tournament created');
+        }, function(){
+            console.log('error creating tournament');
+        });
     };
     
 });
