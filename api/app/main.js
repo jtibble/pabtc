@@ -2,7 +2,16 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var request = require('request');
 
-var services = require('./services.js');
+//Services Definitions
+var userServices = require('./services/users.js');
+var tournamentServices = require('./services/tournaments.js');
+var utilityServices = require('./services/utility.js');
+
+var servicesConfig = {
+    'staticContentPath': '/www',
+    'apiPath': '/api/v0/',
+    'endpoints': userServices.concat(tournamentServices)
+};
 
 var Service = function (config) {
     var server = express();
@@ -45,5 +54,5 @@ var Service = function (config) {
     };
 };
 
-var service = Service(services);
+var service = Service(servicesConfig);
 service.initialize();
