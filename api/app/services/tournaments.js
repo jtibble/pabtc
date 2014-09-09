@@ -17,15 +17,15 @@ module.exports = [
                 return;
             }
             
-            var userId = req.get('UserId');
+            var APIKey = req.get('APIKey');
 
-            if (!userId) {
-                responseBody = {message: 'Missing UserId header'};
+            if (!APIKey) {
+                responseBody = {message: 'Missing APIKey header'};
                 res.status(403).send(responseBody);
                 return;
             }
             
-            var tournamentPromise = storage.addTournamentAsync( req.body, userId );
+            var tournamentPromise = storage.addTournamentAsync( req.body, APIKey );
             
             var successCallback = function(tournament){
                 res.status(201).send(tournament);

@@ -5,7 +5,7 @@ var serviceURL = 'http://localhost:8080/api/v0/';
 
 module.exports = {
     
-    makeRequestAsync: function( options ){
+    callService: function( options ){
         var deferred = Q.defer();
         
         options.url = serviceURL + options.endpoint;
@@ -22,6 +22,27 @@ module.exports = {
         });
         return deferred.promise;
     },
+	
+	postResourceByHREF: function(href){
+        var deferred = Q.defer();
+        
+        var options = {
+            url: href,
+            method: 'POST',
+            json: true,
+        };
+        
+        request( options, function(error, response, body){
+            if( !error && response ){
+                deferred.resolve(body);
+                return;
+            } else {
+                deferred.reject('service returned HTTP ' + response.statusCode);
+            }
+            return;    
+        });
+        return deferred.promise;
+	},
     
     getResourceByHREF: function(href){
         var deferred = Q.defer();
@@ -51,7 +72,7 @@ module.exports = {
             body: user
         };
         
-        return this.makeRequestAsync( options );
+        return this.callService( options );
     },
     
     getUsers: function(id){
@@ -64,20 +85,20 @@ module.exports = {
             options.endpoint += '/' + id;
         }
         
-        return this.makeRequestAsync( options );
+        return this.callService( options );
     },
     
-    createTournament: function( tournament, userId ){
+    createTournament: function( tournament, APIKey ){
         var options = {
             endpoint: 'tournaments',
             method: 'POST',
             body: tournament,
             headers: {
-                UserId: userId
+                APIKey: APIKey
             }
         };
         
-        return this.makeRequestAsync( options );
+        return this.callService( options );
     },
     
     getTournaments: function(id){
@@ -90,6 +111,27 @@ module.exports = {
             options.endpoint += '/' + id;
         }
         
-        return this.makeRequestAsync( options );
-    }
+        return this.callService( options );
+    },
+	
+	createAPIKey: function(href){      
+        var deferred = Q.defer();
+        
+        var options = {
+            url: href + '/generateAPIKey',
+            method: 'POST',
+            json: true
+        };
+        
+        request( options, function(error, response, body){
+            if( !error && response ){
+                deferred.resolve(body.key); // Return key property on response body
+                return;
+            } else {
+                deferred.reject('service returned HTTP ' + response.statusCode);
+            }
+            return;    
+        });
+        return deferred.promise;
+	}
 };

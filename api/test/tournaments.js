@@ -6,35 +6,28 @@ describe('Tournaments', function(){
         it('Should return a tournament id when called successfully', function(done){
             
             // Create user that will then create tournament
-            var adminUser = {
-                name: 'Admin User',
-                permissions: {
-                    'read': true,
-                    'write': true,
-                    'admin': true
-                }
-            };
+            var apiUser = { name: 'Admin User' };
             
-            function CreateTournament(user){
-                var tournament = {
-                    name: 'Test Tournament'
-                };
-                
-                RESTService.createTournament( tournament, user._id ).then( function(tournament){
-                    if( tournament && tournament._id ){
-                        done();
-                    } else {
-                        done('bad tournament data');   
-                    }
-                });
-            };
-            
-            RESTService.createUser(adminUser).then( CreateTournament, function(){ 
-                done('could not create user: ' + error);
-            });
+            RESTService.createUser(apiUser).then( function(user){
+				
+				RESTService.createAPIKey(user.href).then( function(APIKey){
+					
+					var tournament = { name: 'Test Tournament' };
+					
+					RESTService.createTournament( tournament, APIKey ).then( function(tournament){
+						
+						if( tournament && tournament.href ){
+							done();
+						} else {
+							done('couldn\'t create tournament');   
+						}
+					});
+				});
+			});
+			
         });
     }); 
-    
+    /*
     describe('Create Basic Tournament - Insufficient Permissions', function(){
         it('Should fail to create a tournament', function(done){
             
@@ -142,5 +135,5 @@ describe('Tournaments', function(){
                 done('could not create user: ' + error);
             });
         });
-    });
+    });*/
 });

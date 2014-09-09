@@ -52,7 +52,7 @@ module.exports = {
         return deferred.promise;
     },
                   
-    getUserByIdAsync: function (userId) {
+    getUserByAPIKeyAsync: function (APIKey) {
 
         var deferred = Q.defer();
 
@@ -60,11 +60,11 @@ module.exports = {
             if (error || !value || !value.length){
                 deferred.reject('no user found');
             } else {
-                deferred.resolve(value[0]);
+                deferred.resolve(value[0]); // Only return one user
             }
         };
 
-        usersCollection.find({ _id: userId }, callback);
+        usersCollection.find({ APIKey: APIKey }, callback);
 
         return deferred.promise;
 
@@ -93,17 +93,12 @@ module.exports = {
         return deferred.promise;
     },
     
-    addTournamentAsync: function (tournamentInfo, userId) {
+    addTournamentAsync: function (tournamentInfo, APIKey) {
 
         var deferred = Q.defer();
-
-        if (!tournamentInfo || !userId) {
-            deferred.reject('Improper call to addTournamentAsync');
-        }
         
         var userFetchedCallback = function(user){
-            if (user && user.permissions && (user.permissions.write || user.permissions.write)) {
-                
+            if (user && user.APIKey == APIKey) {
                 
                 var newId = UUID.v4({rng: UUID.nodeRNG});
 
@@ -125,7 +120,7 @@ module.exports = {
                 });
                 
             } else {
-                deferred.reject('User ' + user._id + ' does not have permission to create tournament.');
+                deferred.reject('User does not have permission to create tournament.');
             }
         };
         
@@ -133,7 +128,7 @@ module.exports = {
             deferred.reject('Could not find user. ' + message);
         };
 
-        this.getUserByIdAsync(userId).then( userFetchedCallback, userFetchFailedCallback );
+        this.getUserByAPIKeyAsync(APIKey).then( userFetchedCallback, userFetchFailedCallback );
 
         return deferred.promise;
     },
