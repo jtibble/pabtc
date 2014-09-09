@@ -57,7 +57,7 @@ describe('Users', function(){
             };
             
             function callback(createdUser) {
-                function UsersListCallback( user ){
+                function UserCallback( user ){
                     if( user && user.href && user.href == createdUser.href ){
                         done();
                     } else {
@@ -65,7 +65,7 @@ describe('Users', function(){
                     }
                 };
 
-                RESTService.getResourceByHREF(createdUser.href).then(UsersListCallback, function(){
+                RESTService.getByHREF(createdUser.href).then(UserCallback, function(){
                     done('could not get user from REST service');
                 });  
             }

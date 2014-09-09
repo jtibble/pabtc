@@ -76,7 +76,7 @@ module.exports = [
             }
 
             var successCallback = function(APIKey){
-				console.log(APIKey);
+				
                 if( APIKey ){
 					responseBody = {
 						message: 'WARNING: This API key can only be generated once. If you lose it, you will need to create a new account. No exceptions.',

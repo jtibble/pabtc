@@ -10,7 +10,7 @@ var Service = function (config) {
     server.use(express.static(__dirname + config.staticContentPath));
 
     var apiPath = config.apiPath;
-    console.log('Creating Service in ' + apiPath);
+    console.log('Creating Services');
     return {
         
         addEndpoint: function (serviceMethod, serviceName, response) {
@@ -40,7 +40,7 @@ var Service = function (config) {
 
             var port = 8080;
             server.listen(port);
-            console.log('%s listening at %s', server.name, port);
+            console.log('%s listening on port %s', server.name, port);
         }
     };
 };

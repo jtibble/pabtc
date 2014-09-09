@@ -3,10 +3,10 @@ var assert = require('assert');
 
 describe('Tournaments', function(){
     describe('Create Basic Tournament', function(){
-        it('Should return a tournament id when called successfully', function(done){
+        it('Should create user, get API key, create tournament, and fetch that tournament', function(done){
             
             // Create user that will then create tournament
-            var apiUser = { name: 'Admin User' };
+            var apiUser = { name: 'API User' };
             
             RESTService.createUser(apiUser).then( function(user){
 				
@@ -16,124 +16,68 @@ describe('Tournaments', function(){
 					
 					RESTService.createTournament( tournament, APIKey ).then( function(tournament){
 						
-						if( tournament && tournament.href ){
+						if( tournament && tournament.href && tournament.name && tournament.createdBy){
 							done();
 						} else {
-							done('couldn\'t create tournament');   
+							done('tournament was missing data');   
 						}
-					});
-				});
-			});
+						
+					}, function(){ done('couldn\'t call service to create tournament with api key'); });
+				}, function(){ done('couldn\'t call service to create api key for user'); });
+			}, function(){ done('couldn\'t call service to create user'); });
 			
         });
     }); 
-    /*
-    describe('Create Basic Tournament - Insufficient Permissions', function(){
-        it('Should fail to create a tournament', function(done){
+	
+    describe('Create Basic Tournament - No API Key', function(){
+        it('Should create user, try to create tournament with no API key, and fail', function(done){
             
             // Create user that will then create tournament
-            var adminUser = {
-                name: 'Un-Privileged User',
-                permissions: {
-                    'read': true
-                }
-            };
+            var apiUser = { name: 'Regular User' };
             
-            function CreateTournament(user){
-                var tournament = {
-                    name: 'Test Tournament'
-                };
-                
-                RESTService.createTournament( tournament, user._id ).then( function(tournament){
-                    if( tournament && tournament._id ){
-                        done('created tournament, which is incorrect');  
-                    } else {
-                        done();   
-                    }
-                });
-            };
-            
-            RESTService.createUser(adminUser).then( CreateTournament, function(){ 
-                done('could not create user: ' + error);
-            });
+            RESTService.createUser(apiUser).then( function(user){
+				
+				var tournament = { name: 'Test Tournament' };
+
+				RESTService.createTournament( tournament, 'asdf12345' ).then( function(tournament){
+					
+					if( tournament && tournament.href && tournament.name && tournament.createdBy){
+						done('incorrectly created tournament');
+					} else {
+						done();   
+					}
+
+				}, function(){ done('couldn\'t call service to create tournament'); });
+				
+			}, function(){ done('couldn\'t call service to create user'); });
+			
         });
-    });   
-    
+    }); 
+	  
     describe('Get Tournaments List', function(){
-        it('Should return list of tournaments', function(done){
+        it('Should create user, get API key, create tournament, and fetch all tournaments', function(done){
             
             // Create user that will then create tournament
-            var adminUser = {
-                name: 'Writing User',
-                permissions: {
-                    'read': true,
-                    'write': true,
-                    'admin': true
-                }
-            };
+            var apiUser = { name: 'API User' };
             
-            function CreateTournament(user){
-                var tournament = {
-                    name: 'Test Tournament'
-                };
-                
-                RESTService.createTournament( tournament, user._id ).then( function(tournament){
-                    function GetTournaments(tournamentsList){
-                        if( tournamentsList && tournamentsList.length ){
-                            done();
-                        } else {
-                            done('bad tournament data');
-                        }
-                    };
-
-                    RESTService.getTournaments().then( GetTournaments, function(){
-                        done('could not fetch tournaments from service');
-                    });
-                });
-            };
-            
-            RESTService.createUser(adminUser).then( CreateTournament, function(){ 
-                done('could not create user: ' + error);
-            });
+            RESTService.createUser(apiUser).then( function(user){
+				
+				RESTService.createAPIKey(user.href).then( function(APIKey){
+					
+					var tournament = { name: 'Test Tournament' };
+					
+					RESTService.getTournaments().then( function(tournamentsList){
+						
+						if( tournamentsList && tournamentsList.length){
+							done();
+						} else {
+							done('tournamentsList was missing data');   
+						}
+						
+					}, function(){ done('couldn\'t call service to create tournament with api key'); });
+				}, function(){ done('couldn\'t call service to create api key for user'); });
+			}, function(){ done('couldn\'t call service to create user'); });
+			
         });
-    });
-    
-    describe('Get Tournament', function(){
-        it('Should return a specific tournament', function(done){
-            
-            // Create user that will then create tournament
-            var adminUser = {
-                name: 'Writing User',
-                permissions: {
-                    'read': true,
-                    'write': true,
-                    'admin': true
-                }
-            };
-            
-            function CreateTournament(user){
-                var tournament = {
-                    name: 'Test Tournament'
-                };
-                
-                RESTService.createTournament( tournament, user._id ).then( function(tournament){
-                    function GetTournaments(tournamentsList){
-                        if( tournamentsList && tournamentsList.length && tournamentsList.length == 1 ){
-                            done();
-                        } else {
-                            done('bad tournament data');
-                        }
-                    };
-
-                    RESTService.getTournaments(tournament._id).then( GetTournaments, function(){
-                        done('could not fetch tournaments from service');
-                    });
-                });
-            };
-            
-            RESTService.createUser(adminUser).then( CreateTournament, function(){ 
-                done('could not create user: ' + error);
-            });
-        });
-    });*/
+	});
 });

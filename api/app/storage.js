@@ -105,8 +105,8 @@ module.exports = {
                 tournamentRecord = {
                     _id: newId,
                     dateCreated: (new Date()).toISOString(),
-                    href: 'http://localhost:8080/api/v0/touraments/' + newId,
-                    createdBy: user._id,
+                    href: 'http://localhost:8080/api/v0/tournaments/' + newId,
+                    createdBy: 'http://localhost:8080/api/v0/users/' + user._id,
                     name: tournamentInfo.name
                 };
                 
