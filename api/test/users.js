@@ -14,7 +14,7 @@ describe('Users', function(){
             };
             
             function callback(user) {
-                if( user && user._id ){
+                if( user && user.href ){
                     done();
                 } else {
                     done('request succeeded, but received bad user data: ' + JSON.stringify(user));   
@@ -35,7 +35,7 @@ describe('Users', function(){
             };
             
             function callback(user) {
-                if( user && user._id ){
+                if( user && user.href ){
                     done('user created, which is incorrect');
                 } else {
                     done();
@@ -80,10 +80,10 @@ describe('Users', function(){
         });
     });
     
-    describe('Get Users', function(){
+    describe('Get User', function(){
         it('Should get a specific user', function(done){
             
-            var user = {
+            var newUser = {
                 name: 'John Tibble',
                 permissions: {
                     'admin': true,
@@ -92,21 +92,21 @@ describe('Users', function(){
                 }
             };
             
-            function callback(user) {
-                function UsersListCallback( usersList ){
-                    if( usersList && usersList.length && usersList.length == 1 ){
+            function callback(createdUser) {
+                function UsersListCallback( user ){
+                    if( user && user.href && user.href == createdUser.href ){
                         done();
                     } else {
-                        done( 'bad data for usersList' );   
+                        done( 'bad data retrieved for user' );   
                     }
                 };
 
-                RESTService.getUsers(user._id).then(UsersListCallback, function(){
-                    done('could not get users from REST service');
+                RESTService.getResourceByHREF(createdUser.href).then(UsersListCallback, function(){
+                    done('could not get user from REST service');
                 });  
             }
 
-            RESTService.createUser( user ).then( callback, function(error){
+            RESTService.createUser( newUser ).then( callback, function(error){
                 done('could not create user: ' + error);
             });
         });

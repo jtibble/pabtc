@@ -18,7 +18,7 @@ module.exports = [
             }
             
             var successCallback = function(user){                
-                console.log('Created user ' + user.name + ' with id ' + user._id);
+                console.log('Created user ' + user.name + ' with href ' + user.href);
                 res.status(201).send(user);
             };
             
@@ -43,8 +43,12 @@ module.exports = [
             var responseBody = {};
 
             var successCallback = function(usersList){
-                if( usersList && usersList.length){
-                    res.send(usersList);
+                if( usersList ){
+                    if( usersList.length > 1){
+                        res.send(usersList);
+                    } else {
+                        res.send(usersList[0]);   
+                    }
                 } else {
                     responseBody = {message: 'Could not find user/users'};
                     res.status(404).send(responseBody);

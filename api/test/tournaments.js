@@ -22,13 +22,12 @@ describe('Tournaments', function(){
                 
                 RESTService.createTournament( tournament, user._id ).then( function(tournament){
                     if( tournament && tournament._id ){
-                        done();  
+                        done();
                     } else {
                         done('bad tournament data');   
                     }
                 });
             };
-            
             
             RESTService.createUser(adminUser).then( CreateTournament, function(){ 
                 done('could not create user: ' + error);

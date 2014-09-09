@@ -28,18 +28,22 @@ module.exports = {
             deferred.reject('No userconfig provided');
         }
         
-        userConfig.dateCreated = (new Date()).toISOString();
-
-        userConfig._id = UUID.v4({
-            rng: UUID.nodeRNG
-        });
-        userConfig.href= 'http://localhost:8080/api/v0/users/' + userConfig._id;
+        var newId = UUID.v4({rng: UUID.nodeRNG});
         
-        usersCollection.save(userConfig, function(error, value){
+        userRecord = {
+            _id: newId,
+            dateCreated: (new Date()).toISOString(),
+            href: 'http://localhost:8080/api/v0/users/' + newId,
+            name: userConfig.name,
+            permissions: userConfig.permissions
+        };
+        
+        usersCollection.save(userRecord, function(error, user){
             if( error ){
                 deferred.reject('could not create user');
             } else {
-                deferred.resolve(value);
+                delete user._id;
+                deferred.resolve(user);
             }
         });
 
@@ -98,13 +102,24 @@ module.exports = {
         var userFetchedCallback = function(user){
             if (user && user.permissions && (user.permissions.write || user.permissions.write)) {
                 
-                tournamentInfo._id = UUID.v4({ rng: UUID.nodeRNG });
-                tournamentInfo.dateCreated = (new Date()).toISOString();
-                tournamentInfo.createdBy = user._id;
-                tournamentInfo.href = 'http://localhost:8080/api/v0/tournaments/' + tournamentInfo._id;
+                
+                var newId = UUID.v4({rng: UUID.nodeRNG});
+
+                tournamentRecord = {
+                    _id: newId,
+                    dateCreated: (new Date()).toISOString(),
+                    href: 'http://localhost:8080/api/v0/touraments/' + newId,
+                    createdBy: user._id,
+                    name: tournamentInfo.name
+                };
                 
                 tournamentsCollection.save(tournamentInfo, function(error, tournament){
-                    deferred.resolve(tournament);
+                    if( error ){
+                        deferred.reject('could not create tournament');
+                    } else {
+                        delete tournament._id;
+                        deferred.resolve(tournament);
+                    }
                 });
                 
             } else {

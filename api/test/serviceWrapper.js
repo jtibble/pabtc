@@ -23,6 +23,27 @@ module.exports = {
         return deferred.promise;
     },
     
+    getResourceByHREF: function(href){
+        var deferred = Q.defer();
+        
+        var options = {
+            url: href,
+            method: 'GET',
+            json: true,
+        };
+        
+        request( options, function(error, response, body){
+            if( !error && response ){
+                deferred.resolve(body);
+                return;
+            } else {
+                deferred.reject('service returned HTTP ' + response.statusCode);
+            }
+            return;    
+        });
+        return deferred.promise;
+    },
+    
     createUser: function( user ){
         var options = {
             endpoint: 'users',
