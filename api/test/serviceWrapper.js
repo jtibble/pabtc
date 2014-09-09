@@ -5,30 +5,13 @@ var serviceURL = 'http://localhost:8080/api/v0/';
 
 module.exports = {
     
-    callService: function( options ){
-        var deferred = Q.defer();
-        
-        options.url = serviceURL + options.endpoint;
-        options.json = true;
-        
-        request( options, function(error, response, body){
-            if( !error && response ){
-                deferred.resolve(body);
-                return;
-            } else {
-                deferred.reject('service returned HTTP ' + response.statusCode);
-            }
-            return;    
-        });
-        return deferred.promise;
-    },
-    
+    // GET Resources
     getByHREF: function(href){
         var deferred = Q.defer();
         
         var options = {
-            url: href,
             method: 'GET',
+            url: href,
             json: true,
         };
         
@@ -44,60 +27,61 @@ module.exports = {
         return deferred.promise;
     },
     
-    createUser: function( user ){
-        var options = {
-            endpoint: 'users',
-            method: 'POST',
-            body: user
-        };
-        
-        return this.callService( options );
+    getUsers: function(id){
+        var endpoint = 'users' + (id ? ('/' + id) : '');
+        return this.getByHREF( serviceURL + endpoint);
     },
     
-    getUsers: function(id){
-        var options = {
+    getTournaments: function(id){
+        var endpoint = 'tournaments' + (id ? ('/' + id) : '');
+        return this.getByHREF( serviceURL + endpoint);
+    },
+    
+    // CREATE Resources
+    
+    callService: function( options ){
+        var deferred = Q.defer();
+        
+        options.method = 'POST';
+        options.url = serviceURL + options.endpoint;
+        options.json = true;
+        
+        request( options, function(error, response, body){
+            if( !error && response ){
+                deferred.resolve(body);
+                return;
+            } else {
+                deferred.reject('service returned HTTP ' + response.statusCode);
+            }
+            return;    
+        });
+        return deferred.promise;
+    },
+    
+    createUser: function( user ){
+        return this.callService( {
             endpoint: 'users',
-            method: 'GET'
-        };
-        
-        if( id ){
-            options.endpoint += '/' + id;
-        }
-        
-        return this.callService( options );
+            body: user
+        } );
     },
     
     createTournament: function( tournament, APIKey ){
-        var options = {
+        return this.callService( {
             endpoint: 'tournaments',
-            method: 'POST',
             body: tournament,
             headers: {
                 APIKey: APIKey
             }
-        };
-        
-        return this.callService( options );
+        } );
     },
     
-    getTournaments: function(id){
-        var options = {
-            endpoint: 'tournaments',
-            method: 'GET'
-        };
-        
-        if( id ){
-            options.endpoint += '/' + id;
-        }
-        
-        return this.callService( options );
-    },
-	
-	createAPIKey: function(href){      
+    // MODIFY Resources
+    
+	createUserAPIKey: function(user){      
         var deferred = Q.defer();
         
         var options = {
-            url: href + '/generateAPIKey',
+            url: user.href + '/generateAPIKey',
             method: 'POST',
             json: true
         };

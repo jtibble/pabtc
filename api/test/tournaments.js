@@ -10,7 +10,7 @@ describe('Tournaments', function(){
             
             RESTService.createUser(apiUser).then( function(user){
 				
-				RESTService.createAPIKey(user.href).then( function(APIKey){
+				RESTService.createUserAPIKey(user).then( function(APIKey){
 					
 					var tournament = { name: 'Test Tournament' };
 					
@@ -62,7 +62,7 @@ describe('Tournaments', function(){
             
             RESTService.createUser(apiUser).then( function(user){
 				
-				RESTService.createAPIKey(user.href).then( function(APIKey){
+				RESTService.createUserAPIKey(user).then( function(APIKey){
 					
 					var tournament = { name: 'Test Tournament' };
 					
