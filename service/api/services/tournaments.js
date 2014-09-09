@@ -63,5 +63,32 @@ module.exports = [
             
             tournamentPromise.then(successCallback, errorCallback);
         }
+    },
+    {
+        'type': 'GET',
+        'name': 'tournaments/:id/addUser',
+        'response': function (req, res) {            
+            var responseBody = {};
+            
+            var requiredProperties = ['name'];
+            
+            var tournamentPromise = storage.getTournamentsAsync(req.params.id);
+            
+            var successCallback = function(tournamentsList){
+                if( tournamentsList && tournamentsList.length ){
+                    res.status(200).send(tournamentsList);
+                } else {
+                    responseBody = {message: 'Could not find tournament/tournaments'};
+                    res.status(404).send(responseBody);   
+                }
+            };
+            
+            var errorCallback = function(error){
+                responseBody = {message: error};
+                res.status(500).send(responseBody);
+            };
+            
+            tournamentPromise.then(successCallback, errorCallback);
+        }
     }
 ];

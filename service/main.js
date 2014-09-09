@@ -3,12 +3,12 @@ var bodyParser = require('body-parser');
 var request = require('request');
 
 //Services Definitions
-var userServices = require('./services/users.js');
-var tournamentServices = require('./services/tournaments.js');
-var utilityServices = require('./services/utility.js');
+var userServices = require('./api/services/users.js');
+var tournamentServices = require('./api/services/tournaments.js');
+var utilityServices = require('./api/services/utility.js');
 
 var servicesConfig = {
-    'staticContentPath': '/www',
+    'staticContentPath': '/public',
     'apiPath': '/api/v0/',
     'endpoints': userServices.concat(tournamentServices)
 };
@@ -16,7 +16,8 @@ var servicesConfig = {
 var Service = function (config) {
     var server = express();
     server.use(bodyParser.json());
-    server.use(express.static(__dirname + config.staticContentPath));
+    console.log('dirname: ' + __dirname);
+    server.use(express.static('../ui'/*config.staticContentPath)*/));
 
     var apiPath = config.apiPath;
     console.log('Creating Services');
