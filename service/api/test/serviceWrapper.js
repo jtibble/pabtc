@@ -47,7 +47,8 @@ module.exports = {
         options.json = true;
         
         request( options, function(error, response, body){
-            if( !error && response ){
+            if( !error && response && 
+                (response.statusCode == '200' || response.statusCode == '201')){
                 deferred.resolve(body);
                 return;
             } else {
@@ -87,10 +88,12 @@ module.exports = {
         };
         
         request( options, function(error, response, body){
+            console.log('got api key response from service');
             if( !error && response ){
                 deferred.resolve(body.key); // Return key property on response body
                 return;
             } else {
+                console.log('error creating user API key');
                 deferred.reject('service returned HTTP ' + response.statusCode);
             }
             return;    

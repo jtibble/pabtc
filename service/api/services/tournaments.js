@@ -33,7 +33,7 @@ module.exports = [
             
             var errorCallback = function(error){
                 responseBody = {message: error};
-                res.send(responseBody);
+                res.status(403).send(responseBody);
             };
             
             tournamentPromise.then(successCallback, errorCallback);
