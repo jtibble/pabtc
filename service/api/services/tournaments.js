@@ -74,7 +74,7 @@ module.exports = [
     },
     {
         'type': 'POST',
-        'name': 'tournaments/:id/beginTournament
+        'name': 'tournaments/:id/beginTournament,',
         'response': function (req, res) {            
             var responseBody = {};
             res.status(501).send({message: 'beginTournament service is not available yet'});
@@ -82,7 +82,7 @@ module.exports = [
     },
     {
         'type': 'POST',
-        'name': 'tournaments/:id/concludeTournament
+        'name': 'tournaments/:id/concludeTournament',
         'response': function (req, res) {            
             var responseBody = {};
             res.status(501).send({message: 'concludeTournament service is not available yet'});
