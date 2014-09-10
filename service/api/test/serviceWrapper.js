@@ -39,7 +39,7 @@ module.exports = {
     
     // CREATE Resources
     
-    callService: function( options ){
+    postToService: function( options ){
         var deferred = Q.defer();
         
         options.method = 'POST';
@@ -60,14 +60,14 @@ module.exports = {
     },
     
     createUser: function( user ){
-        return this.callService( {
+        return this.postToService( {
             endpoint: 'users',
             body: user
         } );
     },
     
     createTournament: function( tournament, APIKey ){
-        return this.callService( {
+        return this.postToService( {
             endpoint: 'tournaments',
             body: tournament,
             headers: {
@@ -76,7 +76,14 @@ module.exports = {
         } );
     },
     
-    // MODIFY Resources
+    registerUsersForTournament: function(tournamentId, usersList){
+        console.log('calling ' + 'tournaments' + '/' + tournamentId + '/registerUsers');
+        console.log('usersList: ' +JSON.stringify(usersList));
+        return this.postToService( {
+            endpoint: 'tournaments' + '/' + tournamentId + 'registerUsers',
+            body: { usersList: usersList }
+        } );
+    },
     
 	createUserAPIKey: function(user){      
         var deferred = Q.defer();

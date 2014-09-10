@@ -78,4 +78,30 @@ describe('Tournaments', function(){
           
         });	
 	});
+    
+    describe('Register Users For Tournament', function(){
+        it('Should create tournament, and register users for it', function(done){
+
+            // Create user that will then create tournament
+            var tournament = {name: 'test registration tournmanet'};
+            
+            RESTService.createTournament( tournament, userAPIKey )
+            .then( function(tournament){
+                return RESTService.registerUsersForTournament( tournament._id, [user._id]);     
+            })
+            .then( function(registration){
+                done();
+                /*if( registration ){
+                    done();     
+                } else {
+                    done('failed to register user to tournament');   
+                }*/
+            })
+            .fail( function(message){
+                console.log('failed. message: ' + message);
+                done(message);
+            });
+          
+        });	
+	});
 });

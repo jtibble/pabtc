@@ -44,7 +44,6 @@ module.exports = {
             if( error ){
                 deferred.reject('could not create user');
             } else {
-                delete user._id;
                 deferred.resolve(user);
             }
         });
@@ -107,14 +106,15 @@ module.exports = {
                     dateCreated: (new Date()).toISOString(),
                     href: 'http://localhost:8080/api/v0/tournaments/' + newId,
                     createdBy: 'http://localhost:8080/api/v0/users/' + user._id,
-                    name: tournamentInfo.name
+                    name: tournamentInfo.name,
+                    totalPlayers: 2,
+                    registeredPlayers: []
                 };
                 
                 tournamentsCollection.save(tournamentRecord, function(error, tournament){
                     if( error ){
                         deferred.reject('could not create tournament');
                     } else {
-                        delete tournament._id;
                         deferred.resolve(tournament);
                     }
                 });
@@ -200,5 +200,53 @@ module.exports = {
 		});
         
         return deferred.promise;
-	}
+	}, 
+    
+    registerUsers: function( tournamentId, userIdList ){
+        var deferred = Q.defer();
+        
+        //TODO: parallelize the tournament and users-checks
+        
+        //Find the tournament in the DB
+        tournamentsCollection.find({_id: tournamentId}, function(error, tournamentsList){
+            if( error || !tournamentsList || !tournamentsList.length || tournamentsList.length != 1){
+                deferred.reject('Can\'t find tournament in db correctly');
+                return;
+            }
+            
+            // Get number of available slots
+            var numAvailablePlayers = tournamentsList[0].totalPlayers - tournamentsList[0].registeredPlayers.length;
+            
+            if( numAvailablePlayers > userIdList.length ){
+                deferred.reject('Can\'t add players to tournament because it would over-fill tournament. Only ' + numAvailablePlayers + ' slots available still');   
+                return;
+            }
+            
+            // Find all specified users in the db by id and check that they exist
+            usersCollection.find({ _id: { $in: userIdList} }, function(error, usersList){
+                if( error || usersList.length != userIdList.length ){
+                    deferred.reject('Can\'t find all users in db');
+                    return;
+                }
+                
+                console.log('updating tournament');
+                tournamentsCollection.update({_id: tournamentId}, { $set: { registeredPlayers: usersList }}, function(error, updateStatus){
+                    console.log('checking if update successful');
+                    if(!error && updateStatus.ok && updateStatus.n == 1){
+                        console.log('update is good');
+                        deferred.resolve({message: 'Updated tournament'});
+                    } else {
+                        console.log('update failed');
+                        deferred.reject('Could not update tournament in db');   
+                    }
+                });
+            });
+                
+            
+            
+        });
+        
+        return deferred.promise;
+    }
 };
+                                   

@@ -66,10 +66,26 @@ module.exports = [
     },
     {
         'type': 'POST',
-        'name': 'tournaments/:id/registerUser',
-        'response': function (req, res) {            
+        'name': 'tournaments/:id/registerUsers',
+        'response': function (req, res) {      
             var responseBody = {};
-            res.status(501).send({message: 'registerUser service is not available yet'});
+            
+            if ( !req.params.id || !req.body || !req.body.usersList){
+                responseBody = {message: 'Bad request. Check the API documentation.'};
+                res.status(400).send(responseBody);
+                return;
+            }
+            
+            storage.registerUsers( req.params.id, req.body.usersList )
+            .then( function(registration){
+                if( registration ){
+                   res.status(200).send(registration); 
+                } else {
+                   res.status(500).send(registration); 
+                }
+            }, function(message){ 
+                res.status(500).send( {message: message} ); 
+            });
         }
     },
     {
