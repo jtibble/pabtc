@@ -43,7 +43,7 @@ module.exports = [
             var responseBody = {};
 
             var successCallback = function(usersList){
-                if( usersList && usersList.length ){
+                if( usersList ){
                     for( var i in usersList){
                         usersList[i].APIKey = usersList[i].APIKey ? true : false;
                     }

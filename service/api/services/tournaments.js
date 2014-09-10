@@ -48,7 +48,7 @@ module.exports = [
             var tournamentPromise = storage.getTournamentsAsync(req.params.id);
             
             var successCallback = function(tournamentsList){
-                if( tournamentsList && tournamentsList.length ){
+                if( tournamentsList ){
                     res.status(200).send(tournamentsList);
                 } else {
                     responseBody = {message: 'Could not find tournament/tournaments'};
