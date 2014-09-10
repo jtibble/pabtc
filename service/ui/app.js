@@ -54,13 +54,19 @@ app.controller('LandingController', function ($scope, FrameworkAJAX) {
             }
         };
         FrameworkAJAX.sendRequest(APIKeyRequest, function(data){
-            console.log('API key created');
+            console.log('API key created: '+data.key);
+			$scope.Model.APIKey = data.key;			
         }, function(){
             console.log('error creating API Key');
         });
     };
     
-    $scope.Actions.createTournament = function(APIKey){
+    $scope.Actions.createTournament = function(){
+		if( !$scope.Model.APIKey ){
+			console.log('Can\'t create tournament without an API key provided');
+			return;
+		}
+		
         var APIKeyRequest = {
             method: 'POST',
             url: '/api/v0/tournaments',
@@ -68,9 +74,10 @@ app.controller('LandingController', function ($scope, FrameworkAJAX) {
                 name: 'UI Tournament'
             },
             headers: {
-                APIKey: APIKey
+                APIKey: $scope.Model.APIKey
             }
         };
+		
         FrameworkAJAX.sendRequest(APIKeyRequest, function(data){
             console.log('tournament created');
         }, function(){
@@ -79,8 +86,6 @@ app.controller('LandingController', function ($scope, FrameworkAJAX) {
     };
     
 });
-
-
 
 
 app.provider('FrameworkAJAX', function(){

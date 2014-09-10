@@ -37,10 +37,10 @@
                     </td>
                     <td>
                         <div ng-if="user.APIKey">
-                            <button class="btn btn-default" ng-click="Actions.createTournament(user.APIKey)">Create Tournament</button>
+							API Key Created
                         </div>
                         <div ng-if="!user.APIKey">
-                            <button class="btn btn-default" ng-click="Actions.generateAPIKey(user._id)">Generate</button>
+                            <button class="btn btn-default" ng-click="Actions.generateAPIKey(user._id)">Generate API Key</button>
                         </div>
                     </td>
                 </tr>
@@ -51,6 +51,10 @@
         <!-- USERS TABLE -->
         <hr>
         <h3>Tournaments</h3>
+		<button class="btn btn-default" ng-click="Actions.createTournament()">Create Tournament</button>
+		<input ng-model="Model.APIKey" placeholder="API Key">
+		<br>
+		
         <table ng-show="Model.tournaments.length">
             <thead>
                 <tr>
