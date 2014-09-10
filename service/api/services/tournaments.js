@@ -65,30 +65,27 @@ module.exports = [
         }
     },
     {
-        'type': 'GET',
-        'name': 'tournaments/:id/addUser',
+        'type': 'POST',
+        'name': 'tournaments/:id/registerUser',
         'response': function (req, res) {            
             var responseBody = {};
-            
-            var requiredProperties = ['name'];
-            
-            var tournamentPromise = storage.getTournamentsAsync(req.params.id);
-            
-            var successCallback = function(tournamentsList){
-                if( tournamentsList && tournamentsList.length ){
-                    res.status(200).send(tournamentsList);
-                } else {
-                    responseBody = {message: 'Could not find tournament/tournaments'};
-                    res.status(404).send(responseBody);   
-                }
-            };
-            
-            var errorCallback = function(error){
-                responseBody = {message: error};
-                res.status(500).send(responseBody);
-            };
-            
-            tournamentPromise.then(successCallback, errorCallback);
+            res.status(501).send({message: 'registerUser service is not available yet'});
+        }
+    },
+    {
+        'type': 'POST',
+        'name': 'tournaments/:id/beginTournament
+        'response': function (req, res) {            
+            var responseBody = {};
+            res.status(501).send({message: 'beginTournament service is not available yet'});
+        }
+    },
+    {
+        'type': 'POST',
+        'name': 'tournaments/:id/concludeTournament
+        'response': function (req, res) {            
+            var responseBody = {};
+            res.status(501).send({message: 'concludeTournament service is not available yet'});
         }
     }
 ];
