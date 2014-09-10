@@ -57,8 +57,8 @@ describe('Users', function(){
             };
             
             function callback(createdUser) {
-                function UserCallback( user ){
-                    if( user && user.href && user.href == createdUser.href ){
+                function UserCallback( userList ){
+                    if( userList && userList.length && userList[0].href && userList[0].href == createdUser.href ){
                         done();
                     } else {
                         done( 'bad data retrieved for user' );   

@@ -43,16 +43,11 @@ module.exports = [
             var responseBody = {};
 
             var successCallback = function(usersList){
-                if( usersList ){
-                    if( usersList.length > 1){
-						for( var i in usersList){
-							usersList[i].APIKey = usersList[i].APIKey ? true : false;
-						}
-                        res.send(usersList);
-                    } else {
-						usersList[0].APIKey = usersList[0].APIKey ? true : false;
-                        res.send(usersList[0]);   
+                if( usersList && usersList.length ){
+                    for( var i in usersList){
+                        usersList[i].APIKey = usersList[i].APIKey ? true : false;
                     }
+                    res.send(usersList);
                 } else {
                     responseBody = {message: 'Could not find user/users'};
                     res.status(404).send(responseBody);
