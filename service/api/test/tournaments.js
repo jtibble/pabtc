@@ -53,31 +53,38 @@ describe('Tournaments', function(){
 			
         });
     }); 
-	  
+    
     describe('Get Tournaments List', function(){
         it('Should create user, get API key, create tournament, and fetch all tournaments', function(done){
-            
+
             // Create user that will then create tournament
             var apiUser = { name: 'API User' };
+            var numTournaments;
             
-            RESTService.createUser(apiUser).then( function(user){
-				
-				RESTService.createUserAPIKey(user).then( function(APIKey){
-					
-					var tournament = { name: 'Test Tournament' };
-					
-					RESTService.getTournaments().then( function(tournamentsList){
-						
-						if( tournamentsList && tournamentsList.length){
-							done();
-						} else {
-							done('tournamentsList was missing data');   
-						}
-						
-					}, function(){ done('couldn\'t call service to create tournament with api key'); });
-				}, function(){ done('couldn\'t call service to create api key for user'); });
-			}, function(){ done('couldn\'t call service to create user'); });
-			
+            RESTService.getTournaments()
+            .then( function(tournamentsList){
+                numTournaments = tournamentsList.length;
+                return RESTService.createUser( apiUser )
+            })
+            .then( function(user){
+                return RESTService.createUserAPIKey(user);
+            })
+            .then( function( APIKey ){
+                var tournament = {name: 'test tournmanet'};
+                return RESTService.createTournament( tournament, APIKey );
+            })
+            .then( function(tournament){
+                return RESTService.getTournaments();                
+            })
+            .then( function(tournamentsList){
+                if( tournamentsList && tournamentsList.length && tournamentsList.length == (numTournaments + 1) ){
+                    done();     
+                } else {
+                    done('failed to create tournament correctly');   
+                }
+            });
+          
         });
+			
 	});
 });
