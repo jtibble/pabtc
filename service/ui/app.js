@@ -3,7 +3,10 @@ var app = angular.module('uiApp', []);
 app.controller('LandingController', function ($scope, FrameworkAJAX) {
     
     
-    $scope.Model = {};
+    $scope.Model = {
+		newUser: {},
+		newTournament: {}
+	};
 	
 	var fetchUsers = function(){
 
@@ -46,11 +49,10 @@ app.controller('LandingController', function ($scope, FrameworkAJAX) {
             method: 'POST',
             url: '/api/v0/users',
             data: {
-                name: 'UI User'
+                name: $scope.Model.newUser.name
             }
         };
         FrameworkAJAX.sendRequest(newUserRequest, function(data){
-            console.log('user created');
 			fetchUsers();
         }, function(){
             console.log('error creating new user');
@@ -67,14 +69,14 @@ app.controller('LandingController', function ($scope, FrameworkAJAX) {
         };
         FrameworkAJAX.sendRequest(APIKeyRequest, function(data){
             console.log('API key created: '+data.key);
-			$scope.Model.APIKey = data.key;			
+			$scope.Model.newTournament.APIKey = data.key;			
         }, function(){
             console.log('error creating API Key');
         });
     };
     
     $scope.Actions.createTournament = function(){
-		if( !$scope.Model.APIKey ){
+		if( !$scope.Model.newTournament.APIKey ){
 			console.log('Can\'t create tournament without an API key provided');
 			return;
 		}
@@ -83,15 +85,14 @@ app.controller('LandingController', function ($scope, FrameworkAJAX) {
             method: 'POST',
             url: '/api/v0/tournaments',
             data: {
-                name: 'UI Tournament'
+                name: $scope.Model.newTournament.name
             },
             headers: {
-                APIKey: $scope.Model.APIKey
+                APIKey: $scope.Model.newTournament.APIKey
             }
         };
 		
         FrameworkAJAX.sendRequest(APIKeyRequest, function(data){
-            console.log('tournament created');
 			
 			fetchTournaments();
         }, function(){

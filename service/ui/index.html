@@ -9,8 +9,20 @@
         
         <!-- USERS TABLE -->
         <hr>
-        <h3>Users</h3>
+        <h3>Create User</h3>
+		<table>
+			<tbody>
+				<tr>
+					<td>Name</td>
+					<td><input ng-model="Model.newUser.name" placeholder="User Name"></td>
+				</tr>
+			</tbody>
+		</table>
         <button class="btn btn-default" ng-click="Actions.createUser()">Create User</button>
+		<br><br>
+		
+		
+        <h3>Users</h3>
         <table ng-show="Model.users.length" class="table">
             <thead>
                 <tr>
@@ -36,15 +48,30 @@
                 </tr>
             </tbody>
         </table>
-        
-        
-        <!-- USERS TABLE -->
-        <hr>
-        <h3>Tournaments</h3>
-		<button class="btn btn-default" ng-click="Actions.createTournament()">Create Tournament</button>
-		<input ng-model="Model.APIKey" placeholder="API Key">
+		<br><br>
+		
+		
+        <h3>Create Tournament</h3>
+		<table>
+			<tbody>
+				<tr>
+					<td>Name</td>
+					<td><input ng-model="Model.newTournament.name" placeholder="Tournament Name"></td>
+				</tr>
+				<tr>
+					<td>API Key</td>
+					<td><input ng-model="Model.newTournament.APIKey" placeholder="API Key"></td>
+				</tr>
+				<tr>
+					<td><button class="btn btn-default" ng-click="Actions.createTournament()">Create Tournament</button></td>
+				</tr>
+			</tbody>
+		</table>
+		<br><br>
+		
 		<br>
 		
+        <h3>Tournaments</h3>
         <table ng-show="Model.tournaments.length" class="table">
             <thead>
                 <tr>
