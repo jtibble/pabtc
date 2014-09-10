@@ -8,71 +8,63 @@ describe('Users', function(){
                 name: 'John Tibble'
             };
             
-            function callback(user) {
-                if( user && user.href ){
+            RESTService.createUser( user ).then( function(user){
+                if( user && user.href && user.name){
                     done();
                 } else {
                     done('request succeeded, but received bad user data: ' + JSON.stringify(user));   
                 }
-            }
-
-            RESTService.createUser( user ).then( callback, function(error){
-                done('could not create user: ' + error);
             });
+            
         });
     });
     
     describe('Get Users List', function(){
         it('Should get list of users', function(done){
+              
+            var user = { name: 'John Tibble' };
+            var numUsers;
             
-            var user = {
-                name: 'John Tibble'
-            };
-            
-            function callback(user) {
-                function UsersListCallback( usersList ){
-                    if( usersList && usersList.length ){
-                        done();
-                    } else {
-                        done( 'bad data for usersList' );   
-                    }
-                };
-
-                RESTService.getUsers().then(UsersListCallback, function(){
-                    done('could not get users from REST service');
-                });  
-            }
-
-            RESTService.createUser( user ).then( callback, function(error){
-                done('could not create user: ' + error);
+            RESTService.getUsers().then( function(usersList){
+                if( usersList && usersList.length){
+                    numUsers = usersList.length;
+                } else {
+                    done('could not get users list');
+                }
+                return RESTService.createUser( user );
+            })
+            .then( function(user){
+                return RESTService.getUsers();
+            })
+            .then( function(usersList){
+                if( usersList && usersList.length && usersList.length == (numUsers+1) ){
+                    done();
+                } else {
+                    done( 'bad data for usersList' );   
+                }
             });
+            
         });
     });
     
     describe('Get User', function(){
         it('Should get a specific user', function(done){
             
-            var newUser = {
-                name: 'John Tibble'
-            };
+            var user = { name: 'John Tibble'};
+            var createdUser;
             
-            function callback(createdUser) {
-                function UserCallback( userList ){
-                    if( userList && userList.length && userList[0].href && userList[0].href == createdUser.href ){
-                        done();
-                    } else {
-                        done( 'bad data retrieved for user' );   
-                    }
-                };
-
-                RESTService.getByHREF(createdUser.href).then(UserCallback, function(){
-                    done('could not get user from REST service');
-                });  
-            }
-
-            RESTService.createUser( newUser ).then( callback, function(error){
-                done('could not create user: ' + error);
+            RESTService.createUser( user ).then( function(storedUser) {
+                createdUser = storedUser;
+                return RESTService.getByHREF(createdUser.href);
+            })
+            .then( function( userList ){
+                if( userList && userList.length && userList[0].href && userList[0].href == createdUser.href ){
+                    done();
+                } else {
+                    done( 'bad data retrieved for user' );   
+                }
             });
+
         });
     });
 });
