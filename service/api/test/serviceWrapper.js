@@ -88,7 +88,6 @@ module.exports = {
         };
         
         request( options, function(error, response, body){
-            console.log('got api key response from service');
             if( !error && response ){
                 deferred.resolve(body.key); // Return key property on response body
                 return;
