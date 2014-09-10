@@ -11,30 +11,20 @@
         <hr>
         <h3>Users</h3>
         <button class="btn btn-default" ng-click="Actions.createUser()">Create User</button>
-        <table ng-show="Model.users.length">
+        <table ng-show="Model.users.length" class="table">
             <thead>
                 <tr>
                     <th>Name</th>
                     <th>Date Created</th>
                     <th>HREF</th>
-                    <th>Permissions</th>
                     <th>API Key</th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="user in Model.users">
                     <td>{{user.name}}</td>
-                    <td>{{user.dateCreated}}</td>
+                    <td>{{user.dateCreated | date: 'MMM d, y h:mm a'}}</td>
                     <td><a href="{{user.href}}">{{user.href}}</a></td>
-                    <td>
-                        <table>
-                            <tr>
-                                <td ng-if="user.permissions.read">Read</td>
-                                <td ng-if="user.permissions.write">Write</td>
-                                <td ng-if="user.permissions.admin">Admin</td>
-                            </tr>
-                        </table>
-                    </td>
                     <td>
                         <div ng-if="user.APIKey">
 							API Key Created
@@ -55,7 +45,7 @@
 		<input ng-model="Model.APIKey" placeholder="API Key">
 		<br>
 		
-        <table ng-show="Model.tournaments.length">
+        <table ng-show="Model.tournaments.length" class="table">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -67,7 +57,7 @@
             <tbody>
                 <tr ng-repeat="tournament in Model.tournaments">
                     <td>{{tournament.name}}</td>
-                    <td>{{tournament.dateCreated}}</td>
+                    <td>{{tournament.dateCreated | date: 'MMM d, y h:mm a'}}</td>
                     <td><a href="{{tournament.href}}">{{tournament.href}}</a></td>
                     <td><a href="{{tournament.createdBy}}">{{tournament.createdBy}}</a></td>
                 </tr>

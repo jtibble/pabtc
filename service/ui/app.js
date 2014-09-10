@@ -2,31 +2,42 @@ var app = angular.module('uiApp', []);
 
 app.controller('LandingController', function ($scope, FrameworkAJAX) {
     
-    var userRequest = {
-        method: 'GET',
-        url: '/api/v0/users',
-        data: {}
-    };
     
     $scope.Model = {};
+	
+	var fetchUsers = function(){
+
+		var userRequest = {
+			method: 'GET',
+			url: '/api/v0/users',
+			data: {}
+		};
+		
+		FrameworkAJAX.sendRequest(userRequest, function(data){
+			$scope.Model.users = data;
+		}, function(){ 
+			console.log('error getting users');
+		});
+	};
+	
+	var fetchTournaments = function(){
     
-    FrameworkAJAX.sendRequest(userRequest, function(data){
-        $scope.Model.users = data;
-    }, function(){ 
-        console.log('error getting users');
-    });
-    
-    var tournamentsRequest = {
-        method: 'GET',
-        url: '/api/v0/tournaments',
-        data: {}
-    };
-    
-    FrameworkAJAX.sendRequest(tournamentsRequest, function(data){
-        $scope.Model.tournaments = data;
-    }, function(){ 
-        console.log('error getting tournaments');
-    });
+		var tournamentsRequest = {
+			method: 'GET',
+			url: '/api/v0/tournaments',
+			data: {}
+		};
+
+		FrameworkAJAX.sendRequest(tournamentsRequest, function(data){
+			$scope.Model.tournaments = data;
+		}, function(){ 
+			console.log('error getting tournaments');
+		});
+		
+	};
+	
+	fetchTournaments();
+	fetchUsers();
     
     $scope.Actions = {};
     
@@ -40,6 +51,7 @@ app.controller('LandingController', function ($scope, FrameworkAJAX) {
         };
         FrameworkAJAX.sendRequest(newUserRequest, function(data){
             console.log('user created');
+			fetchUsers();
         }, function(){
             console.log('error creating new user');
         });
@@ -80,6 +92,8 @@ app.controller('LandingController', function ($scope, FrameworkAJAX) {
 		
         FrameworkAJAX.sendRequest(APIKeyRequest, function(data){
             console.log('tournament created');
+			
+			fetchTournaments();
         }, function(){
             console.log('error creating tournament');
         });
