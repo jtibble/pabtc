@@ -47,7 +47,7 @@ module.exports = [
                     for( var i in usersList){
                         usersList[i].APIKey = usersList[i].APIKey ? true : false;
                     }
-                    res.send(usersList);
+                    res.status(200).send(usersList);
                 } else {
                     responseBody = {message: 'Could not find user/users'};
                     res.status(404).send(responseBody);
