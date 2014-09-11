@@ -69,7 +69,6 @@ module.exports = [
         'name': 'tournaments/:id/registerUsers',
         'response': function (req, res) {      
             var responseBody = {};
-            
             if ( !req.params.id || !req.body || !req.body.usersList){
                 responseBody = {message: 'Bad request. Check the API documentation.'};
                 res.status(400).send(responseBody);

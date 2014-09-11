@@ -77,10 +77,8 @@ module.exports = {
     },
     
     registerUsersForTournament: function(tournamentId, usersList){
-        console.log('calling ' + 'tournaments' + '/' + tournamentId + '/registerUsers');
-        console.log('usersList: ' +JSON.stringify(usersList));
         return this.postToService( {
-            endpoint: 'tournaments' + '/' + tournamentId + 'registerUsers',
+            endpoint: 'tournaments' + '/' + tournamentId + '/registerUsers',
             body: { usersList: usersList }
         } );
     },

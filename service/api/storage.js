@@ -217,7 +217,7 @@ module.exports = {
             // Get number of available slots
             var numAvailablePlayers = tournamentsList[0].totalPlayers - tournamentsList[0].registeredPlayers.length;
             
-            if( numAvailablePlayers > userIdList.length ){
+            if( userIdList.length > numAvailablePlayers ){
                 deferred.reject('Can\'t add players to tournament because it would over-fill tournament. Only ' + numAvailablePlayers + ' slots available still');   
                 return;
             }
@@ -229,21 +229,14 @@ module.exports = {
                     return;
                 }
                 
-                console.log('updating tournament');
                 tournamentsCollection.update({_id: tournamentId}, { $set: { registeredPlayers: usersList }}, function(error, updateStatus){
-                    console.log('checking if update successful');
                     if(!error && updateStatus.ok && updateStatus.n == 1){
-                        console.log('update is good');
                         deferred.resolve({message: 'Updated tournament'});
                     } else {
-                        console.log('update failed');
                         deferred.reject('Could not update tournament in db');   
                     }
                 });
-            });
-                
-            
-            
+            });  
         });
         
         return deferred.promise;
