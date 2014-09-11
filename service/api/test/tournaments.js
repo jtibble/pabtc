@@ -86,20 +86,28 @@ describe('Tournaments', function(){
             var tournament = {name: 'test registration tournmanet'};
             
             RESTService.createTournament( tournament, userAPIKey )
-            .then( function(tournament){
-                return RESTService.registerUsersForTournament( tournament._id, [user._id]);     
+            .then( function(savedTournament){
+                tournament = savedTournament;
+                return RESTService.registerUsersForTournament( savedTournament._id, [user._id]);     
             })
             .then( function(registration){
-                done();
-                /*if( registration ){
-                    done();     
-                } else {
-                    done('failed to register user to tournament');   
-                }*/
+                return RESTService.getTournaments();
             })
-            .fail( function(message){
-                console.log('failed. message: ' + message);
-                done(message);
+            .then( function(tournamentsList){
+                for( var i in tournamentsList ){
+                    
+                    if( tournamentsList[i]._id == tournament._id ){
+                        console.log('found tournament');
+                        debugger;
+                        if(tournamentsList[i].registeredPlayers[0].name == user.name ){
+                            done();
+                            return;
+                        }
+                    }
+                }
+                
+                done('user could not be found in tournament they registered for');
+                
             });
           
         });	
