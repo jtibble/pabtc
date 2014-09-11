@@ -5,7 +5,8 @@ app.controller('LandingController', function ($scope, FrameworkAJAX) {
     
     $scope.Model = {
 		newUser: {},
-		newTournament: {}
+		newTournament: {},
+        selectedUsers: []
 	};
 	
 	var fetchUsers = function(){
@@ -93,11 +94,40 @@ app.controller('LandingController', function ($scope, FrameworkAJAX) {
         };
 		
         FrameworkAJAX.sendRequest(APIKeyRequest, function(data){
-			
 			fetchTournaments();
         }, function(){
             console.log('error creating tournament');
         });
+    };
+    
+    $scope.Actions.selectUser = function(user){
+        $scope.Model.selectedUsers.push(user);
+    };
+    
+    $scope.Actions.selectTournament = function( tournament ){
+        $scope.Model.selectedTournament = tournament;  
+    };
+    
+    $scope.Actions.registerUsersToTournament = function(){
+        var userIdList = [];
+        for( var i in $scope.Model.selectedUsers ){
+            userIdList.push( $scope.Model.selectedUsers[i]._id);
+        }
+        
+        var RegisterUsersRequest = {
+            method: 'POST',
+            url: $scope.Model.selectedTournament.href + '/registerUsers',
+            data: {
+                usersList: userIdList
+            }
+        };
+		
+        FrameworkAJAX.sendRequest(RegisterUsersRequest, function(data){
+			fetchTournaments();
+        }, function(){
+            console.log('error registering users');
+        });
+        
     };
     
 });
