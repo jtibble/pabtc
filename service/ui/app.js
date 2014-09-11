@@ -103,11 +103,14 @@ app.controller('LandingController', function ($scope, FrameworkAJAX) {
     $scope.Actions.selectUser = function(user){
         $scope.Model.selectedUsers.push(user);
     };
+    $scope.Actions.removeFromSelection = function( index ){
+        $scope.Model.selectedUsers.splice(index, 1);
+    };
+    
     
     $scope.Actions.selectTournament = function( tournament ){
         $scope.Model.selectedTournament = tournament;  
     };
-    
     $scope.Actions.registerUsersToTournament = function(){
         var userIdList = [];
         for( var i in $scope.Model.selectedUsers ){
