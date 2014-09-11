@@ -115,6 +115,7 @@ module.exports = {
                     if( error ){
                         deferred.reject('could not create tournament');
                     } else {
+                        console.log('created tournament with id ' + tournament._id);
                         deferred.resolve(tournament);
                     }
                 });

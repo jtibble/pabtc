@@ -91,22 +91,21 @@ describe('Tournaments', function(){
                 return RESTService.registerUsersForTournament( savedTournament._id, [user._id]);     
             })
             .then( function(registration){
-                return RESTService.getTournaments();
+                return RESTService.getTournaments(tournament._id);
             })
             .then( function(tournamentsList){
-                for( var i in tournamentsList ){
-                    
-                    if( tournamentsList[i]._id == tournament._id ){
-                        console.log('found tournament');
-                        debugger;
-                        if(tournamentsList[i].registeredPlayers[0].name == user.name ){
-                            done();
-                            return;
-                        }
-                    }
+                if( tournamentsList.length != 1){
+                    done('more than one tournament returned');
+                    return;
                 }
                 
-                done('user could not be found in tournament they registered for');
+                if( tournamentsList[0]._id == tournament._id &&
+                    tournamentsList[0].registeredPlayers[0].name == user.name ){
+                        done();
+                } else {
+                    done('user could not be found in tournament they registered for');
+                }
+                
                 
             });
           
