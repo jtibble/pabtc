@@ -6,12 +6,15 @@ module.exports = {
         _id: '',
         dateCreated: '',
         name: '',
-        APIKey: null
+        APIKey: null 
     },
     tournament: {
         _id: '',
         dateCreated: '',
-        name: ''
+        name: '',
+        createdBy: '',
+        totalPlayers: 2,
+        registeredPlayers: []
     },
     event: {
         _id: '',

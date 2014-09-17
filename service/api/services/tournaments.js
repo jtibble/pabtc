@@ -1,6 +1,11 @@
 var storage = require('./storage.js');
 var requestValidator = require('./requestValidator.js');
 
+function createHREF( id ){
+    var domain = 'tournaments';
+    return 'http://localhost:8080/api/v0/' + domain + '/' + id;
+}
+
 module.exports = [
     {
         'type': 'POST',
@@ -28,6 +33,7 @@ module.exports = [
             var tournamentPromise = storage.addTournamentAsync( req.body, APIKey );
             
             var successCallback = function(tournament){
+                tournament.href = createHREF(tournament._id);
                 res.status(201).send(tournament);
             };
             
@@ -49,6 +55,9 @@ module.exports = [
             
             var successCallback = function(tournamentsList){
                 if( tournamentsList ){
+                    for( var i in tournamentsList ){
+                        tournamentsList[i].href = createHREF(tournamentsList[i]._id);
+                    }
                     res.status(200).send(tournamentsList);
                 } else {
                     responseBody = {message: 'Could not find tournament/tournaments'};

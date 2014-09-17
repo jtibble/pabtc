@@ -88,19 +88,11 @@ module.exports = {
         var userFetchedCallback = function(user){
             if (user && user.APIKey == APIKey) {
                 
-                var newId = UUID.v4({rng: UUID.nodeRNG});
+                var newTournament = Schema.create('tournament');
+                newTournament.name = tournamentInfo.name;
+                newTournament.createdBy = 'http://localhost:8080/api/v0/users/' + user._id;
 
-                tournamentRecord = {
-                    _id: newId,
-                    dateCreated: (new Date()).toISOString(),
-                    href: 'http://localhost:8080/api/v0/tournaments/' + newId,
-                    createdBy: 'http://localhost:8080/api/v0/users/' + user._id,
-                    name: tournamentInfo.name,
-                    totalPlayers: 2,
-                    registeredPlayers: []
-                };
-                
-                tournamentsCollection.save(tournamentRecord, function(error, tournament){
+                tournamentsCollection.save(newTournament, function(error, tournament){
                     if( error ){
                         deferred.reject('could not create tournament');
                     } else {
