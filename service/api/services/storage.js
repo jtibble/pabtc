@@ -204,8 +204,10 @@ var tournamentsStorage = {
 
                 // Add incoming users to the list of already-registered players
                 registeredPlayers = registeredPlayers.concat(usersList);
+                var query = {_id: tournamentId};
+                var command = { $set: { registeredPlayers: registeredPlayers }};
 
-                tournamentsCollection.update({_id: tournamentId}, { $set: { registeredPlayers: registeredPlayers }}, function(error, updateStatus){
+                tournamentsCollection.update(query, command, function(error, updateStatus){
                     if(!error && updateStatus.ok && updateStatus.n == 1){
                         deferred.resolve({message: 'Updated tournament'});
                     } else {
