@@ -22,7 +22,7 @@ module.exports = [
                 return;
             }
             
-            storage.addUserAsync( req.body ).then( function(user){ 
+            storage.users.create( req.body ).then( function(user){ 
                 user.href = createHREF( user._id );
                 console.log('Created user ' + user.name + ' with href ' + user.href);
                 res.status(201).send(user);
@@ -44,7 +44,7 @@ module.exports = [
             
             var responseBody = {};
 
-            storage.getUsersAsync( req.params.id ).then( function(usersList){
+            storage.users.find('_id', req.params.id).then( function(usersList){
                 if( usersList ){
                     for( var i in usersList){
                         usersList[i].href = createHREF( usersList[i]._id );
@@ -72,7 +72,7 @@ module.exports = [
 				res.status(400).send(responseBody);
             }
 
-            storage.createAPIKey( req.params.id ).then( function(APIKey){
+            storage.users.createAPIKey( req.params.id ).then( function(APIKey){
                 if( APIKey ){
 					responseBody = {
 						message: 'WARNING: Do not lose this API key. It can only be generated once. No exceptions.',

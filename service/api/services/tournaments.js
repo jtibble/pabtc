@@ -30,7 +30,7 @@ module.exports = [
                 return;
             }
             
-            storage.addTournamentAsync( req.body, APIKey ).then( function(tournament){
+            storage.tournaments.create( req.body, APIKey ).then( function(tournament){
                 tournament.href = createHREF(tournament._id);
                 res.status(201).send(tournament);
             }, function(error){
@@ -45,7 +45,7 @@ module.exports = [
         'response': function (req, res) {            
             var responseBody = {};
             
-            storage.getTournamentsAsync(req.params.id).then( function(tournamentsList){
+            storage.tournaments.find('_id', req.params.id).then( function(tournamentsList){
                 if( tournamentsList ){
                     for( var i in tournamentsList ){
                         tournamentsList[i].href = createHREF(tournamentsList[i]._id);
@@ -72,7 +72,7 @@ module.exports = [
                 return;
             }
             
-            storage.registerUsers( req.params.id, req.body.usersList ).then( function(registration){
+            storage.tournaments.registerUsers( req.params.id, req.body.usersList ).then( function(registration){
                 if( registration ){
                    res.status(200).send(registration); 
                 } else {
