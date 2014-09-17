@@ -1,4 +1,4 @@
-var storage = require('../storage.js');
+var storage = require('./storage.js');
 var requestValidator = require('./requestValidator.js');
 
 module.exports = [
