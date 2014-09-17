@@ -1,6 +1,11 @@
 var storage = require('./storage.js');
 var requestValidator = require('./requestValidator.js');
 
+function createHREF( id ){
+    var domain = 'users';
+    return 'http://localhost:8080/api/v0/' + domain + '/' + id;
+}
+
 module.exports = [
     {
         'type': 'POST',
@@ -17,7 +22,8 @@ module.exports = [
                 return;
             }
             
-            var successCallback = function(user){                
+            var successCallback = function(user){ 
+                user.href = createHREF( user._id );
                 console.log('Created user ' + user.name + ' with href ' + user.href);
                 res.status(201).send(user);
             };
@@ -45,6 +51,7 @@ module.exports = [
             var successCallback = function(usersList){
                 if( usersList ){
                     for( var i in usersList){
+                        usersList[i].href = createHREF( usersList[i]._id );
                         usersList[i].APIKey = usersList[i].APIKey ? true : false;
                     }
                     res.status(200).send(usersList);

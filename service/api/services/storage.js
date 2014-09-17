@@ -1,5 +1,7 @@
-var Q = require('q');
+var Schema = require('./schema.js');
+
 var UUID = require('node-uuid');
+var Q = require('q');
 
 var mongojs = require('mongojs');
 var db = mongojs('test');
@@ -14,11 +16,6 @@ db.runCommand({ping:1}, function(err, res) {
     }
 });
 
-var localDB = {
-    tournaments: {},
-    users: {}
-};
-
 module.exports = {
 
     addUserAsync: function (userConfig) {
@@ -26,21 +23,13 @@ module.exports = {
         
         if (!userConfig) {
             deferred.reject('No userconfig provided');
+            return deferred.promise;
         }
         
-        var newId = UUID.v4({rng: UUID.nodeRNG});
+        var newUser = Schema.create('user');
+        newUser.name = userConfig.name;
         
-        userRecord = {
-            _id: newId,
-            dateCreated: (new Date()).toISOString(),
-            href: 'http://localhost:8080/api/v0/users/' + newId,
-            name: userConfig.name,
-            permissions: {
-				'read': true	
-			}
-        };
-        
-        usersCollection.save(userRecord, function(error, user){
+        usersCollection.save(newUser, function(error, user){
             if( error ){
                 deferred.reject('could not create user');
             } else {
