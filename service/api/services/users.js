@@ -28,7 +28,7 @@ module.exports = [
                 res.status(201).send(user);
             }, function(error){
                 responseBody.success = false;
-                responseBody = {message: 'Could not create user'};
+                responseBody.issues = ['Could not create user', error];
                 res.status(500).send(responseBody);
             });
         }
@@ -38,13 +38,18 @@ module.exports = [
         'name': 'users/:id?',
         'response': function (req, res) {
 
+            var promise;
             if( req.params && req.params.id ){
                 console.log('Requested users/' + req.params.id);
+                promise = storage.users.find('_id', req.params.id);
+            } else {
+                promise = storage.users.find();
             }
             
             var responseBody = {};
 
-            storage.users.find('_id', req.params.id).then( function(usersList){
+            promise.then( function(usersList){
+                debugger;
                 if( usersList ){
                     for( var i in usersList){
                         usersList[i].href = createHREF( usersList[i]._id );
@@ -55,7 +60,7 @@ module.exports = [
                     res.status(404).send(responseBody);
                 }
             }, function(error){
-                responseBody.issues = ['Could not find user/users'];
+                responseBody.issues = ['Could not find user/users', error];
                 res.status(404).send(responseBody);
             });
         }

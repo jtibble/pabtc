@@ -54,10 +54,10 @@ var usersStorage = {
         }
 
         usersCollection.find(query, function (error, usersList) {
-            if (error || !usersList || !usersList.length){
-                deferred.reject('no users found');
+            if (error || !usersList){
+                deferred.reject('no users found: ' + error);
             } else {
-                deferred.resolve(usersList); // Only return one user
+                deferred.resolve(usersList);
             }
         });
 
@@ -69,7 +69,7 @@ var usersStorage = {
         console.log('User id=' + userId + ' is requesting an API key');
 
         this.find('_id', userId).then( function( userList){
-            debugger;
+            
             if( !userList || !userList.length ){
                 deferred.reject('error finding user in db');
                 return;
