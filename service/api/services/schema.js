@@ -18,8 +18,7 @@ module.exports = {
     },
     event: {
         _id: '',
-        dateCreated: '',
-        name: ''
+        dateCreated: ''
     },
     
     create: function( objectName ){
