@@ -30,19 +30,13 @@ module.exports = [
                 return;
             }
             
-            var tournamentPromise = storage.addTournamentAsync( req.body, APIKey );
-            
-            var successCallback = function(tournament){
+            storage.addTournamentAsync( req.body, APIKey ).then( function(tournament){
                 tournament.href = createHREF(tournament._id);
                 res.status(201).send(tournament);
-            };
-            
-            var errorCallback = function(error){
+            }, function(error){
                 responseBody = {message: error};
                 res.status(403).send(responseBody);
-            };
-            
-            tournamentPromise.then(successCallback, errorCallback);
+            });
         }
     },
     {
@@ -51,9 +45,7 @@ module.exports = [
         'response': function (req, res) {            
             var responseBody = {};
             
-            var tournamentPromise = storage.getTournamentsAsync(req.params.id);
-            
-            var successCallback = function(tournamentsList){
+            storage.getTournamentsAsync(req.params.id).then( function(tournamentsList){
                 if( tournamentsList ){
                     for( var i in tournamentsList ){
                         tournamentsList[i].href = createHREF(tournamentsList[i]._id);
@@ -63,14 +55,10 @@ module.exports = [
                     responseBody = {message: 'Could not find tournament/tournaments'};
                     res.status(404).send(responseBody);   
                 }
-            };
-            
-            var errorCallback = function(error){
+            },  function(error){
                 responseBody = {message: error};
                 res.status(500).send(responseBody);
-            };
-            
-            tournamentPromise.then(successCallback, errorCallback);
+            });
         }
     },
     {
@@ -84,8 +72,7 @@ module.exports = [
                 return;
             }
             
-            storage.registerUsers( req.params.id, req.body.usersList )
-            .then( function(registration){
+            storage.registerUsers( req.params.id, req.body.usersList ).then( function(registration){
                 if( registration ){
                    res.status(200).send(registration); 
                 } else {
