@@ -1,0 +1,70 @@
+<h3>Tournaments</h3>
+
+
+		
+<h3>Create Tournament</h3>
+<table>
+    <tbody>
+        <tr>
+            <td>Name</td>
+            <td><input ng-model="Model.newTournament.name" placeholder="Tournament Name"></td>
+        </tr>
+        <tr>
+            <td>API Key</td>
+            <td><input ng-model="Model.newTournament.APIKey" placeholder="API Key"></td>
+        </tr>
+        <tr>
+            <td><button class="btn btn-default" ng-click="Actions.createTournament()">Create Tournament</button></td>
+        </tr>
+    </tbody>
+</table>
+<br><br>
+
+<h3>Register User with Tournament</h3>
+<table>
+    <tbody>
+        <tr ng-repeat="user in Model.selectedUsers">
+            <td>{{user.name}}</td>
+            <td><button class="btn btn-default" ng-click="Actions.removeFromSelection($index)">Remove</button></td>
+        </tr>
+        <tr>
+            <td>Selected Tournament:</td>
+            <td>{{Model.selectedTournament.name}}</td>
+        </tr>
+        <tr>
+            <td><button class="btn btn-default" ng-click="Actions.registerUsersToTournament()">Register To Tournament</button></td>
+        </tr>
+    </tbody>
+</table>
+<br><br>
+
+<br>
+
+<h3>Tournaments</h3>
+<table ng-show="Model.tournaments.length" class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Date Created</th>
+            <th>Created By</th>
+            <th>Registered Players</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="tournament in Model.tournaments">
+            <td><a href="{{tournament.href}}">{{tournament.name}}</a>
+            <td>{{tournament.dateCreated | date: 'MMM d, y h:mm a'}}</td>
+            <td><a href="{{tournament.createdBy}}">{{tournament.createdBy}}</a></td>
+            <td>
+                {{tournament.registeredPlayers.length}} / {{tournament.totalPlayers}}<br>
+                <table>
+                    <tr ng-repeat="player in tournament.registeredPlayers">
+                        <td>{{player.name}}</td>
+                    </tr>
+                </table>
+            </td>
+            <td><button class="btn btn-default" ng-click="Actions.selectTournament(tournament)">Select</button></td>
+        </tr>
+    </tbody>
+</table>

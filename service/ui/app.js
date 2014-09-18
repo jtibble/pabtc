@@ -1,14 +1,34 @@
-var app = angular.module('uiApp', []);
+var app = angular.module('uiApp', ['ui.router']);
 
-app.controller('LandingController', function ($scope, FrameworkAJAX) {
+app.config(function($stateProvider, $urlRouterProvider) {
     
+  $urlRouterProvider.otherwise("/home");
     
+  $stateProvider
+    .state('home', {
+      url: "/home",
+      templateUrl: "partials/home.html"
+    })
+    .state('users', {
+      url: "/users",
+      templateUrl: "partials/users.html",
+      controller: "UsersController"
+    })
+    .state('tournaments', {
+      url: "/tournaments",
+      templateUrl: "partials/tournaments.html",
+      controller: "TournamentsController"
+    });
+});
+
+app.controller('UsersController', function($scope, FrameworkAJAX){
+    $scope.Actions = {};
     $scope.Model = {
 		newUser: {},
 		newTournament: {},
         selectedUsers: []
 	};
-	
+    
 	var fetchUsers = function(){
 
 		var userRequest = {
@@ -23,27 +43,7 @@ app.controller('LandingController', function ($scope, FrameworkAJAX) {
 			console.log('error getting users');
 		});
 	};
-	
-	var fetchTournaments = function(){
     
-		var tournamentsRequest = {
-			method: 'GET',
-			url: '/api/v0/tournaments',
-			data: {}
-		};
-
-		FrameworkAJAX.sendRequest(tournamentsRequest, function(data){
-			$scope.Model.tournaments = data;
-		}, function(){ 
-			console.log('error getting tournaments');
-		});
-		
-	};
-	
-	fetchTournaments();
-	fetchUsers();
-    
-    $scope.Actions = {};
     
     $scope.Actions.createUser = function(){
         var newUserRequest = {
@@ -75,6 +75,37 @@ app.controller('LandingController', function ($scope, FrameworkAJAX) {
             console.log('error creating API Key');
         });
     };
+    $scope.Actions.selectUser = function(user){
+        $scope.Model.selectedUsers.push(user);
+    };
+    $scope.Actions.removeFromSelection = function( index ){
+        $scope.Model.selectedUsers.splice(index, 1);
+    };
+    
+    
+    fetchUsers();
+});
+
+app.controller('TournamentsController', function($scope, FrameworkAJAX){
+    $scope.Actions = {};
+    $scope.Model = {};
+    
+	var fetchTournaments = function(){
+    
+		var tournamentsRequest = {
+			method: 'GET',
+			url: '/api/v0/tournaments',
+			data: {}
+		};
+
+		FrameworkAJAX.sendRequest(tournamentsRequest, function(data){
+			$scope.Model.tournaments = data;
+		}, function(){ 
+			console.log('error getting tournaments');
+		});
+		
+	};
+    
     
     $scope.Actions.createTournament = function(){
 		if( !$scope.Model.newTournament.APIKey ){
@@ -99,14 +130,6 @@ app.controller('LandingController', function ($scope, FrameworkAJAX) {
             console.log('error creating tournament');
         });
     };
-    
-    $scope.Actions.selectUser = function(user){
-        $scope.Model.selectedUsers.push(user);
-    };
-    $scope.Actions.removeFromSelection = function( index ){
-        $scope.Model.selectedUsers.splice(index, 1);
-    };
-    
     
     $scope.Actions.selectTournament = function( tournament ){
         $scope.Model.selectedTournament = tournament;  
@@ -133,7 +156,10 @@ app.controller('LandingController', function ($scope, FrameworkAJAX) {
         
     };
     
+    
+    fetchTournaments();
 });
+
 
 
 app.provider('FrameworkAJAX', function(){
