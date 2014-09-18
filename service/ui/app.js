@@ -15,7 +15,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
       controller: "UsersController"
     })
     .state('tournaments', {
-      url: "/tournaments",
+      url: "/tournaments/:id",
       templateUrl: "tournaments/tournaments.html",
       controller: "TournamentsController"
     });

@@ -1,13 +1,17 @@
 
-app.controller('TournamentsController', function($scope, FrameworkAJAX){
+app.controller('TournamentsController', function($scope, FrameworkAJAX, $stateParams){
     $scope.Actions = {};
     $scope.Model = {};
+    
+    if( $stateParams && $stateParams.id && $stateParams.id.length ){
+        $scope.Model.selectedId = $stateParams.id;
+    }
     
 	var fetchTournaments = function(){
     
 		var tournamentsRequest = {
 			method: 'GET',
-			url: '/api/v0/tournaments',
+			url: '/api/v0/tournaments' + ($scope.Model.selectedId ? ('/' + $scope.Model.selectedId) : ''),
 			data: {}
 		};
 

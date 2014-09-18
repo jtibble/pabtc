@@ -53,9 +53,9 @@
     </thead>
     <tbody>
         <tr ng-repeat="tournament in Model.tournaments">
-            <td><a href="{{tournament.href}}">{{tournament.name}}</a>
+            <td><a href="#/tournaments/{{tournament._id}}">{{tournament.name}}</a>
             <td>{{tournament.dateCreated | date: 'MMM d, y h:mm a'}}</td>
-            <td><a href="{{tournament.createdBy}}">{{tournament.createdBy}}</a></td>
+            <td><a href="#/users/{{tournament.createdBy}}">{{tournament.createdBy}}</a></td>
             <td>
                 {{tournament.registeredPlayers.length}} / {{tournament.totalPlayers}}<br>
                 <table>
