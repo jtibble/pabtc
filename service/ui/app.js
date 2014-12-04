@@ -25,7 +25,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
         controller: "UsersController"
     })
     .state('tournaments', {
-        url: "/tournaments/:id",
+        url: "/tournaments",
         templateUrl: "tournaments/tournaments.html",
         controller: "TournamentsController"
     });
@@ -47,4 +47,10 @@ app.provider('FrameworkAJAX', function(){
 			};
 		}]		
 	};
+});
+
+app.directive('header', function(){
+  return {
+    templateUrl: '/header/header.html'
+  };
 });

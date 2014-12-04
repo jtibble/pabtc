@@ -25,19 +25,12 @@ app.controller('TournamentsController', function($scope, FrameworkAJAX, $statePa
     
     
     $scope.Actions.createTournament = function(){
-		if( !$scope.Model.newTournament.APIKey ){
-			console.log('Can\'t create tournament without an API key provided');
-			return;
-		}
 		
         var APIKeyRequest = {
             method: 'POST',
             url: '/api/v0/tournaments',
             data: {
                 name: $scope.Model.newTournament.name
-            },
-            headers: {
-                APIKey: $scope.Model.newTournament.APIKey
             }
         };
 		
