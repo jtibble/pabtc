@@ -46,17 +46,18 @@ module.exports = {
     update: function( tournament ){
         var deferred = Q.defer();
         return deferred.promise;
-    },
+    }*/,
     find: function( property, value ){
         var deferred = Q.defer();
 
         var query = {};
+        var projection = { _id: 0 };
 
         if( property && value ){
             query[property] = value;   
         }
 
-        tournamentsCollection.find(query, function(error, tournamentsList){
+        tournamentsCollection.find(query, projection, function(error, tournamentsList){
             if( !error && tournamentsList ){
                 deferred.resolve( tournamentsList );
             } else {
@@ -65,7 +66,7 @@ module.exports = {
         });
 
         return deferred.promise;
-    },
+    }/*,
     registerUsers: function( tournamentId, userIdList ){
         var deferred = Q.defer();
 

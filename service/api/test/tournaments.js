@@ -5,12 +5,13 @@ describe('Tournaments', function(){
     
     var user;
     
-    before( function(done){
+    beforeEach( function(done){
         var user = {
-            name: 'TestTournamentUser',
-            username: 'testuser' + Math.floor(Math.random()*100000000).toString(),
+            username: 'tournamenttestuser' + Math.floor(Math.random()*100000000).toString(),
             password: 'password'
         };
+        
+        RESTService.enableCookies();
         
         RESTService.createUser( user )
         .then( function(storedUser){
@@ -81,36 +82,24 @@ describe('Tournaments', function(){
         });
     
     }); 
-	
-    /*describe('Create Basic Tournament - No API Key', function(){
-        it('Should create user, try to create tournament with no API key, and fail', function(done){
-                
-            var tournament = {name: 'test tournmanet'};
-            var bogusAPIKey = 'bogus API key!'
-            
-            RESTService.createTournament( tournament, bogusAPIKey )
-            .then( function(tournament){
-                done('should not have created tournament');           
-            }, function(){
-                done();
-            });
-			
-        });
-    }); 
     
     describe('Get Tournaments List', function(){
-        it('Should create user, get API key, create tournament, and fetch all tournaments', function(done){
+        it('Should get list of tournaments', function(done){
 
-            var tournament = {name: 'test tournmanet'};
+            var tournament = {name: 'test tournament for GET'};
             var numTournaments;
             
             RESTService.getTournaments()
             .then( function(tournamentsList){
                 numTournaments = tournamentsList.length;
-                return RESTService.createTournament( tournament, userAPIKey );
+                return RESTService.createTournament( tournament );
+            }, function(){
+                done('failed to get tournaments list');   
             })
             .then( function(tournament){
                 return RESTService.getTournaments();                
+            }, function(){
+                done('failed to create tournament');
             })
             .then( function(tournamentsList){
                 if( tournamentsList && tournamentsList.length && tournamentsList.length == (numTournaments + 1) ){
@@ -118,16 +107,18 @@ describe('Tournaments', function(){
                 } else {
                     done('failed to create tournament correctly');   
                 }
+            }, function(){
+                done('failed to get tournaments list again');
             });
           
         });	
 	});
-    
+    /*
     describe('Register Users For Tournament', function(){
         it('Should create tournament, and register users for it', function(done){
 
             // Create user that will then create tournament
-            var tournament = {name: 'test registration tournmanet'};
+            var tournament = {name: 'test registration tournament'};
             
             RESTService.createTournament( tournament, userAPIKey )
             .then( function(savedTournament){

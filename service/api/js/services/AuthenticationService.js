@@ -12,13 +12,13 @@ module.exports = {
         UserDao.findByUsernameWithPassword( username ).then( function( accountList ){
             
             if( accountList.length == 0 ){
-                console.log('Could not find user \'' + username + '\' in database');
-                deferred.reject('User not found');
+                //console.log('Could not find user \'' + username + '\' in database');
+                deferred.reject( new Error('User not found') );
                 return;
             }
             
             if( accountList.length > 1 ){ 
-                console.log('More than one account with username \'' + username + '\' found by dao');
+                //console.log('More than one account with username \'' + username + '\' found by dao');
                 deferred.reject( new Error('More than one account with that username returned by dao'));
                 return;
             }

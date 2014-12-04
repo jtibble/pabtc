@@ -25,13 +25,13 @@ module.exports = [
             
             var sessionId = req.cookies.sessionId;
             if( !sessionId || !AuthenticationService.checkAuthorization(sessionId) ){
-                console.log('Tournament not created for user with missing sessionId');
+                console.log('Tournament \'' + req.body.name + '\' not created for user with missing sessionId');
                 res.status(403).send(responseBody);
                 return;
             }
             
             TournamentsService.create( req.body ).then( function(tournament){
-                console.log('Tournament created');
+                console.log('Tournament \'' + tournament.name + '\' created');
                 
                 res.status(201).send(tournament);
             }, function(error){
@@ -39,14 +39,14 @@ module.exports = [
                 res.status(403).send(responseBody);
             });
         }
-    }/*,
+    },
     {
         'type': 'GET',
         'name': 'tournaments/:id?',
         'response': function (req, res) {            
             var responseBody = {};
             
-            storage.tournaments.find('_id', req.params.id).then( function(tournamentsList){
+            TournamentsService.find().then( function(tournamentsList){
                 if( tournamentsList ){
                     res.status(200).send(tournamentsList);
                 } else {
@@ -58,7 +58,7 @@ module.exports = [
                 res.status(500).send(responseBody);
             });
         }
-    },
+    }/*,
     {
         'type': 'POST',
         'name': 'tournaments/:id/registerUsers',

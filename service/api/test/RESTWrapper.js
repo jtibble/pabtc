@@ -59,12 +59,12 @@ function postToService( endpoint, body, debug ){
     return deferred.promise;
 }
 
-function getResource( href ){
+function getResource( endpoint ){
     var deferred = Q.defer();
 
     var options = {
         method: 'GET',
-        url: href,
+        url: serviceURL + endpoint,
         json: true
     };
     
@@ -124,19 +124,16 @@ module.exports = {
     
     getUsers: function(username){
         var endpoint = 'users' + (username ? ('/' + username) : '');
-        return getResource( serviceURL + endpoint);
+        return getResource( endpoint);
     },
     
-    createTournament: function( tournament, APIKey ){
+    createTournament: function( tournament ){
         return postToService( endpointURLs.tournaments, tournament );
-    }
-    
-    /*,
+    },
     
     getTournaments: function(id){
-        var endpoint = 'tournaments' + (id ? ('/' + id) : '');
-        return getResource( serviceURL + endpoint);
-    },
+        return getResource( endpointURLs.tournaments);
+    }/*,
     
     // CREATE Resources
     
