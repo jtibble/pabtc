@@ -3,75 +3,130 @@ var Q = require('q');
 
 var serviceURL = 'http://localhost:8080/api/v0/';
 
+var endpointURLs = {
+    users: 'users', 
+    login: 'login',
+    logout: 'logout',
+    tournaments: 'tournaments'
+};
+
+var cookiesEnabled = false;
+var j = request.jar();
+
+function postToService( endpoint, body, debug ){
+    var deferred = Q.defer();
+
+    var options = {
+        method: 'POST',
+        url: serviceURL + endpoint,
+        json: true,
+        body: body
+    };
+    
+    if( cookiesEnabled ){
+        options.jar = j;
+    }
+
+    if( debug ){
+        console.log('Cookies Enabled? ' + cookiesEnabled);
+        console.log('POSTing ' + JSON.stringify(options.body) + ' to ' + options.url);
+    }
+    
+    request( options, function(error, response, body){
+        
+        if( error || !response || !response.statusCode ){
+            deferred.reject('service returned bad response');
+            return;
+        }
+
+        if( response && (response.statusCode == '200' || response.statusCode == '201')){
+            
+            if( debug ){
+                console.log('resolving promise with data to caller');
+                console.log('cookies: ' + j.getCookies( serviceURL ));
+            }
+            deferred.resolve(body);
+            return;
+        } else {
+            deferred.reject('service returned HTTP ' + response.statusCode);
+            return;
+        }
+    });
+    return deferred.promise;
+}
+
+/*function getResource( href ){
+    var deferred = Q.defer();
+
+    var options = {
+        method: 'GET',
+        url: href,
+        json: true,
+        jar: cookiesEnabled
+    };
+
+    request( options, function(error, response, body){
+        if( !error && response ){
+            deferred.resolve(body);
+            return;
+        } else {
+            deferred.reject('service returned HTTP ' + response.statusCode);
+        }
+        return;    
+    });
+    return deferred.promise;
+}*/
+
+
+
+
 module.exports = {
     
-    // GET Resources
-    getByHREF: function(href){
-        var deferred = Q.defer();
-        
-        var options = {
-            method: 'GET',
-            url: href,
-            json: true,
-        };
-        
-        request( options, function(error, response, body){
-            if( !error && response ){
-                deferred.resolve(body);
-                return;
-            } else {
-                deferred.reject('service returned HTTP ' + response.statusCode);
-            }
-            return;    
-        });
-        return deferred.promise;
+    // Authentication
+    enableCookies: function(){
+        cookiesEnabled = true;
+    },
+    disableCookies: function(){
+        cookiesEnabled = false;
+    },
+    getCookies: function(){
+        return j.getCookies( serviceURL );
     },
     
-    getUsers: function(id){
+    
+    createUser: function( user ){
+        return postToService( endpointURLs.users, user );
+    },
+    
+    loginUser: function( username, password ){
+        
+        var body = {
+            username: username,
+            password: password
+        };
+        
+        return postToService( endpointURLs.login, body );
+    }
+    
+    
+    
+    
+    /*getUsers: function(id){
         var endpoint = 'users' + (id ? ('/' + id) : '');
-        return this.getByHREF( serviceURL + endpoint);
+        return getResource( serviceURL + endpoint);
     },
     
     getTournaments: function(id){
         var endpoint = 'tournaments' + (id ? ('/' + id) : '');
-        return this.getByHREF( serviceURL + endpoint);
+        return getResource( serviceURL + endpoint);
     },
     
     // CREATE Resources
     
-    postToService: function( options ){
-        var deferred = Q.defer();
-        
-        options.method = 'POST';
-        options.url = serviceURL + options.endpoint;
-        options.json = true;
-        
-        request( options, function(error, response, body){
-            if( error || !response || !response.statusCode ){
-                deferred.reject('service returned bad response');
-                return;
-            }
-            
-            if( response && (response.statusCode == '200' || response.statusCode == '201')){
-                deferred.resolve(body);
-                return;
-            } else {
-                deferred.reject('service returned HTTP ' + response.statusCode);
-                return;
-            }
-        });
-        return deferred.promise;
-    },
     
-    createUser: function( user ){
-        return this.postToService( {
-            endpoint: 'users',
-            body: user
-        } );
-    },
     
     createTournament: function( tournament, APIKey ){
-        return this.postToService( {
+        return postToService( {
             endpoint: 'tournaments',
             body: tournament,
             headers: {
@@ -81,7 +136,7 @@ module.exports = {
     },
     
     registerUsersForTournament: function(tournamentId, usersList){
-        return this.postToService( {
+        return postToService( {
             endpoint: 'tournaments' + '/' + tournamentId + '/registerUsers',
             body: { usersList: usersList }
         } );
@@ -107,5 +162,5 @@ module.exports = {
             return;    
         });
         return deferred.promise;
-	}
+	}*/
 };

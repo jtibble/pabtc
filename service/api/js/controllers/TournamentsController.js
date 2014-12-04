@@ -8,7 +8,7 @@ function createHREF( id ){
 }
 
 module.exports = [
-    {
+    /*{
         'type': 'POST',
         'name': 'tournaments',
         'response': function (req, res) {
@@ -44,7 +44,7 @@ module.exports = [
         'response': function (req, res) {            
             var responseBody = {};
             
-            /*storage.tournaments.find('_id', req.params.id).then( function(tournamentsList){
+            storage.tournaments.find('_id', req.params.id).then( function(tournamentsList){
                 if( tournamentsList ){
                     for( var i in tournamentsList ){
                         tournamentsList[i].href = createHREF(tournamentsList[i]._id);
@@ -57,7 +57,7 @@ module.exports = [
             },  function(error){
                 responseBody = {message: error};
                 res.status(500).send(responseBody);
-            });*/
+            });
         }
     },
     {
@@ -71,7 +71,7 @@ module.exports = [
                 return;
             }
             
-            /*storage.tournaments.registerUsers( req.params.id, req.body.usersList ).then( function(registration){
+            storage.tournaments.registerUsers( req.params.id, req.body.usersList ).then( function(registration){
                 if( registration ){
                    res.status(200).send(registration); 
                 } else {
@@ -79,7 +79,7 @@ module.exports = [
                 }
             }, function(message){ 
                 res.status(500).send( {message: message} ); 
-            });*/
+            });
         }
     },
     {
@@ -97,5 +97,5 @@ module.exports = [
             var responseBody = {};
             res.status(501).send({message: 'concludeTournament service is not available yet'});
         }
-    }
+    }*/
 ];
