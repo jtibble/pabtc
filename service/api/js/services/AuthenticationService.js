@@ -25,7 +25,7 @@ module.exports = {
             
             var account = accountList[0];
             if( account.password == password ){
-                SessionDao.createSession().then( function(sessionId){
+                SessionDao.createSession(username).then( function(sessionId){
                     deferred.resolve( sessionId );   
                 }, function(){
                     deferred.reject( new Error('Could not create session in db') );   
@@ -49,7 +49,13 @@ module.exports = {
         // if successful, return true else false
         // if session has timed out, call logout and return error to caller
         
-        deferred.resolve(true);
+        SessionDao.findSession( sessionId ).then(function( session ){
+            
+            deferred.resolve( session );
+            
+        }, function( error ){
+            deferred.reject( new Error('Could not find session'));   
+        });
         
         return deferred.promise;
     },

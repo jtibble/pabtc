@@ -8,7 +8,7 @@ var db = mongojs('test');
 var tournamentsCollection = db.collection('tournaments');
 
 module.exports = {
-    create: function( params, APIKey ){
+    create: function( params ){
         var deferred = Q.defer();
 
         // Find the user creating the tournament by API key

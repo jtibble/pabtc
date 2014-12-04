@@ -48,7 +48,7 @@ describe('Tournaments', function(){
         
         it('Should not be able to create tournament (no session)', function(done){
 
-            var tournament = {name: 'test tournament'};
+            var tournament = {name: 'test tournament (no session)'};
 
             RESTService.disableCookies();
             RESTService.createTournament( tournament )

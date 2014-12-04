@@ -30,7 +30,7 @@ module.exports = [
                 res.status(201).send(user);
             }, function(error){
                 responseBody.success = false;
-                responseBody.issues = ['Could not create user', error];
+                responseBody.issues = ['Could not create user', error.message];
                 res.status(500).send(responseBody);
             });
         }

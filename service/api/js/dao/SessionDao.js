@@ -8,10 +8,11 @@ var db = mongojs('test');
 var sessionCollection = db.collection('sessions');
 
 module.exports = {
-    createSession: function(){
+    createSession: function(username){
         var deferred = Q.defer();
         
         var newSession = Schema.create('session');
+        newSession.username = username;
         
         sessionCollection.save( newSession, function(error, result){
             if( !error && result ){
@@ -25,6 +26,15 @@ module.exports = {
     },
     findSession: function(sessionId){
         var deferred = Q.defer();
+        
+        sessionCollection.find( {_id: sessionId}, function(error, sessionList){
+            if( !error && sessionList ){
+                deferred.resolve( sessionList[0] );
+            } else {
+                deferred.reject( new Error('Could not find session in db'));   
+            }
+        });
+        
         
         return deferred.promise;
     },

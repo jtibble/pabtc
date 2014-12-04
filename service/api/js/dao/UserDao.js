@@ -26,7 +26,7 @@ module.exports = {
         this.find( 'username', newUser.username ).then(function( userList ){
             if( userList.length != 0 ){
                 console.log('Can not create user: user already exists in db');
-                deferred.reject( new Error('User by that name already exists in db'));
+                deferred.reject( new Error('Username already exists in db'));
             } else {
                 
                 usersCollection.save(newUser, function(error, user){
@@ -49,7 +49,7 @@ module.exports = {
         
         usersCollection.find( criteria, projection, function (error, usersList) {
             if (error){
-                deferred.reject('error finding users: ' + error);
+                deferred.reject( new Error('error finding users: ' + error));
             } else {
                 deferred.resolve(usersList);
             }
@@ -69,7 +69,7 @@ module.exports = {
         
         usersCollection.find( criteria, projection, function (error, usersList) {
             if (error || !usersList){
-                deferred.reject('error finding users: ' + error);
+                deferred.reject( new Error('error finding users: ' + error));
             } else {
                 deferred.resolve(usersList);
             }

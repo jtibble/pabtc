@@ -24,20 +24,32 @@ module.exports = [
             }
             
             var sessionId = req.cookies.sessionId;
-            if( !sessionId || !AuthenticationService.checkAuthorization(sessionId) ){
+            
+            if( !sessionId ){
                 console.log('Tournament \'' + req.body.name + '\' not created for user with missing sessionId');
                 res.status(403).send(responseBody);
-                return;
+                return;   
             }
             
-            TournamentsService.create( req.body ).then( function(tournament){
-                console.log('Tournament \'' + tournament.name + '\' created');
+            // Check session and add the username to the new tournament
+            AuthenticationService.checkAuthorization(sessionId).then( function(session){
                 
-                res.status(201).send(tournament);
+                req.body.createdBy = session.username;
+                
+                TournamentsService.create( req.body ).then( function(tournament){
+                    console.log('Tournament \'' + tournament.name + '\' created by user \'' + session.username + '\'');
+                    res.status(201).send(tournament);
+                }, function(error){
+                    responseBody = {message: error.message};
+                    res.status(403).send(responseBody);
+                });
+                
             }, function(error){
-                responseBody = {message: error};
+                console.log('Tournament \'' + req.body.name + '\' not created for user with invalid or expired session');
                 res.status(403).send(responseBody);
+                return; 
             });
+            
         }
     },
     {
