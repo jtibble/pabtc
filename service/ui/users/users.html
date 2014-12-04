@@ -18,18 +18,16 @@
 <table ng-show="Model.users.length" class="table">
     <thead>
         <tr>
-            <th>Name</th>
+            <th>Username</th>
             <th>Date Created</th>
-            <th>HREF</th>
-            <th>API Key</th>
-            <th></th>
+            <!--<th></th>-->
         </tr>
     </thead>
     <tbody>
         <tr ng-repeat="user in Model.users">
-            <td>{{user.name}}</td>
+            <td>{{user.username}}</td>
             <td>{{user.dateCreated | date: 'MMM d, y h:mm a'}}</td>
-            <td><a href="{{user.href}}">{{user.href}}</a></td>
+            <!--<td><a href="{{user.href}}">{{user.href}}</a></td>
             <td>
                 <div ng-if="user.APIKey">
                     API Key Created
@@ -38,7 +36,7 @@
                     <button class="btn btn-default" ng-click="Actions.generateAPIKey(user._id)">Generate API Key</button>
                 </div>
             </td>
-            <td><button class="btn btn-default" ng-click="Actions.selectUser(user)">Select</button></td>
+            <td><button class="btn btn-default" ng-click="Actions.selectUser(user)">Select</button></td>-->
         </tr>
     </tbody>
 </table>

@@ -4,20 +4,30 @@ app.config(function($stateProvider, $urlRouterProvider) {
     
   $urlRouterProvider.otherwise("/home");
     
-  $stateProvider
+    $stateProvider
     .state('home', {
-      url: "/home",
-      templateUrl: "home/home.html"
+        url: "/home",
+        templateUrl: "home/home.html"
+    })
+    .state('login', {
+        url: "/login",
+        templateUrl: "login/login.html",
+        controller: "LoginController"
+    })
+    .state('registration', {
+        url: "/registration",
+        templateUrl: "registration/registration.html",
+        controller: "RegistrationController"
     })
     .state('users', {
-      url: "/users",
-      templateUrl: "users/users.html",
-      controller: "UsersController"
+        url: "/users",
+        templateUrl: "users/users.html",
+        controller: "UsersController"
     })
     .state('tournaments', {
-      url: "/tournaments/:id",
-      templateUrl: "tournaments/tournaments.html",
-      controller: "TournamentsController"
+        url: "/tournaments/:id",
+        templateUrl: "tournaments/tournaments.html",
+        controller: "TournamentsController"
     });
 });
 
