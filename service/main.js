@@ -1,21 +1,23 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
 var request = require('request');
 
 //Services Definitions
-var userServices = require('./api/services/users.js');
-var tournamentServices = require('./api/services/tournaments.js');
-var utilityServices = require('./api/services/utility.js');
+var UsersController = require('./api/js/controllers/UsersController');
+var TournamentsController = require('./api/js/controllers/TournamentsController');
+var AuthenticationController = require('./api/js/controllers/AuthenticationController');
 
 var servicesConfig = {
     'staticContentPath': '/ui',
     'apiPath': '/api/v0/',
-    'endpoints': userServices.concat(tournamentServices)
+    'endpoints': AuthenticationController.concat(UsersController).concat(TournamentsController)
 };
 
 var Service = function (config) {
     var server = express();
     server.use(bodyParser.json());
+    server.use(cookieParser());
     console.log('dirname: ' + __dirname);
     server.use(express.static(__dirname + config.staticContentPath));
 
@@ -50,7 +52,7 @@ var Service = function (config) {
 
             var port = 8080;
             server.listen(port);
-            console.log('%s listening on port %s', server.name, port);
+            console.log('%s listening on port %s \n=========', server.name, port);
         }
     };
 };
