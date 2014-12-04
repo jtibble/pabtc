@@ -22,27 +22,54 @@ module.exports = {
             }
         }
 
-        usersCollection.save(newUser, function(error, user){
-            if( error ){
-                deferred.reject('could not create user');
+        // Check that the user doesn't already exist!
+        this.find( 'username', newUser.username ).then(function( userList ){
+            if( userList.length != 0 ){
+                console.log('Can not create user: user already exists in db');
+                deferred.reject( new Error('User by that name already exists in db'));
             } else {
-                deferred.resolve(user);
+                
+                usersCollection.save(newUser, function(error, user){
+                    if( error ){
+                        deferred.reject('could not create user');
+                    } else {
+                        deferred.resolve(user);
+                    }
+                });
+
             }
         });
-
+        
         return deferred.promise;
+    },
+    findByUsernameWithPassword: function( username ){
+        var deferred = Q.defer();
+        var criteria = { username: username };
+        var projection = { _id: 0 };
+        
+        usersCollection.find( criteria, projection, function (error, usersList) {
+            if (error){
+                deferred.reject('error finding users: ' + error);
+            } else {
+                deferred.resolve(usersList);
+            }
+        });
+        
+        return deferred.promise;        
     },
     find: function( property, value ){
         var deferred = Q.defer();
-
-        var query = {};
+        
+        var criteria = {};
+        var projection = { _id: 0, password: 0 }; 
+                
         if( property && value){
-            query[property] = value;
+            criteria[property] = value;
         }
-
-        usersCollection.find(query, function (error, usersList) {
+        
+        usersCollection.find( criteria, projection, function (error, usersList) {
             if (error || !usersList){
-                deferred.reject('no users found: ' + error);
+                deferred.reject('error finding users: ' + error);
             } else {
                 deferred.resolve(usersList);
             }

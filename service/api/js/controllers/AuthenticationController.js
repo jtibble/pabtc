@@ -14,8 +14,9 @@ module.exports = [
                 res.cookie('sessionId', sessionId, {maxAge: cookieAge});
                 res.status(200).send(responseBody);
             }, function(error){
+                console.log('User ' + req.body.username + ' failed to log in because ' + error.message);
                 res.clearCookie('sessionId');
-                responseBody.issues = ['Authentication failed', error];
+                responseBody.issues = ['Authentication failed', error.message];
                 res.status(401).send(responseBody); 
             });
         }

@@ -48,9 +48,6 @@ module.exports = [
             
             storage.tournaments.find('_id', req.params.id).then( function(tournamentsList){
                 if( tournamentsList ){
-                    for( var i in tournamentsList ){
-                        tournamentsList[i].href = createHREF(tournamentsList[i]._id);
-                    }
                     res.status(200).send(tournamentsList);
                 } else {
                     responseBody = {message: 'Could not find tournament/tournaments'};

@@ -25,8 +25,7 @@ module.exports = [
                 return;
             }
             
-            UsersService.create( req.body).then( function(user){ 
-                user.href = createHREF( user._id );
+            UsersService.create( req.body).then( function(user){
                 console.log('Created user ' + user.username);
                 res.status(201).send(user);
             }, function(error){
@@ -53,9 +52,6 @@ module.exports = [
 
             promise.then( function(usersList){
                 if( usersList ){
-                    for( var i in usersList){
-                        usersList[i].href = createHREF( usersList[i]._id );
-                    }
                     res.status(200).send(usersList);
                 } else {
                     responseBody = {message: 'Could not find user/users'};
