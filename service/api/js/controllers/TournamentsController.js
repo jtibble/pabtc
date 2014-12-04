@@ -66,7 +66,7 @@ module.exports = [
                     res.status(404).send(responseBody);   
                 }
             },  function(error){
-                responseBody = {message: error};
+                responseBody = {message: error.message};
                 res.status(500).send(responseBody);
             });
         }
