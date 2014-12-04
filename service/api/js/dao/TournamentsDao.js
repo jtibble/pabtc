@@ -1,4 +1,4 @@
-var Schema = require('./schema.js');
+var Schema = require('../model/Schema.js');
 
 var UUID = require('node-uuid');
 var Q = require('q');
@@ -12,37 +12,37 @@ module.exports = {
         var deferred = Q.defer();
 
         // Find the user creating the tournament by API key
-        usersStorage.find('APIKey', APIKey).then( function(userList){
+        /*usersStorage.find('APIKey', APIKey).then( function(userList){
             if (!userList || userList.length != 1 || userList[0].APIKey != APIKey) {
                 deferred.reject('User API key is not correct');
                 return;
+            }*/
+
+        var newTournament = Schema.create('tournament');
+        var newTournamentKeys = Object.keys(newTournament);
+
+        // Copy properties to new object if they exist in the schema
+        for( var i in newTournamentKeys ){
+            var keyName = newTournamentKeys[i];
+            if( params[ keyName ] ){
+                newTournament[ keyName ] = params[ keyName ];
             }
+        }
 
-            var newTournament = Schema.create('tournament');
-            var newTournamentKeys = Object.keys(newTournament);
-
-            // Copy properties to new object if they exist in the schema
-            for( var i in newTournamentKeys ){
-                var keyName = newTournamentKeys[i];
-                if( params[ keyName ] ){
-                    newTournament[ keyName ] = params[ keyName ];
-                }
+        tournamentsCollection.save(newTournament, function(error, tournament){
+            if( error ){
+                deferred.reject('could not create tournament');
+            } else {
+                deferred.resolve(tournament);
             }
-
-            tournamentsCollection.save(newTournament, function(error, tournament){
-                if( error ){
-                    deferred.reject('could not create tournament');
-                } else {
-                    deferred.resolve(tournament);
-                }
-            });
-
-        }, function(error){
-            deferred.reject(error);
         });
 
+        /*}, function(error){
+            deferred.reject(error);
+        });*/
+
         return deferred.promise;
-    },
+    }/*,
     update: function( tournament ){
         var deferred = Q.defer();
         return deferred.promise;
@@ -111,5 +111,5 @@ module.exports = {
         });
 
         return deferred.promise;
-    }    
+    }    */
 };

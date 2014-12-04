@@ -1,4 +1,4 @@
-var RESTService = require('./serviceWrapper.js');
+var RESTService = require('./RESTWrapper');
 
 describe('Users', function(){
     describe('Create User', function(){

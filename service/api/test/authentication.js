@@ -1,4 +1,4 @@
-var RESTService = require('./serviceWrapper');
+var RESTService = require('./RESTWrapper');
 //var assert = require('assert');
 
 describe('Authentication', function(){

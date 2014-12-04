@@ -50,7 +50,7 @@ function postToService( endpoint, body, debug ){
         } else {
             var errorMessages = 'service returned HTTP ' + response.statusCode;
             if( response.body && response.body.length ){
-                errorMessages += '\n' + JSON.stringify(body);   
+                errorMessages += ' ' + JSON.stringify(response.body);   
             }
             deferred.reject(errorMessages);
             return;
@@ -125,7 +125,14 @@ module.exports = {
     getUsers: function(username){
         var endpoint = 'users' + (username ? ('/' + username) : '');
         return getResource( serviceURL + endpoint);
-    }/*,
+    },
+    
+    
+    createTournament: function( tournament, APIKey ){
+        return postToService( endpointURLs.tournaments, tournament );
+    }
+    
+    /*,
     
     getTournaments: function(id){
         var endpoint = 'tournaments' + (id ? ('/' + id) : '');
@@ -136,15 +143,6 @@ module.exports = {
     
     
     
-    createTournament: function( tournament, APIKey ){
-        return postToService( {
-            endpoint: 'tournaments',
-            body: tournament,
-            headers: {
-                APIKey: APIKey
-            }
-        } );
-    },
     
     registerUsersForTournament: function(tournamentId, usersList){
         return postToService( {

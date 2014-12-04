@@ -1,4 +1,4 @@
-var RESTService = require('./serviceWrapper.js');
+var RESTService = require('./RESTWrapper');
 var assert = require('assert');
 
 describe('Tournaments', function(){
@@ -7,40 +7,50 @@ describe('Tournaments', function(){
     var userAPIKey;
     
     before( function(done){
-        var tournamentsTestUser = { name: 'TournamentsTestUser' };
+        var user = {
+            name: 'TestTournamentUser',
+            username: 'testuser' + Math.floor(Math.random()*100000000).toString(),
+            password: 'password'
+        };
         
-        RESTService.createUser( tournamentsTestUser )
+        RESTService.createUser( user )
         .then( function(storedUser){
             user = storedUser;
-            return RESTService.createUserAPIKey(user);
+            return RESTService.loginUser( user.username, user.password );
+        }, function(){
+            done('could not create user');   
         })
-        .then( function( APIKey ){ 
-            userAPIKey = APIKey;
+        .then( function(){
             done();
+        }, function(){
+            done('could not log in user');   
         })
     });
     
-    describe('Create Basic Tournament', function(){
-        it('Should create user, get API key, create tournament, and fetch that tournament', function(done){
+    //describe('Create Basic Tournament', function(){
+    
+    it('Should create tournament', function(done){
 
-            var tournament = {name: 'test tournmanet'};
-            
-            RESTService.createTournament( tournament, userAPIKey )
-            .then( function(tournament){
-                if( tournament && tournament.href && tournament.name && tournament.dateCreated ){
-                    done();
-                } else {
-                    done('tournament did not contain all the expected properties');   
-                }
-            });
-			
+        var tournament = {name: 'test tournmanet'};
+
+        RESTService.createTournament( tournament, userAPIKey )
+        .then( function(tournament){
+            if( tournament && tournament.href && tournament.name && tournament.dateCreated ){
+                done();
+            } else {
+                done('tournament did not contain all the expected properties');   
+            }
+        }, function(error){
+            done('could not create tournament: ' + error);
         });
-    }); 
+
+    });
+    
+    //}); 
 	
-    describe('Create Basic Tournament - No API Key', function(){
+    /*describe('Create Basic Tournament - No API Key', function(){
         it('Should create user, try to create tournament with no API key, and fail', function(done){
-                        
-            
+                
             var tournament = {name: 'test tournmanet'};
             var bogusAPIKey = 'bogus API key!'
             
@@ -110,5 +120,5 @@ describe('Tournaments', function(){
             });
           
         });	
-	});
+	});*/
 });

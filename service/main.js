@@ -5,16 +5,13 @@ var request = require('request');
 
 //Services Definitions
 var UsersController = require('./api/js/controllers/UsersController');
-//var tournamentServices = require('./api/services/tournaments.js');
-
+var TournamentsController = require('./api/js/controllers/TournamentsController');
 var AuthenticationController = require('./api/js/controllers/AuthenticationController');
-
-//var utilityServices = require('./api/services/utility.js');
 
 var servicesConfig = {
     'staticContentPath': '/ui',
     'apiPath': '/api/v0/',
-    'endpoints': AuthenticationController.concat(UsersController) //userServices.concat(tournamentServices)
+    'endpoints': AuthenticationController.concat(UsersController).concat(TournamentsController)
 };
 
 var Service = function (config) {

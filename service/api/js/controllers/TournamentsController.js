@@ -1,6 +1,7 @@
-var storage = require('./storage.js');
-var RequestValidator = require('./requestValidator.js');
+//var storage = require('./storage.js');
+var RequestValidator = require('../requestValidator.js');
 var TournamentsService = require('../services/TournamentsService');
+var AuthenticationService = require('../services/AuthenticationService');
 
 function createHREF( id ){
     var domain = 'tournaments';
@@ -8,7 +9,7 @@ function createHREF( id ){
 }
 
 module.exports = [
-    /*{
+    {
         'type': 'POST',
         'name': 'tournaments',
         'response': function (req, res) {
@@ -23,8 +24,7 @@ module.exports = [
             }
             
             var sessionId = req.cookies.sessionId;
-            console.log('sessionId from cookie: ' + sessionId);
-            if( !sessionId || !security.checkAuthorization(sessionId) ){
+            if( !sessionId || !AuthenticationService.checkAuthorization(sessionId) ){
                 res.status(403).send(responseBody);
                 return;
             }
@@ -37,7 +37,7 @@ module.exports = [
                 res.status(403).send(responseBody);
             });
         }
-    },
+    }/*,
     {
         'type': 'GET',
         'name': 'tournaments/:id?',

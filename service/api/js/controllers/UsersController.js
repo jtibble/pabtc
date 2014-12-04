@@ -27,7 +27,7 @@ module.exports = [
             
             UsersService.create( req.body).then( function(user){ 
                 user.href = createHREF( user._id );
-                console.log('Created user ' + user.name + ' with href ' + user.href);
+                console.log('Created user ' + user.name);
                 res.status(201).send(user);
             }, function(error){
                 responseBody.success = false;

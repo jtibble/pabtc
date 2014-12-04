@@ -17,17 +17,13 @@ module.exports = {
             }
             
             var account = accountList[0];
-            console.log('found account: ' + JSON.stringify(account));
-            console.log('incoming password is \'' + password + '\'');
             if( account.password == password ){
-                console.log('password is correct');
                 SessionDao.createSession().then( function(sessionId){
                     deferred.resolve( sessionId );   
                 }, function(){
                     deferred.reject( new Error('Could not create session in db') );   
                 });
             } else {
-                console.log('password incorrect');
                 deferred.reject( new Error('Could not authenticate'));  
             }
             
