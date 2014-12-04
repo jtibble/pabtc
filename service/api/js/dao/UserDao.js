@@ -1,4 +1,4 @@
-var Schema = require('./schema.js');
+var Schema = require('../model/Schema');
 
 var UUID = require('node-uuid');
 var Q = require('q');

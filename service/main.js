@@ -4,14 +4,17 @@ var cookieParser = require('cookie-parser');
 var request = require('request');
 
 //Services Definitions
-var userServices = require('./api/services/users.js');
-var tournamentServices = require('./api/services/tournaments.js');
-var utilityServices = require('./api/services/utility.js');
+var UsersController = require('./api/js/controllers/UsersController');
+//var tournamentServices = require('./api/services/tournaments.js');
+
+var AuthenticationController = require('./api/js/controllers/AuthenticationController');
+
+//var utilityServices = require('./api/services/utility.js');
 
 var servicesConfig = {
     'staticContentPath': '/ui',
     'apiPath': '/api/v0/',
-    'endpoints': userServices.concat(tournamentServices)
+    'endpoints': AuthenticationController.concat(UsersController) //userServices.concat(tournamentServices)
 };
 
 var Service = function (config) {

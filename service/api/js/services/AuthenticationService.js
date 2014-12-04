@@ -1,31 +1,41 @@
 var Q = require('q');
 var UUID = require('node-uuid');
 
-var UserDao = require('UserDao');
-var SessionDao = require('SessionDao');
+var UserDao = require('../dao/UserDao');
+var SessionDao = require('../dao/SessionDao');
 
-var activeSessionId;
 
 module.exports = {
     login: function(username, password){
         var deferred = Q.defer();
         
-        UserDao.findUser( username ).then( function( account ){
+        UserDao.find( 'username', username ).then( function( accountList ){
             
+            if( accountList.length != 1 ){ 
+                deferred.reject( new Error('More than one account with that username returned by dao'));
+                return;
+            }
+            
+            var account = accountList[0];
+            console.log('found account: ' + JSON.stringify(account));
+            console.log('incoming password is \'' + password + '\'');
             if( account.password == password ){
+                console.log('password is correct');
                 SessionDao.createSession().then( function(sessionId){
                     deferred.resolve( sessionId );   
                 }, function(){
                     deferred.reject( new Error('Could not create session in db') );   
                 });
             } else {
-                deferred.reject( new Error('Could not authenticate');   
+                console.log('password incorrect');
+                deferred.reject( new Error('Could not authenticate'));  
             }
             
         }, function(){
-             deferred.reject( new Error('Could not find user');
+             deferred.reject( new Error('Could not find user'));
         });
         
+        return deferred.promise;
     },
     
     checkAuthorization: function(sessionId, requestedPermission){
@@ -36,11 +46,7 @@ module.exports = {
         // if successful, return true else false
         // if session has timed out, call logout and return error to caller
         
-        if( sessionId == activeSessionId ){
-            deferred.resolve();
-        } else {
-            deferred.reject();
-        }
+        deferred.resolve(true);
         
         return deferred.promise;
     },
@@ -49,7 +55,6 @@ module.exports = {
         var deferred = Q.defer();
         // delete session from database
         // (caller will delete cookie)
-        activeSessionId = undefined;
         deferred.resolve();
         
         return deferred.promise;

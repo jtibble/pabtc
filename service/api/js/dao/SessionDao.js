@@ -1,4 +1,4 @@
-var Schema = require('./schema.js');
+var Schema = require('../model/Schema.js');
 
 var UUID = require('node-uuid');
 var Q = require('q');
@@ -17,7 +17,7 @@ module.exports = {
             if( !error && result ){
                 deferred.resolve( result._id );
             } else {
-                deferred.reject();   
+                deferred.reject( new Error('Could not save session in db'));   
             }
         });
         
