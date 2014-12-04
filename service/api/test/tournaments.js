@@ -4,7 +4,6 @@ var assert = require('assert');
 describe('Tournaments', function(){
     
     var user;
-    var userAPIKey;
     
     before( function(done){
         var user = {
@@ -27,26 +26,61 @@ describe('Tournaments', function(){
         })
     });
     
-    //describe('Create Basic Tournament', function(){
+    describe('Create Basic Tournament', function(){
     
-    it('Should create tournament', function(done){
+        it('Should create tournament', function(done){
 
-        var tournament = {name: 'test tournmanet'};
+            var tournament = {name: 'test tournament'};
 
-        RESTService.createTournament( tournament, userAPIKey )
-        .then( function(tournament){
-            if( tournament && tournament.href && tournament.name && tournament.dateCreated ){
-                done();
-            } else {
-                done('tournament did not contain all the expected properties');   
-            }
-        }, function(error){
-            done('could not create tournament: ' + error);
+            RESTService.createTournament( tournament )
+            .then( function(tournament){
+                if( tournament && tournament.name && tournament.dateCreated ){
+                    done();
+                } else {
+                    done('tournament did not contain all the expected properties');   
+                }
+            }, function(error){
+                done('could not create tournament: ' + error);
+            });
+
         });
+        
+        it('Should not be able to create tournament (no session)', function(done){
 
-    });
+            var tournament = {name: 'test tournament'};
+
+            RESTService.disableCookies();
+            RESTService.createTournament( tournament )
+            .then( function(tournament){
+                if( tournament && tournament.name && tournament.dateCreated ){
+                    done('should not have been able to create the tournament');
+                } else {
+                    done('tournament did not contain all the expected properties');   
+                }
+            }, function(error){
+                done();
+            });
+
+        });
+        
+        it('Should not be able to create tournament (no name)', function(done){
+
+            var tournament = {};
+            
+            RESTService.createTournament( tournament )
+            .then( function(tournament){
+                if( tournament && tournament.name && tournament.dateCreated ){
+                    done('should not have been able to create the tournament');
+                } else {
+                    done('tournament did not contain all the expected properties');   
+                }
+            }, function(error){
+                done();
+            });
+
+        });
     
-    //}); 
+    }); 
 	
     /*describe('Create Basic Tournament - No API Key', function(){
         it('Should create user, try to create tournament with no API key, and fail', function(done){

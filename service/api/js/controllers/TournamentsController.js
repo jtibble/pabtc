@@ -25,12 +25,14 @@ module.exports = [
             
             var sessionId = req.cookies.sessionId;
             if( !sessionId || !AuthenticationService.checkAuthorization(sessionId) ){
+                console.log('Tournament not created for user with missing sessionId');
                 res.status(403).send(responseBody);
                 return;
             }
             
             TournamentsService.create( req.body ).then( function(tournament){
-                tournament.href = createHREF(tournament._id);
+                console.log('Tournament created');
+                
                 res.status(201).send(tournament);
             }, function(error){
                 responseBody = {message: error};

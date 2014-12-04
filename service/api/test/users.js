@@ -2,22 +2,39 @@ var RESTService = require('./RESTWrapper');
 
 describe('Users', function(){
     describe('Create User', function(){
-        it('Should return a new user href when called successfully', function(done){
+        it('Should return a new user href when called correctly', function(done){
             
             var user = {
-                name: 'TestUser',
                 username: 'testuser' + Math.floor(Math.random()*100000000).toString(),
                 password: 'password'
             };
             
             RESTService.createUser( user ).then( function(user){
-                if( user && user.href && user.name){
+                if( user && user.username && user.dateCreated ){
                     done();
                 } else {
                     done('request succeeded, but received bad user data: ' + JSON.stringify(user));   
                 }
             }, function(error){
                 done('failed to create user: ' + error);   
+            });
+            
+        });
+        
+        it('Should fail when called incorrectly', function(done){
+            
+            var user = {
+                username: 'testuser' + Math.floor(Math.random()*100000000).toString()
+            };
+            
+            RESTService.createUser( user ).then( function(user){
+                if( user && user.username && user.dateCreated ){
+                    done('should not have succeeded');
+                } else {
+                    done('request succeeded, but received bad user data: ' + JSON.stringify(user));   
+                }
+            }, function(error){
+                done();   
             });
             
         });

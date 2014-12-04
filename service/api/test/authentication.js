@@ -4,8 +4,7 @@ var RESTService = require('./RESTWrapper');
 describe('Authentication', function(){
     
     var user = {
-        "name": "John Tibble",
-        "username": "jtibble" + Math.floor(Math.random()*10000000).toString(),
+        "username": "authuser" + Math.floor(Math.random()*10000000).toString(),
         "password": "password"
     };
     

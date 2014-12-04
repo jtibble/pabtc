@@ -127,7 +127,6 @@ module.exports = {
         return getResource( serviceURL + endpoint);
     },
     
-    
     createTournament: function( tournament, APIKey ){
         return postToService( endpointURLs.tournaments, tournament );
     }

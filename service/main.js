@@ -52,7 +52,7 @@ var Service = function (config) {
 
             var port = 8080;
             server.listen(port);
-            console.log('%s listening on port %s', server.name, port);
+            console.log('%s listening on port %s \n=========', server.name, port);
         }
     };
 };

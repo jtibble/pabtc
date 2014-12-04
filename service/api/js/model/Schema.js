@@ -5,7 +5,6 @@ module.exports = {
     user: {
         _id: '',
         dateCreated: '',
-        name: '',
         username: '',
         password: '' 
     },
