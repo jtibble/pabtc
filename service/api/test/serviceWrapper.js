@@ -48,22 +48,29 @@ function postToService( endpoint, body, debug ){
             deferred.resolve(body);
             return;
         } else {
-            deferred.reject('service returned HTTP ' + response.statusCode);
+            var errorMessages = 'service returned HTTP ' + response.statusCode;
+            if( response.body && response.body.length ){
+                errorMessages += '\n' + JSON.stringify(body);   
+            }
+            deferred.reject(errorMessages);
             return;
         }
     });
     return deferred.promise;
 }
 
-/*function getResource( href ){
+function getResource( href ){
     var deferred = Q.defer();
 
     var options = {
         method: 'GET',
         url: href,
-        json: true,
-        jar: cookiesEnabled
+        json: true
     };
+    
+    if( cookiesEnabled ){
+        options.jar = j;
+    }
 
     request( options, function(error, response, body){
         if( !error && response ){
@@ -75,7 +82,7 @@ function postToService( endpoint, body, debug ){
         return;    
     });
     return deferred.promise;
-}*/
+}
 
 
 
@@ -106,15 +113,19 @@ module.exports = {
         };
         
         return postToService( endpointURLs.login, body );
-    }
-    
-    
-    
-    
-    /*getUsers: function(id){
-        var endpoint = 'users' + (id ? ('/' + id) : '');
-        return getResource( serviceURL + endpoint);
     },
+    
+    logoutUser: function(){
+        return postToService( endpointURLs.logout, {} );
+    },
+    
+    
+    
+    
+    getUsers: function(username){
+        var endpoint = 'users' + (username ? ('/' + username) : '');
+        return getResource( serviceURL + endpoint);
+    }/*,
     
     getTournaments: function(id){
         var endpoint = 'tournaments' + (id ? ('/' + id) : '');

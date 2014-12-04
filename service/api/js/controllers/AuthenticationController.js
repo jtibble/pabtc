@@ -1,5 +1,7 @@
 var AuthenticationService = require('../services/AuthenticationService');
 
+var cookieAge = 900000; // 15 minutes
+
 module.exports = [
     {
         'type': 'POST',
@@ -10,7 +12,7 @@ module.exports = [
             console.log('username/password: ' + req.body.username + '/' + req.body.password);
             
             AuthenticationService.login( req.body.username, req.body.password ).then( function(sessionId){
-                res.cookie('sessionId', sessionId, {maxAge: 900000}); // 15 minutes
+                res.cookie('sessionId', sessionId, {maxAge: cookieAge});
                 res.status(200).send(responseBody);
             }, function(error){
                 res.clearCookie('sessionId');
@@ -24,6 +26,7 @@ module.exports = [
         'name': 'logout',
         'response': function (req, res){
             AuthenticationService.logout( req.cookies.sessionId ).then( function(){
+                console.log('session destroyed, clearing client session cookie');
                 res.clearCookie('sessionId');
                 res.status(200).send();
             }, function(){

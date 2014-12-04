@@ -5,7 +5,9 @@ describe('Users', function(){
         it('Should return a new user href when called successfully', function(done){
             
             var user = {
-                name: 'John Tibble'
+                name: 'TestUser',
+                username: 'testuser' + Math.floor(Math.random()*100000000).toString(),
+                password: 'password'
             };
             
             RESTService.createUser( user ).then( function(user){
@@ -14,6 +16,8 @@ describe('Users', function(){
                 } else {
                     done('request succeeded, but received bad user data: ' + JSON.stringify(user));   
                 }
+            }, function(error){
+                done('failed to create user: ' + error);   
             });
             
         });
@@ -22,7 +26,11 @@ describe('Users', function(){
     describe('Get Users List', function(){
         it('Should get list of users', function(done){
               
-            var user = { name: 'John Tibble' };
+            var user = {
+                name: 'TestUser',
+                username: 'testuser' + Math.floor(Math.random()*100000000).toString(),
+                password: 'password'
+            };
             var numUsers;
             
             RESTService.getUsers().then( function(usersList){
@@ -32,9 +40,13 @@ describe('Users', function(){
                     done('could not get users list');
                 }
                 return RESTService.createUser( user );
+            }, function(){
+                done('can\'t get list of users');   
             })
             .then( function(user){
                 return RESTService.getUsers();
+            }, function(){
+                done('couldn\'t create user');   
             })
             .then( function(usersList){
                 if( usersList && usersList.length && usersList.length == (numUsers+1) ){
@@ -42,12 +54,14 @@ describe('Users', function(){
                 } else {
                     done( 'bad data for usersList' );   
                 }
+            }, function(){
+                done('couldn\'t get list of users again');   
             });
             
         });
     });
     
-    describe('Get User', function(){
+    /*describe('Get User', function(){
         it('Should get a specific user', function(done){
             
             var user = { name: 'John Tibble'};
@@ -66,5 +80,5 @@ describe('Users', function(){
             });
 
         });
-    });
+    });*/
 });

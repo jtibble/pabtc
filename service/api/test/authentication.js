@@ -11,22 +11,19 @@ describe('Authentication', function(){
     
     before( function(done){
         
-        RESTService.createUser( user )
-        .then( function(storedUser){
+        RESTService.createUser( user ).then( function(storedUser){
             user = storedUser;
             done();
         }, function( response ){
             done('failed to create user: ' + response);
         });
         
+        RESTService.enableCookies();
     });
     
     describe('Login', function(){
         it('Should log in successfully', function(done){
 
-            
-            RESTService.enableCookies();
-            
             RESTService.loginUser( user.username, user.password ).then( function(){
                 
                 var cookies = RESTService.getCookies();
@@ -45,9 +42,6 @@ describe('Authentication', function(){
         
         it('Should fail login with wrong password', function(done){
 
-            
-            RESTService.enableCookies();
-            
             RESTService.loginUser( user.username, 'randomPassword' ).then( function(){
                 
                 var cookies = RESTService.getCookies();
@@ -66,9 +60,6 @@ describe('Authentication', function(){
         
         it('Should fail login with wrong username', function(done){
 
-            
-            RESTService.enableCookies();
-            
             RESTService.loginUser( 'randomUsername', user.password ).then( function(){
                 
                 var cookies = RESTService.getCookies();
@@ -84,6 +75,29 @@ describe('Authentication', function(){
             });
             
         });
-    }); 
+    });
+    
+    describe('Logout', function(){
+        it('Should log out successfully', function(done){
+            RESTService.loginUser( user.username, user.password ).then( function(){
+                
+               return RESTService.logoutUser(); 
+                
+            }, function(){
+                done('failed to log in');
+            }).then( function(){
+                
+                var cookies = RESTService.getCookies();
+                if( !cookies || cookies.length == 0 ){
+                    done();
+                } else {
+                    done('did not delete cookie successfully');   
+                }
+                
+            }, function(){
+                done('failed to log out');  
+            });
+        });
+    });
 });
 	

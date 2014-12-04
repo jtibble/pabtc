@@ -14,7 +14,7 @@ module.exports = [
         'type': 'POST',
         'name': 'users',
         'response': function (req, res) {
-            var requiredProperties = ['name'];
+            var requiredProperties = ['username', 'password'];
 
             var responseBody = {};
 
@@ -35,19 +35,19 @@ module.exports = [
                 res.status(500).send(responseBody);
             });
         }
-    }/*,
+    },
     {
         'type': 'GET',
-        'name': 'users/:id?',
+        'name': 'users/:username?',
         'response': function (req, res) {
 
             var promise;
-            if( req.params && req.params.id ){
+            /*if( req.params && req.params.id ){
                 console.log('Requested users/' + req.params.id);
                 promise = storage.users.find('_id', req.params.id);
-            } else {
-                promise = storage.users.find();
-            }
+            } else {*/
+                promise = UsersService.find();
+            //}
             
             var responseBody = {};
 
@@ -66,7 +66,7 @@ module.exports = [
                 res.status(404).send(responseBody);
             });
         }
-    },
+    }/*,
     {
         'type': 'POST',
         'name': 'users/:id/generateAPIKey',

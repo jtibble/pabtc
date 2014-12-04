@@ -32,10 +32,6 @@ module.exports = {
 
         return deferred.promise;
     },
-    update: function( user ){
-        var deferred = Q.defer();
-        return deferred.promise;
-    },
     find: function( property, value ){
         var deferred = Q.defer();
 
@@ -53,7 +49,7 @@ module.exports = {
         });
 
         return deferred.promise;
-    },
+    }/*,
     createAPIKey: function( userId){
         var deferred = Q.defer();
 
@@ -102,5 +98,5 @@ module.exports = {
 
 
         return deferred.promise;
-    }  
+    }  */
 };
