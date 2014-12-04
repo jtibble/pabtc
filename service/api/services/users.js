@@ -1,4 +1,5 @@
 var storage = require('./storage.js');
+var security = require('./security');
 var requestValidator = require('./requestValidator.js');
 
 function createHREF( id ){
@@ -7,6 +8,36 @@ function createHREF( id ){
 }
 
 module.exports = [
+    {
+        'type': 'POST',
+        'name': 'login',
+        'response': function (req, res){
+            var responseBody = {};
+            
+            console.log('username/password: ' + req.body.username + '/' + req.body.password);
+            
+            security.login( req.body.username, req.body.password ).then( function(sessionId){
+                res.cookie('sessionId', sessionId, {maxAge: 900000}); // 15 minutes
+                res.status(200).send(responseBody);
+            }, function(error){
+                res.clearCookie('sessionId');
+                responseBody.issues = ['Authentication failed'];
+                res.status(401).send(responseBody); 
+            });
+        }
+    },
+    {
+        'type': 'POST',
+        'name': 'logout',
+        'response': function (req, res){
+            security.logout( req.cookies.sessionId ).then( function(){
+                res.clearCookie('sessionId');
+                res.status(200).send();
+            }, function(){
+                throw new Error('could not delete session from storage');   
+            });
+        }
+    },
     {
         'type': 'POST',
         'name': 'users',
@@ -49,7 +80,6 @@ module.exports = [
             var responseBody = {};
 
             promise.then( function(usersList){
-                debugger;
                 if( usersList ){
                     for( var i in usersList){
                         usersList[i].href = createHREF( usersList[i]._id );

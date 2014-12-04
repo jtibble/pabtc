@@ -1,5 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
 var request = require('request');
 
 //Services Definitions
@@ -16,6 +17,7 @@ var servicesConfig = {
 var Service = function (config) {
     var server = express();
     server.use(bodyParser.json());
+    server.use(cookieParser());
     console.log('dirname: ' + __dirname);
     server.use(express.static(__dirname + config.staticContentPath));
 

@@ -24,6 +24,7 @@
         "mongojs": "*",
         "node-uuid": "*",
         "body-parser": "*",
+		"cookie-parser": "*",
         "request": "2.40.0",
         "mocha": "1.21.4",
         "q": "1.0.1"

@@ -16,6 +16,10 @@ module.exports = {
         totalPlayers: 2,
         registeredPlayers: []
     },
+    session: {
+        _id: '',
+        createdTimestamp: ''
+    },
     event: {
         _id: '',
         dateCreated: ''

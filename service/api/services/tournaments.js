@@ -22,7 +22,13 @@ module.exports = [
                 return;
             }
             
-            var APIKey = req.get('APIKey');
+            //var APIKey = req.get('APIKey');
+            var sessionId = req.cookies.sessionId;
+            console.log('sessionId from cookie: ' + sessionId);
+            if( !sessionId || !security.checkAuthorization(sessionId) ){
+                res.status(403).send(responseBody);
+                return;
+            }
 
             if (!APIKey) {
                 responseBody = {message: 'Missing APIKey header'};
