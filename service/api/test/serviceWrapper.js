@@ -47,14 +47,18 @@ module.exports = {
         options.json = true;
         
         request( options, function(error, response, body){
-            if( !error && response && 
-                (response.statusCode == '200' || response.statusCode == '201')){
+            if( error || !response || !response.statusCode ){
+                deferred.reject('service returned bad response');
+                return;
+            }
+            
+            if( response && (response.statusCode == '200' || response.statusCode == '201')){
                 deferred.resolve(body);
                 return;
             } else {
                 deferred.reject('service returned HTTP ' + response.statusCode);
+                return;
             }
-            return;    
         });
         return deferred.promise;
     },
