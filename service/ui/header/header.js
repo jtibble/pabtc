@@ -14,5 +14,12 @@ app.controller('HeaderController', function($scope, $state, FrameworkAJAX){
         });
     };
     
-    return ;
+    // Fetch the session, if available
+    FrameworkAJAX.sendRequest( {method: 'GET', url: '/api/v0/session', data: {}}, function(session){
+        $scope.Model.sessionActive = true;
+        $scope.Model.username = session.username;
+    }, function(){
+        $scope.Model.sessionActive = false; 
+        $scope.Model.username = undefined;
+    });
 });

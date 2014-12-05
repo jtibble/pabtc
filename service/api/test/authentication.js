@@ -98,5 +98,12 @@ describe('Authentication', function(){
             });
         });
     });
+    
+    describe('Session', function(){
+        xit('Should be renewed by calling the session service', function(done){
+            // TODO
+            done(); 
+        });
+    });
 });
 	

@@ -9,7 +9,8 @@
         <a href="#/tournaments">Tournaments</a><br>
     </div>
     <div class="col-xs-6">
-        <button ng-click="Actions.goTo('login')" class="btn btn-default">Log In</button><br>
-        <button ng-click="Actions.logout()" class="btn btn-default">Log Out</button>
+        <span ng-show="Model.username">Logged in as {{Model.username}}</span><br>
+        <button ng-show="!Model.sessionActive" ng-click="Actions.goTo('login')" class="btn btn-default">Log In</button><br>
+        <button ng-show="Model.sessionActive" ng-click="Actions.logout()" class="btn btn-default">Log Out</button>
     </div>
 </div>
