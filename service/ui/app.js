@@ -55,3 +55,31 @@ app.directive('header', function(){
     controller: 'HeaderController'
   };
 });
+
+app.provider('SessionService', function(){
+    return {
+        $get: function(FrameworkAJAX){
+            return {
+                callbacks: [],
+                getSession: function(){
+                    
+                      // Fetch the session, if available
+                    FrameworkAJAX.sendRequest( {method: 'GET', url: '/api/v0/session', data: {}}, angular.bind(this, function(session){
+                        this.notifyListeners(session);
+                    }), angular.bind(this, function(){
+                        this.notifyListeners( undefined );
+                    }));
+                },
+                registerCallback: function( callback ){
+                    this.callbacks.push( callback );
+                },
+                notifyListeners: function(session){
+                    for( var i in this.callbacks ){
+                        this.callbacks[i]( session );
+                    }  
+                }
+            };   
+        }
+    };
+     
+});

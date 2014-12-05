@@ -1,4 +1,4 @@
-app.controller('LoginController', function($scope, FrameworkAJAX, $state){
+app.controller('LoginController', function($scope, FrameworkAJAX, $state, SessionService){
     $scope.Actions = {};
     $scope.Model = {};
     
@@ -13,7 +13,7 @@ app.controller('LoginController', function($scope, FrameworkAJAX, $state){
         };
         FrameworkAJAX.sendRequest(request, function(response){
             console.log('logged in');
-            
+            SessionService.getSession();
             $state.go('home');
         }, function(){
             console.log('login failed');
