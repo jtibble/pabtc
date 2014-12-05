@@ -2,23 +2,23 @@
 
 
 		
-<h3>Create Tournament</h3>
-<table>
-    <tbody>
-        <tr>
-            <td>Name</td>
-            <td><input ng-model="Model.newTournament.name" placeholder="Tournament Name"></td>
-        </tr>
-        <tr>
-            <td><button class="btn btn-default" ng-click="Actions.createTournament()">Create Tournament</button></td>
-        </tr>
-    </tbody>
-</table>
-<br><br>
+<h3 ng-show="Model.sessionActive">Create Tournament as {{Model.username}}</h3>
+<form>
+    <table ng-show="Model.sessionActive">
+        <tbody>
+            <tr>
+                <td>Name</td>
+                <td><input ng-model="Model.newTournament.name" placeholder="Tournament Name"></td>
+            </tr>
+            <tr>
+                <td><button class="btn btn-default" ng-click="Actions.createTournament()">Create Tournament</button></td>
+            </tr>
+        </tbody>
+    </table>
+</form>
 
 <br>
 
-<h3>Tournaments</h3>
 <table ng-show="Model.tournaments.length" class="table">
     <thead>
         <tr>
@@ -33,7 +33,7 @@
         <tr ng-repeat="tournament in Model.tournaments">
             <td><a href="#/tournaments/{{tournament._id}}">{{tournament.name}}</a>
             <td>{{tournament.dateCreated | date: 'MMM d, y h:mm a'}}</td>
-            <td><a href="#/users/{{tournament.createdBy}}">{{tournament.createdBy}}</a></td>
+            <td><!--<a href="#/users/{{tournament.createdBy}}">-->{{tournament.createdBy}}<!--</a>--></td>
             <td>
                 {{tournament.registeredPlayers.length}} / {{tournament.totalPlayers}}<br>
                 <table>

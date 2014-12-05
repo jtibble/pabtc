@@ -61,12 +61,15 @@ app.provider('SessionService', function(){
         $get: function(FrameworkAJAX){
             return {
                 callbacks: [],
+                lastSession: undefined,
                 getSession: function(){
                     
                       // Fetch the session, if available
                     FrameworkAJAX.sendRequest( {method: 'GET', url: '/api/v0/session', data: {}}, angular.bind(this, function(session){
+                        this.lastSession = session;
                         this.notifyListeners(session);
                     }), angular.bind(this, function(){
+                        this.lastSession = undefined;
                         this.notifyListeners( undefined );
                     }));
                 },

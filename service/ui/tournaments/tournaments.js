@@ -1,11 +1,27 @@
 
-app.controller('TournamentsController', function($scope, FrameworkAJAX, $stateParams){
+app.controller('TournamentsController', function($scope, FrameworkAJAX, $stateParams, SessionService){
     $scope.Actions = {};
     $scope.Model = {};
+    
+    
     
     if( $stateParams && $stateParams.id && $stateParams.id.length ){
         $scope.Model.selectedId = $stateParams.id;
     }
+    
+    
+    $scope.Actions.updateSession = function( session ){
+        if( session ){
+            $scope.Model.username = session.username;
+            $scope.Model.sessionActive = true;
+        } else {
+            $scope.Model.username = undefined;
+            $scope.Model.sessionActive = false;
+        }
+    };
+    
+    SessionService.registerCallback( $scope.Actions.updateSession );
+    $scope.Actions.updateSession( SessionService.lastSession );
     
 	var fetchTournaments = function(){
     
