@@ -32,5 +32,5 @@ module.exports = [
                 throw new Error('could not delete session from storage');   
             });
         }
-    },
+    }
 ]

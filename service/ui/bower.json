@@ -7,7 +7,7 @@
   ],
   "description": "UI for interacting with the PABTC REST API",
   "dependencies": [
-    "angular-ui-router#~0.2.11"
+    "angular-ui-router"
   ],
   "main": "app.js",
   "license": "MIT",

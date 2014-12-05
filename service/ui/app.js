@@ -51,6 +51,7 @@ app.provider('FrameworkAJAX', function(){
 
 app.directive('header', function(){
   return {
-    templateUrl: '/header/header.html'
+    templateUrl: '/header/header.html',
+    controller: 'HeaderController'
   };
 });
