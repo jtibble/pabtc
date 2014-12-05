@@ -4,7 +4,10 @@ module.exports = {
     create: function( newTournament ){
         return TournamentsDao.create( newTournament );
     },
-    find: function(){
-        return TournamentsDao.find();   
+    find: function( query ){
+        return TournamentsDao.find( query );   
+    },
+    update: function( id, updateParams ){
+        return TournamentsDao.update( id, updateParams );   
     }
 };

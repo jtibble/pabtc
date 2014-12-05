@@ -17,20 +17,55 @@
     </table>
 </form>
 
-<br>
+<hr>
 
-<table ng-show="Model.tournaments.length" class="table">
+
+<h3>Active Tournaments</h3>
+
+<table class="table">
     <thead>
         <tr>
             <th>Name</th>
-            <th>Date Created</th>
+            <th>Date</th>
+            <th>Winner</th>
+            <th>Prizes</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="tournament in Model.activeTournaments">
+            <td><a href="#/tournaments/{{tournament._id}}">{{tournament.name}}</a></td>
+            <td>{{tournament.date}}</td>
+            <td>{{tournament.winner}}</td>
+            <td>{{tournament.prize}}</td>
+            <td>
+                <button class="btn btn-default" ng-click="Actions.viewTournamentDetails(tournament)">
+                    Details
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<br>
+<br>
+
+<h3>Upcoming Tournaments</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Start Date</th>
+            <!--<th>Date Created</th>-->
             <th>Created By</th>
+            <th>Prizes</th>
             <th>Registered Players</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="tournament in Model.tournaments">
+        <tr ng-repeat="tournament in Model.pendingTournaments">
             <td><a href="#/tournaments/{{tournament._id}}">{{tournament.name}}</a>
             <td>{{tournament.dateCreated | date: 'MMM d, y h:mm a'}}</td>
             <td><!--<a href="#/users/{{tournament.createdBy}}">-->{{tournament.createdBy}}<!--</a>--></td>
@@ -42,7 +77,40 @@
                     </tr>
                 </table>
             </td>
-            <td><button class="btn btn-default" ng-click="Actions.selectTournament(tournament)">Select</button></td>
+            <td>
+                <button class="btn btn-default" ng-click="Actions.viewTournamentDetails(tournament)">
+                    Details
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<br>
+<br>
+
+<h3>Concluded Tournaments</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Date</th>
+            <th>Winner</th>
+            <th>Prizes</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="tournament in Model.concludedTournaments">
+            <td><a href="#/tournaments/{{tournament._id}}">{{tournament.name}}</a></td>
+            <td>{{tournament.date}}</td>
+            <td>{{tournament.winner}}</td>
+            <td>{{tournament.prize}}</td>
+            <td>
+                <button class="btn btn-default" ng-click="Actions.viewTournamentDetails(tournament)">
+                    Details
+                </button>
+            </td>
         </tr>
     </tbody>
 </table>

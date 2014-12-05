@@ -54,11 +54,11 @@ module.exports = [
     },
     {
         'type': 'GET',
-        'name': 'tournaments/:id?',
+        'name': 'tournaments',
         'response': function (req, res) {            
             var responseBody = {};
             
-            TournamentsService.find().then( function(tournamentsList){
+            TournamentsService.find( req.query ).then( function(tournamentsList){
                 if( tournamentsList ){
                     res.status(200).send(tournamentsList);
                 } else {
@@ -70,19 +70,21 @@ module.exports = [
                 res.status(500).send(responseBody);
             });
         }
-    }/*,
+    },
     {
         'type': 'POST',
-        'name': 'tournaments/:id/registerUsers',
+        'name': 'tournaments/:id',
         'response': function (req, res) {      
             var responseBody = {};
-            if ( !req.params.id || !req.body || !req.body.usersList){
-                responseBody = {message: 'Bad request. Check the API documentation.'};
-                res.status(400).send(responseBody);
-                return;
-            }
             
-            storage.tournaments.registerUsers( req.params.id, req.body.usersList ).then( function(registration){
+            TournamentsService.update( req.params.id, req.body ).then( function(){
+                res.status(200).send();
+            }, function(error){
+                res.status(500).send( error.message ); 
+            });
+        }
+            
+            /*storage.tournaments.registerUsers( req.params.id, req.body.usersList ).then( function(registration){
                 if( registration ){
                    res.status(200).send(registration); 
                 } else {
@@ -90,9 +92,9 @@ module.exports = [
                 }
             }, function(message){ 
                 res.status(500).send( {message: message} ); 
-            });
-        }
-    },
+            });*/
+    }
+    /*,
     {
         'type': 'POST',
         'name': 'tournaments/:id/beginTournament',

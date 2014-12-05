@@ -10,14 +10,7 @@ var tournamentsCollection = db.collection('tournaments');
 module.exports = {
     create: function( params ){
         var deferred = Q.defer();
-
-        // Find the user creating the tournament by API key
-        /*usersStorage.find('APIKey', APIKey).then( function(userList){
-            if (!userList || userList.length != 1 || userList[0].APIKey != APIKey) {
-                deferred.reject('User API key is not correct');
-                return;
-            }*/
-
+        
         var newTournament = Schema.create('tournament');
         var newTournamentKeys = Object.keys(newTournament);
 
@@ -37,25 +30,11 @@ module.exports = {
             }
         });
 
-        /*}, function(error){
-            deferred.reject(error);
-        });*/
-
         return deferred.promise;
-    }/*,
-    update: function( tournament ){
+    },
+    find: function( query ){
         var deferred = Q.defer();
-        return deferred.promise;
-    }*/,
-    find: function( property, value ){
-        var deferred = Q.defer();
-
-        var query = {};
-        var projection = { _id: 0 };
-
-        if( property && value ){
-            query[property] = value;   
-        }
+        var projection = {};
 
         tournamentsCollection.find(query, projection, function(error, tournamentsList){
             if( !error && tournamentsList ){
@@ -65,6 +44,41 @@ module.exports = {
             }
         });
 
+        return deferred.promise;
+    },
+    update: function( tournamentId, updateParams ){
+        var deferred = Q.defer();
+        
+        if( !updateParams ){
+            deferred.reject( new Error('no update parameters specified'));
+            return;
+        }
+        
+        var updateKeys= {};
+        
+        // Selectively add keys to update. Don't add tons of keys from REST request, of course
+        if( updateParams.status ){
+            updateKeys.status = updateParams.status;
+        }
+        
+        console.log('TournamentDao updating tournament ' + tournamentId);
+        
+        tournamentsCollection.findAndModify( {
+            query: {_id: tournamentId },
+            update: { 
+                $set: updateKeys
+            },
+            new: true
+        }, function(error, updatedTournament){
+            if( !error ){
+                deferred.resolve(updatedTournament);
+            } else {
+                deferred.reject( new Error('could not update tournament in db'));   
+            }
+        });
+        
+        
+        
         return deferred.promise;
     }/*,
     registerUsers: function( tournamentId, userIdList ){

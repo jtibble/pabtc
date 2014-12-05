@@ -14,7 +14,8 @@ module.exports = {
         name: '',
         createdBy: '',
         totalPlayers: 2,
-        registeredPlayers: []
+        registeredPlayers: [],
+        status: 'pending'
     },
     session: {
         _id: '',

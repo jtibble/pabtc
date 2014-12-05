@@ -1,7 +1,11 @@
 
-app.controller('TournamentsController', function($scope, FrameworkAJAX, $stateParams, SessionService){
+app.controller('TournamentsController', function($scope, FrameworkAJAX, $stateParams, SessionService, $modal){
     $scope.Actions = {};
-    $scope.Model = {};
+    $scope.Model = {
+        pendingTournaments: [],
+        activeTournaments: [],
+        concludedTournaments: []
+    };
     
     
     
@@ -23,20 +27,20 @@ app.controller('TournamentsController', function($scope, FrameworkAJAX, $statePa
     SessionService.registerCallback( $scope.Actions.updateSession );
     $scope.Actions.updateSession( SessionService.lastSession );
     
-	var fetchTournaments = function(){
+	var fetchTournaments = function(status){
     
 		var tournamentsRequest = {
 			method: 'GET',
-			url: '/api/v0/tournaments' + ($scope.Model.selectedId ? ('/' + $scope.Model.selectedId) : ''),
+			url: '/api/v0/tournaments?status=' + status,
 			data: {}
 		};
 
 		FrameworkAJAX.sendRequest(tournamentsRequest, function(data){
-			$scope.Model.tournaments = data;
+            $scope.Model[ status + 'Tournaments'] = data;
+			//$scope.Model.tournaments = data;
 		}, function(){ 
-			console.log('error getting tournaments');
+			console.log('error getting ' + status + ' tournaments');
 		});
-		
 	};
     
     
@@ -51,38 +55,28 @@ app.controller('TournamentsController', function($scope, FrameworkAJAX, $statePa
         };
 		
         FrameworkAJAX.sendRequest(APIKeyRequest, function(data){
-			fetchTournaments();
+            fetchTournaments('pending');
         }, function(){
             console.log('error creating tournament');
         });
     };
     
-    $scope.Actions.selectTournament = function( tournament ){
+    $scope.Actions.viewTournamentDetails = function( tournament ){
         $scope.Model.selectedTournament = tournament;  
-    };
-    $scope.Actions.registerUsersToTournament = function(){
-        var userIdList = [];
-        for( var i in $scope.Model.selectedUsers ){
-            userIdList.push( $scope.Model.selectedUsers[i]._id);
-        }
-        
-        var RegisterUsersRequest = {
-            method: 'POST',
-            url: $scope.Model.selectedTournament.href + '/registerUsers',
-            data: {
-                usersList: userIdList
+        var modalInstance = $modal.open({
+            templateUrl: 'tournaments/tournamentModal.html',
+            controller: 'TournamentModalController',
+            size: 'lg',
+            resolve: {
+                tournament: function () {
+                    return $scope.Model.selectedTournament;
+                }
             }
-        };
-		
-        FrameworkAJAX.sendRequest(RegisterUsersRequest, function(data){
-			fetchTournaments();
-        }, function(){
-            console.log('error registering users');
         });
-        
     };
     
-    
-    fetchTournaments();
+    fetchTournaments('pending');
+    fetchTournaments('active');
+    fetchTournaments('concluded');
 });
 
