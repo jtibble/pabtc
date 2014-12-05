@@ -11,12 +11,14 @@ app.controller('LoginController', function($scope, FrameworkAJAX, $state, Sessio
                 password: $scope.Model.password
             }
         };
-        FrameworkAJAX.sendRequest(request, function(response){
+        FrameworkAJAX.sendRequest(request, angular.bind(this, function(response){
             console.log('logged in');
+            $scope.Model.statusText = undefined;
             SessionService.getSession();
             $state.go('home');
-        }, function(){
+        }), angular.bind(this, function(){
+            $scope.Model.statusText = "Login Failed. Please try again."
             console.log('login failed');
-        });
+        }));
     };    
 });

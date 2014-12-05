@@ -13,7 +13,7 @@ module.exports = {
             
             if( accountList.length == 0 ){
                 //console.log('Could not find user \'' + username + '\' in database');
-                deferred.reject( new Error('User not found') );
+                deferred.reject( new Error('user not found') );
                 return;
             }
             
