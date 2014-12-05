@@ -1,5 +1,5 @@
 //var storage = require('./storage.js');
-var RequestValidator = require('../RequestValidator');
+var RequestValidator = require('./RequestValidator');
 var TournamentsService = require('../services/TournamentsService');
 var AuthenticationService = require('../services/AuthenticationService');
 

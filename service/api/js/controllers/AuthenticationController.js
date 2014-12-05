@@ -1,5 +1,5 @@
 var AuthenticationService = require('../services/AuthenticationService');
-
+var RequestValidator = require('./RequestValidator');
 var cookieAge = 900000; // 15 minutes
 
 module.exports = [

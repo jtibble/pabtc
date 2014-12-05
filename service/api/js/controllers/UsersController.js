@@ -1,6 +1,6 @@
 //var storage = require('./storage.js');
 //var security = require('./security');
-var RequestValidator = require('../RequestValidator');
+var RequestValidator = require('./RequestValidator');
 var UsersService = require('../services/UsersService');
 
 function createHREF( id ){
