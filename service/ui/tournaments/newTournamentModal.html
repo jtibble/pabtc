@@ -1,0 +1,20 @@
+<div class="container">
+    <h3>Create New Tournament</h3>
+    <div style="display:inline-block; min-height:290px;">
+    <form> 
+        
+        Tournament Name: <input ng-model="Model.name" type="text"/><br>
+        Total Players: <input ng-model="Model.totalPlayers" type="number"/><br><br>
+
+        Prize Amount: <input ng-model="Model.prizeAmount" type="number"/><br>
+        Price Currency: <select ng-model="Model.prizeCurrency" ng-options="value for value in Model.prizeCurrencyOptions"></select><br><br>
+
+        Registration Begin Date: <datepicker ng-model="Model.registrationBeginDate" min-date="minDate" show-weeks="true" class="well well-sm"></datepicker><br>
+        Registration End Date: <datepicker ng-model="Model.registrationCloseDate" min-date="minDate" show-weeks="true" class="well well-sm"></datepicker><br>
+
+        Begin Date: <datepicker ng-model="Model.date" min-date="minDate" show-weeks="true" class="well well-sm"></datepicker><br><br>
+        
+        <button class="btn btn-default" ng-click="Actions.createTournament()">Create</button>
+    </form>
+    </div>
+</div>

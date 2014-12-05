@@ -1,24 +1,7 @@
 <h3>Tournaments</h3>
-
-
-		
+	
 <h3 ng-show="Model.sessionActive">Create Tournament as {{Model.username}}</h3>
-<form>
-    <table ng-show="Model.sessionActive">
-        <tbody>
-            <tr>
-                <td>Name</td>
-                <td><input ng-model="Model.newTournament.name" placeholder="Tournament Name"></td>
-            </tr>
-            <tr>
-                <td><button class="btn btn-default" ng-click="Actions.createTournament()">Create Tournament</button></td>
-            </tr>
-        </tbody>
-    </table>
-</form>
-
-<hr>
-
+<button class="btn btn-default" ng-click="Actions.showNewTournamentModal()">Create Tournament</button>
 
 <h3>Active Tournaments</h3>
 

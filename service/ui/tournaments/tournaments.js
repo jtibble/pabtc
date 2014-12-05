@@ -43,22 +43,12 @@ app.controller('TournamentsController', function($scope, FrameworkAJAX, $statePa
 		});
 	};
     
-    
-    $scope.Actions.createTournament = function(){
-		
-        var APIKeyRequest = {
-            method: 'POST',
-            url: '/api/v0/tournaments',
-            data: {
-                name: $scope.Model.newTournament.name
-            }
-        };
-		
-        FrameworkAJAX.sendRequest(APIKeyRequest, function(data){
-            fetchTournaments('pending');
-        }, function(){
-            console.log('error creating tournament');
-        });
+    $scope.Actions.showNewTournamentModal = function(){
+        var modalInstance = $modal.open({
+            templateUrl: 'tournaments/newTournamentModal.html',
+            controller: 'NewTournamentModalController',
+            size: 'lg'
+        });  
     };
     
     $scope.Actions.viewTournamentDetails = function( tournament ){
