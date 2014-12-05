@@ -42,5 +42,35 @@ module.exports = {
         var deferred = Q.defer();
         
         return deferred.promise;
+    },
+    
+    renewSession: function( sessionId ){
+        var deferred = Q.defer();
+        
+        var newSession = Schema.create('session');
+        
+        sessionCollection.findAndModify( {
+            query: {_id: sessionId}, 
+            update: {$set: {dateCreated: newSession.dateCreated}},
+            new: true
+        }, function(error, updatedSession){
+            if( !error ){
+                deferred.resolve(updatedSession);
+            } else {
+                deferred.reject( new Error('could not update session dateCreated'));
+            }
+        });
+        
+        /*sessionCollection.find( {_id: sessionId}, function(error, sessionList){
+            if( !error && sessionList ){
+                deferred.resolve( sessionList[0] );
+            } else {
+                deferred.reject( new Error('Could not find session in db'));   
+            }
+        });       */
+        
+        //deferred.resolve(true);  //TODO actually renew the session
+        
+        return deferred.promise;
     }
 };

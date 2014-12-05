@@ -18,8 +18,7 @@ module.exports = {
     },
     session: {
         _id: '',
-        username: '',
-        createdTimestamp: ''
+        username: ''
     },
     event: {
         _id: '',

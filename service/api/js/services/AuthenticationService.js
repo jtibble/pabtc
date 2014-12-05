@@ -43,18 +43,28 @@ module.exports = {
     
     checkAuthorization: function(sessionId, requestedPermission){
         var deferred = Q.defer();
-        // retrieve session from database
-        // if session is still valid,
-        // compare requested permission to stored permissions
-        // if successful, return true else false
-        // if session has timed out, call logout and return error to caller
         
         SessionDao.findSession( sessionId ).then(function( session ){
             
-            deferred.resolve( session );
+            // Check if session is expired TODO
+            var sessionExpired = false;
+            
+            if( sessionExpired ){
+                SessionDao.deleteSession().then( function(){
+                    deferred.reject( new Error('session expired and was deleted. log in again.'));    
+                }, function(){
+                    deferred.reject( new Error('could not delete session'));
+                });
+            } else {
+                SessionDao.renewSession(sessionId).then( function( renewedSession){
+                    deferred.resolve( renewedSession );  
+                }, function(){
+                    deferred.reject( new Error('could not renew session'));   
+                });
+            }
             
         }, function( error ){
-            deferred.reject( new Error('Could not find session'));   
+            deferred.reject( new Error('Could not find session: ' + error.message));   
         });
         
         return deferred.promise;

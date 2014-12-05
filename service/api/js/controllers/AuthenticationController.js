@@ -32,5 +32,24 @@ module.exports = [
                 throw new Error('could not delete session from storage');   
             });
         }
+    },
+    {
+        'type': 'GET',
+        'name': 'session',
+        'response': function (req, res){
+            
+            if( !req.cookies.sessionId ){
+                res.status(401).send();
+                return;
+            }
+            
+            AuthenticationService.checkAuthorization( req.cookies.sessionId ).then( function(session){
+                res.cookie('sessionId', req.cookies.sessionId, {maxAge: cookieAge});
+                res.status(200).send(session);
+            }, function(){
+                res.status(500).send();
+                throw new Error('could not delete session from storage');   
+            });
+        }
     }
 ]
