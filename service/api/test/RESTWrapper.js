@@ -7,6 +7,7 @@ var endpointURLs = {
     users: 'users', 
     login: 'login',
     logout: 'logout',
+    session: 'session',
     tournaments: 'tournaments'
 };
 
@@ -118,7 +119,9 @@ module.exports = {
     logoutUser: function(){
         return postToService( endpointURLs.logout, {} );
     },
-    
+    getSession: function(){
+        return getResource( endpointURLs.session );  
+    },
     
     
     

@@ -100,9 +100,29 @@ describe('Authentication', function(){
     });
     
     describe('Session', function(){
-        xit('Should be renewed by calling the session service', function(done){
-            // TODO
-            done(); 
+        it('Should be renewed by calling the session service', function(done){
+            
+            var cookieExpiration;
+            
+            RESTService.loginUser( user.username, user.password ).then( function(){
+                
+                cookieExpiration = RESTService.getCookies()[0].expires;
+                
+                return RESTService.getSession(); 
+                
+            }, function(){
+                done('failed to log in');
+            }).then( function(){
+                
+                var newExpiration = RESTService.getCookies()[0].expires;
+                if( newExpiration - cookieExpiration >= 0 ){
+                    done();
+                } else {
+                    done( 'calling session service did not extend session');
+                }
+            }, function(){
+                done('failed to call session service');  
+            });
         });
     });
 });
