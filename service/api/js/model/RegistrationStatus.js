@@ -1,4 +1,4 @@
-module.export = [
+module.exports = [
     'New',
     'Payment Requested',
     'Payment Sent',

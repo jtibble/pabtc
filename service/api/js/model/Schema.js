@@ -14,7 +14,7 @@ module.exports = {
         name: '',
         createdBy: '',
         totalPlayers: 2,
-        registeredPlayers: [],
+        registrations: [],
         status: 'pending'
     },
     session: {
@@ -24,6 +24,13 @@ module.exports = {
     event: {
         _id: '',
         dateCreated: ''
+    },
+    registration: {
+        _id: '',
+        dateCreated: '',
+        status: '',
+        username: '',
+        tournamentId: ''
     },
     
     create: function( objectName ){

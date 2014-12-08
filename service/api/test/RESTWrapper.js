@@ -8,7 +8,8 @@ var endpointURLs = {
     login: 'login',
     logout: 'logout',
     session: 'session',
-    tournaments: 'tournaments'
+    tournaments: 'tournaments',
+    registration: 'registration'
 };
 
 var cookiesEnabled = false;
@@ -140,11 +141,16 @@ module.exports = {
         return postToService( endpointURLs.tournaments, tournament );
     },
     
-    getTournaments: function(id, query){
+    getTournaments: function(query){
         return getResource( endpointURLs.tournaments, query);
     },
     changeTournamentStatus: function(id, status){
         return postToService( endpointURLs.tournaments + '/' + id, {status: status});   
+    },
+    
+    
+    registerUserForTournament: function( tournamentId ){
+        return postToService( endpointURLs.registration, {tournamentId: tournamentId});   
     }/*,
     
     // CREATE Resources

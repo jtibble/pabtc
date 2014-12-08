@@ -145,38 +145,5 @@ describe('Tournaments', function(){
             });    
         });
     });
-    
-    describe('Register Users For Tournament', function(){
-        xit('Should create tournament, and register users for it', function(done){
 
-              
-            var tournament = {name: 'Registration Tournament'};
-            
-            RESTService.createTournament( tournament )
-            .then( function(tournament){
-                return RESTService.changeTournamentStatus( tournament._id, 'Registration Open' );                
-            }, function(){
-                done('failed to create tournament');
-            })
-            .then( function(){
-                return RESTService.getTournaments();
-            }, function(){
-                done('failed to change tournament status');
-            })
-            .then( function(tournamentsList){
-                
-                for( var i in tournamentsList ){
-                    if( tournamentsList[i].status === 'Registration Open' ){
-                        done();
-                        return;
-                    }
-                } 
-                
-                done('could not find tournament with changed status');
-            }, function(){
-                done('failed to get tournaments list');
-            }); 
-          
-        });	
-	});
 });

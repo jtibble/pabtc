@@ -1,12 +1,6 @@
-//var storage = require('./storage.js');
 var RequestValidator = require('./RequestValidator');
 var TournamentsService = require('../services/TournamentsService');
 var AuthenticationService = require('../services/AuthenticationService');
-
-function createHREF( id ){
-    var domain = 'tournaments';
-    return 'http://localhost:8080/api/v0/' + domain + '/' + id;
-}
 
 module.exports = [
     {
@@ -83,16 +77,6 @@ module.exports = [
                 res.status(500).send( error.message ); 
             });
         }
-            
-            /*storage.tournaments.registerUsers( req.params.id, req.body.usersList ).then( function(registration){
-                if( registration ){
-                   res.status(200).send(registration); 
-                } else {
-                   res.status(500).send(registration); 
-                }
-            }, function(message){ 
-                res.status(500).send( {message: message} ); 
-            });*/
     }
     /*,
     {
