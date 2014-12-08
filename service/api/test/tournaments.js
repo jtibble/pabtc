@@ -121,19 +121,19 @@ describe('Tournaments', function(){
             
             RESTService.createTournament( tournament )
             .then( function(tournament){
-                return RESTService.changeTournamentStatus( tournament._id, 'testStatus' );                
+                return RESTService.changeTournamentStatus( tournament._id, 'Registration Open' );                
             }, function(){
                 done('failed to create tournament');
             })
             .then( function(){
                 return RESTService.getTournaments();
             }, function(){
-                console.log('failed to change tournament status');
+                done('failed to change tournament status');
             })
             .then( function(tournamentsList){
                 
                 for( var i in tournamentsList ){
-                    if( tournamentsList[i].status === 'testStatus' ){
+                    if( tournamentsList[i].status === 'Registration Open' ){
                         done();
                         return;
                     }
@@ -145,37 +145,38 @@ describe('Tournaments', function(){
             });    
         });
     });
-    /*
+    
     describe('Register Users For Tournament', function(){
-        it('Should create tournament, and register users for it', function(done){
+        xit('Should create tournament, and register users for it', function(done){
 
-            // Create user that will then create tournament
-            var tournament = {name: 'test registration tournament'};
+              
+            var tournament = {name: 'Registration Tournament'};
             
-            RESTService.createTournament( tournament, userAPIKey )
-            .then( function(savedTournament){
-                tournament = savedTournament;
-                return RESTService.registerUsersForTournament( savedTournament._id, [user._id]);     
+            RESTService.createTournament( tournament )
+            .then( function(tournament){
+                return RESTService.changeTournamentStatus( tournament._id, 'Registration Open' );                
+            }, function(){
+                done('failed to create tournament');
             })
-            .then( function(registration){
-                return RESTService.getTournaments(tournament._id);
+            .then( function(){
+                return RESTService.getTournaments();
+            }, function(){
+                done('failed to change tournament status');
             })
             .then( function(tournamentsList){
-                if( tournamentsList.length != 1){
-                    done('more than one tournament returned');
-                    return;
-                }
                 
-                if( tournamentsList[0]._id == tournament._id &&
-                    tournamentsList[0].registeredPlayers[0].name == user.name ){
+                for( var i in tournamentsList ){
+                    if( tournamentsList[i].status === 'Registration Open' ){
                         done();
-                } else {
-                    done('user could not be found in tournament they registered for');
-                }
+                        return;
+                    }
+                } 
                 
-                
-            });
+                done('could not find tournament with changed status');
+            }, function(){
+                done('failed to get tournaments list');
+            }); 
           
         });	
-	});*/
+	});
 });

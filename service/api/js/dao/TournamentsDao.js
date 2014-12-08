@@ -7,6 +7,8 @@ var mongojs = require('mongojs');
 var db = mongojs('test');
 var tournamentsCollection = db.collection('tournaments');
 
+var tournamentStatusList = require('../model/TournamentStatus.js');
+
 module.exports = {
     create: function( params ){
         var deferred = Q.defer();
@@ -57,8 +59,14 @@ module.exports = {
         var updateKeys= {};
         
         // Selectively add keys to update. Don't add tons of keys from REST request, of course
-        if( updateParams.status ){
-            updateKeys.status = updateParams.status;
+        if( updateParams.status){
+            if( tournamentStatusList.indexOf( updateParams.status ) != -1 ){                    
+                updateKeys.status = updateParams.status;
+            } else {
+                console.log('tried to update tournament status to invalid value');
+                deferred.reject('requested tournament status is not valid');
+                return deferred.promise;
+            }
         }
         
         console.log('TournamentDao updating tournament ' + tournamentId);
