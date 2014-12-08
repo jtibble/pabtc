@@ -60,14 +60,20 @@ function postToService( endpoint, body, debug ){
     return deferred.promise;
 }
 
-function getResource( endpoint ){
+function getResource( endpoint, query ){
     var deferred = Q.defer();
 
+    
+    
     var options = {
         method: 'GET',
         url: serviceURL + endpoint,
         json: true
     };
+    
+    if( query ){
+        options.url += '?' + query;   
+    }
     
     if( cookiesEnabled ){
         options.jar = j;
@@ -134,8 +140,11 @@ module.exports = {
         return postToService( endpointURLs.tournaments, tournament );
     },
     
-    getTournaments: function(id){
-        return getResource( endpointURLs.tournaments);
+    getTournaments: function(id, query){
+        return getResource( endpointURLs.tournaments, query);
+    },
+    changeTournamentStatus: function(id, status){
+        return postToService( endpointURLs.tournaments + '/' + id, {status: status});   
     }/*,
     
     // CREATE Resources

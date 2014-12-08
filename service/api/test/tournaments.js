@@ -113,6 +113,38 @@ describe('Tournaments', function(){
           
         });	
 	});
+    
+    describe('Change Tournament Status', function(){
+        it('Should create tournament and change its status', function(done){
+            
+            var tournament = {name: 'Status Change Tournament'};
+            
+            RESTService.createTournament( tournament )
+            .then( function(tournament){
+                return RESTService.changeTournamentStatus( tournament._id, 'testStatus' );                
+            }, function(){
+                done('failed to create tournament');
+            })
+            .then( function(){
+                return RESTService.getTournaments();
+            }, function(){
+                console.log('failed to change tournament status');
+            })
+            .then( function(tournamentsList){
+                
+                for( var i in tournamentsList ){
+                    if( tournamentsList[i].status === 'testStatus' ){
+                        done();
+                        return;
+                    }
+                } 
+                
+                done('could not find tournament with changed status');
+            }, function(){
+                done('failed to get tournaments list');
+            });    
+        });
+    });
     /*
     describe('Register Users For Tournament', function(){
         it('Should create tournament, and register users for it', function(done){
