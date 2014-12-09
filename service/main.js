@@ -51,7 +51,7 @@ var Service = function (config) {
                 this.addEndpoint(serviceMethod, serviceName, serviceResponse);
             }
 
-            var port = 8080;
+            var port = 80;
             server.listen(port);
             console.log('%s listening on port %s \n=========', server.name, port);
         }
