@@ -1,7 +1,18 @@
 <div class="container">
     <h3>{{Model.name}} Tournament</h3>
     <p>Created by {{Model.createdBy}}</p>
-    <p>Registered Players: {{Model.registrations.length}} / {{Model.totalPlayers}}</p>
+    <p>
+        Registered Players: {{Model.registrations.length}} / {{Model.totalPlayers}}
+    
+        <ol>
+            <li ng-repeat="registration in Model.registrations">
+                {{registration.username}}: {{registration.status}}
+            </li>
+        </ol>
+    
+    </p>
+    <p>
+    </p>
     <p>
         Set tournament status:<br>
         <button ng-click="Actions.setStatus('new')" class="btn btn-default">New</button>
