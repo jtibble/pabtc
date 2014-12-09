@@ -52,7 +52,7 @@
             <td>{{tournament.dateCreated | date: 'MMM d, y h:mm a'}}</td>
             <td><!--<a href="#/users/{{tournament.createdBy}}">-->{{tournament.createdBy}}<!--</a>--></td>
             <td>
-                {{tournament.registeredPlayers.length}} / {{tournament.totalPlayers}}<br>
+                {{tournament.registrations.length}} / {{tournament.totalPlayers}}<br>
                 <table>
                     <tr ng-repeat="player in tournament.registeredPlayers">
                         <td>{{player.name}}</td>

@@ -40,13 +40,13 @@ module.exports = {
             var numFinalizedRegistrations = 0;
             
             registrationList.forEach( function(r){
-                if( r.status == 'Finalized'){
+                if( r.status == 'finalized'){
                     numFinalizedRegistrations++;
                 }
             });
             
             // Check that there is an open spot to register
-            if( numFinalizedRegistrations <= tournament.totalPlayers ){   
+            if( numFinalizedRegistrations >= tournament.totalPlayers ){   
                 deferred.reject( new Error('Tournament is full of finalized players already'));
                 return;
             }
