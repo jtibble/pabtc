@@ -4,7 +4,7 @@ describe('Registrations', function(){
     var user;
     
     beforeEach( function(done){
-        var user = {
+        user = {
             username: 'registrationtestuser' + Math.floor(Math.random()*100000000).toString(),
             password: 'password'
         };
@@ -34,7 +34,6 @@ describe('Registrations', function(){
             RESTService.createTournament( tournament )
             .then( function( newTournament){
                 tournament = newTournament;
-                console.log('new tourney id = ' + newTournament._id);
                 return RESTService.changeTournamentStatus( newTournament._id, 'Registration Open' );                
             })
             .then( function(){
@@ -45,7 +44,7 @@ describe('Registrations', function(){
             }).then( function( tournamentsList ){
                 for( var i in tournamentsList ){
                     if( tournamentsList[i]._id == tournament._id){
-                        var regPlayers = tournamentsList[i].registeredPlayers;
+                        var regPlayers = tournamentsList[i].registrations;
                         if( regPlayers && regPlayers.length && regPlayers[0].username == user.username ){
                             done();
                             return;

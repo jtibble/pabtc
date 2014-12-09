@@ -3,7 +3,7 @@ var Q = require('q');
 
 var serviceURL = 'http://localhost:8080/api/v0/';
 
-var debug = true;
+var debug = false;
 
 var endpointURLs = {
     users: 'users', 
