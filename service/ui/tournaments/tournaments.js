@@ -72,6 +72,21 @@ app.controller('TournamentsController', function($scope, FrameworkAJAX, $statePa
         });
     };
     
+    $scope.Actions.register = function( tournament ){
+        
+		var request = {
+			method: 'POST',
+			url: '/api/v0/registrations',
+			data: {tournamentId: tournament._id}
+		};
+        
+        FrameworkAJAX.sendRequest( request, function( data ){
+            console.log('registration added');
+        }, function(){
+            console.log('failed to register');
+        });
+    };
+    
     
     for( var i in tournamentStatusList ){
         fetchTournaments( tournamentStatusList[i] );
