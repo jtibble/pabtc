@@ -115,10 +115,11 @@ describe('Tournaments', function(){
         it('Should create tournament and change its status', function(done){
             
             var tournament = {name: 'Status Change Tournament'};
+            var newStatus = 'open'
             
             RESTService.createTournament( tournament )
             .then( function(tournament){
-                return RESTService.changeTournamentStatus( tournament._id, 'Registration Open' );                
+                return RESTService.changeTournamentStatus( tournament._id, newStatus );                
             })
             .then( function(){
                 return RESTService.getTournaments();
@@ -126,7 +127,7 @@ describe('Tournaments', function(){
             .then( function(tournamentsList){
                 
                 for( var i in tournamentsList ){
-                    if( tournamentsList[i].status === 'Registration Open' ){
+                    if( tournamentsList[i].status === newStatus ){
                         done();
                         return;
                     }

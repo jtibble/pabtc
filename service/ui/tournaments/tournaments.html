@@ -9,17 +9,15 @@
     <thead>
         <tr>
             <th>Name</th>
-            <th>Date</th>
-            <th>Winner</th>
-            <th>Prizes</th>
+            <th>Registered Players</th>
+            <th>Prize</th>
             <th>Details</th>
         </tr>
     </thead>
     <tbody>
         <tr ng-repeat="tournament in Model.activeTournaments">
             <td><a href="#/tournaments/{{tournament._id}}">{{tournament.name}}</a></td>
-            <td>{{tournament.date}}</td>
-            <td>{{tournament.winner}}</td>
+            <td>{{tournament.registrations.length}}</td>
             <td>{{tournament.prize}}</td>
             <td>
                 <button class="btn btn-default" ng-click="Actions.viewTournamentDetails(tournament)">
@@ -42,13 +40,13 @@
             <th>Start Date</th>
             <!--<th>Date Created</th>-->
             <th>Created By</th>
-            <th>Prizes</th>
             <th>Registered Players</th>
-            <th></th>
+            <th>Prizes</th>
+            <th>Details</th>
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="tournament in Model.pendingTournaments">
+        <tr ng-repeat="tournament in Model.newTournaments.concat(Model.openTournaments).concat(Model.closedTournaments)">
             <td><a href="#/tournaments/{{tournament._id}}">{{tournament.name}}</a>
             <td>{{tournament.dateCreated | date: 'MMM d, y h:mm a'}}</td>
             <td><!--<a href="#/users/{{tournament.createdBy}}">-->{{tournament.createdBy}}<!--</a>--></td>
@@ -60,6 +58,7 @@
                     </tr>
                 </table>
             </td>
+            <td></td>
             <td>
                 <button class="btn btn-default" ng-click="Actions.viewTournamentDetails(tournament)">
                     Details
@@ -84,7 +83,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="tournament in Model.concludedTournaments">
+        <tr ng-repeat="tournament in Model.finishedTournaments">
             <td><a href="#/tournaments/{{tournament._id}}">{{tournament.name}}</a></td>
             <td>{{tournament.date}}</td>
             <td>{{tournament.winner}}</td>

@@ -32,7 +32,7 @@ module.exports = {
             var tournament = tournamentList[0];
             
             // Check that the tournament has the correct status
-            if( tournament.status !== 'Registration Open' ){
+            if( tournament.status !== 'open' ){
                 deferred.reject( new Error('tournament is not open for registrations at this time') );
                 return;
             }

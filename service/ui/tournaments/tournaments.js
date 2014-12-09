@@ -1,12 +1,19 @@
 
+var tournamentStatusList = [
+    'new',
+    'open',
+    'closed',
+    'active',
+    'finished'
+];
+
 app.controller('TournamentsController', function($scope, FrameworkAJAX, $stateParams, SessionService, $modal){
     $scope.Actions = {};
-    $scope.Model = {
-        pendingTournaments: [],
-        activeTournaments: [],
-        concludedTournaments: []
-    };
+    $scope.Model = {};
     
+    for( var i in tournamentStatusList ){
+        $scope.Model[ tournamentStatusList[i] + 'Tournaments' ] = [];
+    }    
     
     
     if( $stateParams && $stateParams.id && $stateParams.id.length ){
@@ -65,8 +72,9 @@ app.controller('TournamentsController', function($scope, FrameworkAJAX, $statePa
         });
     };
     
-    fetchTournaments('pending');
-    fetchTournaments('active');
-    fetchTournaments('concluded');
+    
+    for( var i in tournamentStatusList ){
+        fetchTournaments( tournamentStatusList[i] );
+    }  
 });
 

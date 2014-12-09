@@ -4,8 +4,10 @@
     <p>Registered Players: {{Model.registeredPlayers.length}} / {{Model.totalPlayers}}</p>
     <p>
         Set tournament status:<br>
-        <button ng-click="Actions.setStatus('pending')" class="btn btn-default">Pending</button>
+        <button ng-click="Actions.setStatus('new')" class="btn btn-default">New</button>
+        <button ng-click="Actions.setStatus('open')" class="btn btn-default">Registration Open</button>
+        <button ng-click="Actions.setStatus('closed')" class="btn btn-default">Registration Closed</button>
         <button ng-click="Actions.setStatus('active')" class="btn btn-default">Active</button>
-        <button ng-click="Actions.setStatus('concluded')" class="btn btn-default">Concluded</button>
+        <button ng-click="Actions.setStatus('finished')" class="btn btn-default">Finished</button>
     </p>
 </div>

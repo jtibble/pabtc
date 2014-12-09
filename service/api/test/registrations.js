@@ -34,13 +34,13 @@ describe('Registrations', function(){
             RESTService.createTournament( tournament )
             .then( function( newTournament){
                 tournament = newTournament;
-                return RESTService.changeTournamentStatus( newTournament._id, 'Registration Open' );                
+                return RESTService.changeTournamentStatus( newTournament._id, 'open' );                
             })
             .then( function(){
                 return RESTService.registerUserForTournament( tournament._id );
             })
             .then( function(){
-                return RESTService.getTournaments('status=Registration Open');
+                return RESTService.getTournaments('status=open');
             }).then( function( tournamentsList ){
                 for( var i in tournamentsList ){
                     if( tournamentsList[i]._id == tournament._id){

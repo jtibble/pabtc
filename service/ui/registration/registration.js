@@ -1,4 +1,4 @@
-app.controller('RegistrationController', function($scope, FrameworkAJAX){
+app.controller('RegistrationController', function($scope, FrameworkAJAX, $state){
     $scope.Actions = {};
     $scope.Model = {};
     
@@ -12,7 +12,7 @@ app.controller('RegistrationController', function($scope, FrameworkAJAX){
             }
         };
         FrameworkAJAX.sendRequest(newUserRequest, function(data){
-			fetchUsers();
+			$state.go('login');
         }, function(){
             console.log('error creating new user');
         });
