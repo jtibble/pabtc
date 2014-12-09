@@ -3,6 +3,8 @@ var Q = require('q');
 
 var serviceURL = 'http://localhost:8080/api/v0/';
 
+console.log('RESTWrapper pointing to ' + serviceURL);
+
 var debug = false;
 
 var endpointURLs = {
