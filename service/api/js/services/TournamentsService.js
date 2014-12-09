@@ -12,11 +12,7 @@ module.exports = {
         
         TournamentsDao.find( query ).then( function(tournamentList){
             
-            // Get registration info for each of these tournaments
-            // TODO: Make this parallel!
-            
-            console.log('finding registrations before returning tournament list');
-            
+            // Get registration info for each of these tournaments and join before returning            
             var tournamentUpdatePromiseList = [];
             
             for( var i in tournamentList ){

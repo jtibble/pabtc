@@ -88,51 +88,5 @@ module.exports = {
         
         
         return deferred.promise;
-    }/*,
-    registerUsers: function( tournamentId, userIdList ){
-        var deferred = Q.defer();
-
-        //TODO: parallelize the tournament and users-checks
-
-        //Find the tournament in the DB
-        tournamentsCollection.find({_id: tournamentId}, function(error, tournamentsList){
-            if( error || !tournamentsList || !tournamentsList.length || tournamentsList.length != 1){
-                deferred.reject('Can\'t find tournament in db correctly');
-                return;
-            }
-
-            var registeredPlayers = tournamentsList[0].registeredPlayers;
-
-            // Get number of available slots
-            var numAvailablePlayers = tournamentsList[0].totalPlayers - registeredPlayers.length;
-
-            if( userIdList.length > numAvailablePlayers ){
-                deferred.reject('Can\'t add players to tournament because it would over-fill tournament. Only ' + numAvailablePlayers + ' slots available still');   
-                return;
-            }
-
-            // Find all specified users in the db by id and check that they exist
-            usersCollection.find({ _id: { $in: userIdList} }, function(error, usersList){
-                if( error || usersList.length != userIdList.length ){
-                    deferred.reject('Can\'t find all users in db');
-                    return;
-                }
-
-                // Add incoming users to the list of already-registered players
-                registeredPlayers = registeredPlayers.concat(usersList);
-                var query = {_id: tournamentId};
-                var command = { $set: { registeredPlayers: registeredPlayers }};
-
-                tournamentsCollection.update(query, command, function(error, updateStatus){
-                    if(!error && updateStatus.ok && updateStatus.n == 1){
-                        deferred.resolve({message: 'Updated tournament'});
-                    } else {
-                        deferred.reject('Could not update tournament in db');   
-                    }
-                });
-            });  
-        });
-
-        return deferred.promise;
-    }    */
+    }
 };

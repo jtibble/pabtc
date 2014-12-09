@@ -9,10 +9,6 @@ module.exports = {
     create: function( username, tournamentId ){
         var deferred = Q.defer();
         
-        // Fetch registrations for tournamentId
-        // Fetch tournament by tournamentId
-        console.log('beginning ' + username + '\'s registration for tournament');
-        
         Q.all([
             TournamentsDao.find( {_id: tournamentId} ),
             RegistrationsDao.find( 'tournamentId', tournamentId )
