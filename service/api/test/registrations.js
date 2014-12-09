@@ -26,7 +26,7 @@ describe('Registrations', function(){
     });
     
     describe('Register Users For Tournament', function(){
-        xit('Should create tournament, and register user for it', function(done){
+        it('Should create tournament, and register user for it', function(done){
 
               
             var tournament = {name: 'Registration Tournament'};
@@ -36,23 +36,16 @@ describe('Registrations', function(){
                 tournament = newTournament;
                 console.log('new tourney id = ' + newTournament._id);
                 return RESTService.changeTournamentStatus( newTournament._id, 'Registration Open' );                
-            }, function(){
-                done('failed to create tournament');
             })
             .then( function(){
                 return RESTService.registerUserForTournament( tournament._id );
-            }, function(){
-                done('failed to change tournament status');
             })
             .then( function(){
                 return RESTService.getTournaments('status=Registration Open');
-            }, function(){
-                done('failed to register user for tournament');
             }).then( function( tournamentsList ){
                 for( var i in tournamentsList ){
                     if( tournamentsList[i]._id == tournament._id){
                         var regPlayers = tournamentsList[i].registeredPlayers;
-                        console.log( regPlayers.length + ' registered players found');
                         if( regPlayers && regPlayers.length && regPlayers[0].username == user.username ){
                             done();
                             return;
@@ -64,9 +57,9 @@ describe('Registrations', function(){
                 }
                 done('could not find tournament the player registered with');
                 return;
-            }, function(){
-                done('could not get tournament list');   
-            }); 
+            }).fail( function( error ){
+                done( error.message );    
+            });; 
           
         });	
 	});

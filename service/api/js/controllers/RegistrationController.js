@@ -27,6 +27,7 @@ module.exports = [
                 return;   
             }
             
+            
             // Check session and add the username to the new tournament
             AuthenticationService.checkAuthorization(sessionId).then( function(session){
                 
@@ -35,15 +36,17 @@ module.exports = [
                 RegistrationService.create( username, req.body.tournamentId ).then( function(registration){
                     console.log('User ' + registration.username + ' registered for tournament ' + registration.tournamentId );
                     res.status(200).send();
-                }, function(error){
+                }).fail( function(error){
+                    console.log( error.message );
                     responseBody = {message: error.message};
                     res.status(403).send(responseBody);
+                    return;
                 });
                 
-            }, function(error){
-                console.log('Registration not created for user with invalid or expired session');
-                res.status(403).send(responseBody);
-                return; 
+            }).fail( function(error){
+                console.log('Registration not created... error: ' + error.message);
+                res.status(500).send();
+                return;
             });
             
         }

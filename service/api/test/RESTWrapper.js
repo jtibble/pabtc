@@ -11,7 +11,7 @@ var endpointURLs = {
     logout: 'logout',
     session: 'session',
     tournaments: 'tournaments',
-    registration: 'registration'
+    registration: 'registrations'
 };
 
 var cookiesEnabled = false;

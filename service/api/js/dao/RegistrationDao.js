@@ -22,6 +22,7 @@ module.exports = {
             if( error ){
                 deferred.reject('could not save registration');
             } else {
+                console.log('registration for tournament created');
                 deferred.resolve( registration );
             }
         });
@@ -29,20 +30,18 @@ module.exports = {
         return deferred.promise;
     },
     find: function( parameterName, value ){
-        var deferred = Q.defer();
-        
+        var deferred = Q.defer();        
         var query = {};
         
         query[ parameterName ] = value;
             
-        registrationCollection.find( query, function(error, registration){
+        registrationCollection.find( query, function(error, registrationList){
             if( error ){
-                deferred.reject('could not find registration');
+                deferred.reject('could not find registrations by that query in db');
             } else {
-                deferred.resolve( registration );
+                deferred.resolve( registrationList );
             }
         });
-        
         
         return deferred.promise;
     }

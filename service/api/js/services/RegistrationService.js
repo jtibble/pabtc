@@ -1,3 +1,5 @@
+var Q = require('q');
+
 var RegistrationsDao = require('../dao/RegistrationDao');
 var TournamentsDao = require('../dao/TournamentsDao');
 
@@ -9,21 +11,35 @@ module.exports = {
         
         // Fetch registrations for tournamentId
         // Fetch tournament by tournamentId
+        console.log('beginning ' + username + '\'s registration for tournament');
         
         Q.all([
-            TournamentsDao.find( '_id=' + tournamentId ),
+            TournamentsDao.find( {_id: tournamentId} ),
             RegistrationsDao.find( 'tournamentId', tournamentId )
         ])
         .then( function( resolvedPromises ){            
             var tournamentList = resolvedPromises[0];
             var registrationList = resolvedPromises[1];
             
-            if( tournamentList.length != 1 ){
-                deferred.reject('More than one matching tournament found');
+            // Check that the tournament exists
+            if( tournamentList.length == 0 ){
+                deferred.reject( new Error('tournament not found'));   
+                return;
+            }
+            
+            // Check that there is only one tournament returned
+            if( tournamentList.length > 1 ){
+                deferred.reject( new Error('More than one matching tournament found'));
                 return;
             }
             
             var tournament = tournamentList[0];
+            
+            // Check that the tournament has the correct status
+            if( tournament.status !== 'Registration Open' ){
+                deferred.reject( new Error('tournament is not open for registrations at this time') );
+                return;
+            }
             
             var numFinalizedRegistrations = 0;
             
@@ -33,20 +49,24 @@ module.exports = {
                 }
             });
             
-            
-            if( numFinalizedRegistrations < tournament.totalPlayers ){
-                
-                RegistrationsDao.create( username, tournamentId ).then( function(){
-                    deferred.resolve();    
-                });
-                
-            } else {
-                deferred.reject('Tournament is full of finalized players already');   
+            // Check that there is an open spot to register
+            if( numFinalizedRegistrations <= tournament.totalPlayers ){   
+                deferred.reject( new Error('Tournament is full of finalized players already'));
+                return;
             }
+            
+            // Check that the user is not already registered for this tournament
+            // TODO
+                
+                
+            RegistrationsDao.create( username, tournamentId ).then( function( registration ){
+                deferred.resolve( registration );
+                return;
+            });
         
         })
         .fail( function(error){
-            deferred.reject('Failed to fetch necessary registrations and tournament info from db: ' + error.message);
+            deferred.reject( new Error('Failed to fetch previous registrations and tournament info from db: ' + error.message));
         });
         
         
