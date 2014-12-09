@@ -1,7 +1,7 @@
 var request = require('request');
 var Q = require('q');
 
-var serviceURL = 'http://localhost:8080/api/v0/';
+var serviceURL = 'http://localhost/api/v0/';
 
 var endpointURLs = {
     users: 'users', 
