@@ -1,7 +1,9 @@
 var request = require('request');
 var Q = require('q');
 
-var serviceURL = 'http://localhost/api/v0/';
+var serviceURL = 'http://localhost:8080/api/v0/';
+
+var debug = true;
 
 var endpointURLs = {
     users: 'users', 
@@ -15,7 +17,7 @@ var endpointURLs = {
 var cookiesEnabled = false;
 var j = request.jar();
 
-function postToService( endpoint, body, debug ){
+function postToService( endpoint, body ){
     var deferred = Q.defer();
 
     var options = {
@@ -37,7 +39,7 @@ function postToService( endpoint, body, debug ){
     request( options, function(error, response, body){
         
         if( error || !response || !response.statusCode ){
-            deferred.reject('service returned bad response');
+            deferred.reject('service returned bad response: ' + error);
             return;
         }
 
@@ -63,8 +65,6 @@ function postToService( endpoint, body, debug ){
 
 function getResource( endpoint, query ){
     var deferred = Q.defer();
-
-    
     
     var options = {
         method: 'GET',
@@ -96,8 +96,6 @@ function getResource( endpoint, query ){
 
 
 module.exports = {
-    
-    // Authentication
     enableCookies: function(){
         cookiesEnabled = true;
     },
@@ -107,12 +105,9 @@ module.exports = {
     getCookies: function(){
         return j.getCookies( serviceURL );
     },
-    
-    
     createUser: function( user ){
         return postToService( endpointURLs.users, user );
     },
-    
     loginUser: function( username, password ){
         
         var body = {
@@ -122,68 +117,26 @@ module.exports = {
         
         return postToService( endpointURLs.login, body );
     },
-    
     logoutUser: function(){
         return postToService( endpointURLs.logout, {} );
     },
     getSession: function(){
         return getResource( endpointURLs.session );  
     },
-    
-    
-    
     getUsers: function(username){
         var endpoint = 'users' + (username ? ('/' + username) : '');
         return getResource( endpoint);
     },
-    
     createTournament: function( tournament ){
         return postToService( endpointURLs.tournaments, tournament );
     },
-    
     getTournaments: function(query){
         return getResource( endpointURLs.tournaments, query);
     },
     changeTournamentStatus: function(id, status){
         return postToService( endpointURLs.tournaments + '/' + id, {status: status});   
     },
-    
-    
     registerUserForTournament: function( tournamentId ){
         return postToService( endpointURLs.registration, {tournamentId: tournamentId});   
-    }/*,
-    
-    // CREATE Resources
-    
-    
-    
-    
-    registerUsersForTournament: function(tournamentId, usersList){
-        return postToService( {
-            endpoint: 'tournaments' + '/' + tournamentId + '/registerUsers',
-            body: { usersList: usersList }
-        } );
-    },
-    
-	createUserAPIKey: function(user){      
-        var deferred = Q.defer();
-        
-        var options = {
-            url: user.href + '/generateAPIKey',
-            method: 'POST',
-            json: true
-        };
-        
-        request( options, function(error, response, body){
-            if( !error && response ){
-                deferred.resolve(body.key); // Return key property on response body
-                return;
-            } else {
-                console.log('error creating user API key');
-                deferred.reject('service returned HTTP ' + response.statusCode);
-            }
-            return;    
-        });
-        return deferred.promise;
-	}*/
+    }
 };

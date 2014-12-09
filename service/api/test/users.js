@@ -2,7 +2,7 @@ var RESTService = require('./RESTWrapper');
 
 describe('Users', function(){
     describe('Create User', function(){
-        it('Should return a new user href when called correctly', function(done){
+        it('Should return a new user when called correctly', function(done){
             
             var user = {
                 username: 'testuser' + Math.floor(Math.random()*100000000).toString(),

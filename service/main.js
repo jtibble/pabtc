@@ -15,6 +15,21 @@ var servicesConfig = {
     'endpoints': AuthenticationController.concat(UsersController).concat(TournamentsController).concat(RegistrationCollection)
 };
 
+
+var port = 80;
+
+// Pull port out of argv if it was passed
+if( process.argv.length > 2 ){
+    for( var i = 1; i< process.argv.length; i++){
+        var param = process.argv[i];
+        
+        if( param.match(/-port=[\d]+/) != 0 ){
+            port = param.split('=')[1];
+            console.log('setting port to ' + port);
+        }
+    }
+}
+
 var Service = function (config) {
     var server = express();
     server.use(bodyParser.json());
@@ -51,7 +66,6 @@ var Service = function (config) {
                 this.addEndpoint(serviceMethod, serviceName, serviceResponse);
             }
 
-            var port = 80;
             server.listen(port);
             console.log('%s listening on port %s \n=========', server.name, port);
         }

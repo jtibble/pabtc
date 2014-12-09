@@ -3,7 +3,7 @@ node_js:
   - "0.10"
 before_script:
   - "npm install -g pm2"
-  - "pm2 start service/main.js --name pabtc-api"
+  - "pm2 start service/main.js -- -port=8080 --name pabtc-api"
   - "sleep 3"
 after_script:
   - "pm2 stop all"
