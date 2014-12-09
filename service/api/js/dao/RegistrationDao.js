@@ -17,11 +17,7 @@ module.exports = {
         newRegistration.username = username;
         newRegistration.tournamentId = tournamentId;
         newRegistration.status = RegistrationStatusList[0];
-        
-        // create registration-tracking object in DB and also link registration to tournament.registrations[] array
-        
-        // TODO next time, insert into tournaments collection as well
-        
+                
         registrationCollection.save( newRegistration, function(error, registration){
             if( error ){
                 deferred.reject('could not save registration');
@@ -29,6 +25,24 @@ module.exports = {
                 deferred.resolve( registration );
             }
         });
+        
+        return deferred.promise;
+    },
+    find: function( parameterName, value ){
+        var deferred = Q.defer();
+        
+        var query = {};
+        
+        query[ parameterName ] = value;
+            
+        registrationCollection.find( query, function(error, registration){
+            if( error ){
+                deferred.reject('could not find registration');
+            } else {
+                deferred.resolve( registration );
+            }
+        });
+        
         
         return deferred.promise;
     }

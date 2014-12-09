@@ -93,13 +93,9 @@ describe('Tournaments', function(){
             .then( function(tournamentsList){
                 numTournaments = tournamentsList.length;
                 return RESTService.createTournament( tournament );
-            }, function(){
-                done('failed to get tournaments list');   
             })
             .then( function(tournament){
                 return RESTService.getTournaments();                
-            }, function(){
-                done('failed to create tournament');
             })
             .then( function(tournamentsList){
                 if( tournamentsList && tournamentsList.length && tournamentsList.length == (numTournaments + 1) ){
@@ -107,8 +103,9 @@ describe('Tournaments', function(){
                 } else {
                     done('failed to create tournament correctly');   
                 }
-            }, function(){
-                done('failed to get tournaments list again');
+            })
+            .fail( function(error){
+                done('failed with error ' + error.message);    
             });
           
         });	
@@ -122,13 +119,9 @@ describe('Tournaments', function(){
             RESTService.createTournament( tournament )
             .then( function(tournament){
                 return RESTService.changeTournamentStatus( tournament._id, 'Registration Open' );                
-            }, function(){
-                done('failed to create tournament');
             })
             .then( function(){
                 return RESTService.getTournaments();
-            }, function(){
-                done('failed to change tournament status');
             })
             .then( function(tournamentsList){
                 
@@ -140,8 +133,9 @@ describe('Tournaments', function(){
                 } 
                 
                 done('could not find tournament with changed status');
-            }, function(){
-                done('failed to get tournaments list');
+            })
+            .fail( function(error){
+                done('failed with error ' + error.message);    
             });    
         });
     });
