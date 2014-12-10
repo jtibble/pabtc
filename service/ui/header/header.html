@@ -12,7 +12,7 @@
         <span ng-show="Model.username">Logged in as {{Model.username}}</span><br>
         
         <button ng-show="!Model.sessionActive" ng-click="Actions.goTo('login')" class="btn btn-default">Log In</button>
-        <button ng-show-"!Model.sessionActive" ng-click="Actions.goTo('registration')" class="btn btn-default">Register</button><br>
+        <button ng-show="!Model.sessionActive" ng-click="Actions.goTo('registration')" class="btn btn-default">Register</button><br>
         
         <button ng-show="Model.sessionActive" ng-click="Actions.logout()" class="btn btn-default">Log Out</button>
     </div>
