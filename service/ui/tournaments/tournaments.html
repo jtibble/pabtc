@@ -18,7 +18,30 @@
         <tr ng-repeat="tournament in Model.activeTournaments">
             <td><a href="#/tournaments/{{tournament._id}}">{{tournament.name}}</a></td>
             <td>{{tournament.registrations.length}}</td>
-            <td>{{tournament.prize}}</td>
+            <td>
+                <div ng-show="tournament.prizeCurrency == 'BTC'">
+                    <i class="fa fa-btc"></i>
+                    {{tournament.prizeAmount | number:8}}
+                    <a ng-href="https://www.google.com/search?q={{tournament.prizeAmount}}+BTC+in+USD" target="_blank">
+                        <i class="fa fa-question"></i>
+                    </a>
+                </div>
+                <div ng-show="tournament.prizeCurrency == 'mBTC'">
+                    m<i class="fa fa-btc"></i>{{tournament.prizeAmount | number:5}}
+                    <a ng-href="https://www.google.com/search?q={{tournament.prizeAmount/1000}}+BTC+in+USD" target="_blank">
+                        <i class="fa fa-question"></i>
+                    </a>
+                </div>
+                <div ng-show="tournament.prizeCurrency == 'μBTC'">
+                    &mu;<i class="fa fa-btc"></i>{{tournament.prizeAmount | number:2}}
+                    <a ng-href="https://www.google.com/search?q={{tournament.prizeAmount/1000000}}+BTC+in+USD" target="_blank">
+                        <i class="fa fa-question"></i>
+                    </a>
+                </div>
+                <div ng-show="tournament.prizeCurrency == 'USD'">
+                    <i class="fa fa-dollar"></i>{{tournament.prizeAmount | number:2}}
+                </div>
+            </td>
             <td>
                 <button class="btn btn-default" ng-click="Actions.viewTournamentDetails(tournament)">
                     Details
@@ -38,12 +61,11 @@
         <tr>
             <th>Name</th>
             <th>Start Date</th>
-            <!--<th>Date Created</th>-->
             <th>Created By</th>
             <th>Registered Players</th>
             <th>Prizes</th>
             <th>Details</th>
-            <th>Register</th>
+            <th>Status</th>
         </tr>
     </thead>
     <tbody>
@@ -59,7 +81,30 @@
                     </tr>
                 </table>
             </td>
-            <td></td>
+            <td>
+                <div ng-show="tournament.prizeCurrency == 'BTC'">
+                    <i class="fa fa-btc"></i>
+                    {{tournament.prizeAmount | number:8}}
+                    <a ng-href="https://www.google.com/search?q={{tournament.prizeAmount}}+BTC+in+USD" target="_blank">
+                        <i class="fa fa-question"></i>
+                    </a>
+                </div>
+                <div ng-show="tournament.prizeCurrency == 'mBTC'">
+                    m<i class="fa fa-btc"></i>{{tournament.prizeAmount | number:5}}
+                    <a ng-href="https://www.google.com/search?q={{tournament.prizeAmount/1000}}+BTC+in+USD" target="_blank">
+                        <i class="fa fa-question"></i>
+                    </a>
+                </div>
+                <div ng-show="tournament.prizeCurrency == 'μBTC'">
+                    &mu;<i class="fa fa-btc"></i>{{tournament.prizeAmount | number:2}}
+                    <a ng-href="https://www.google.com/search?q={{tournament.prizeAmount/1000000}}+BTC+in+USD" target="_blank">
+                        <i class="fa fa-question"></i>
+                    </a>
+                </div>
+                <div ng-show="tournament.prizeCurrency == 'USD'">
+                    <i class="fa fa-dollar"></i>{{tournament.prizeAmount | number:2}}
+                </div>
+            </td>
             <td>
                 <button class="btn btn-default" ng-click="Actions.viewTournamentDetails(tournament)">
                     Details
@@ -67,9 +112,7 @@
             </td>
             <td>
                 <div ng-show="tournament.status == 'new'">Pre-Registration</div>
-                <button ng-show="tournament.status == 'open'" class="btn btn-primary" ng-click="Actions.register(tournament)">
-                    Register
-                </button>
+                <div ng-show="tournament.status == 'open'">Registration Open</div>
                 <div ng-show="tournament.status == 'closed'">Registration Closed</div>
             </td>
         </tr>

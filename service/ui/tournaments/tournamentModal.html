@@ -21,4 +21,13 @@
         <button ng-click="Actions.setStatus('active')" class="btn btn-default">Active</button>
         <button ng-click="Actions.setStatus('finished')" class="btn btn-default">Finished</button>
     </p>
+
+    <button ng-show="Model.registrations.length < Model.totalPlayers" class="btn btn-primary" ng-click="Actions.register()">
+        Register
+    </button>
+
+    <button ng-show="Model.registrations.length == Model.totalPlayers" disabled class="btn btn-primary">
+        Registration Full
+    </button>
+<br>
 </div>

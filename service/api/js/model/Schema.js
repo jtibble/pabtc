@@ -13,8 +13,10 @@ module.exports = {
         dateCreated: '',
         name: '',
         createdBy: '',
-        totalPlayers: 2,
+        totalPlayers: 0,
         registrations: [],
+        prizeCurrency: '',
+        prizeAmount: 0,
         status: 'new'
     },
     session: {

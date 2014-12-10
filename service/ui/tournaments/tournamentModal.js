@@ -7,28 +7,6 @@ app.controller('TournamentModalController', function($scope, FrameworkAJAX, tour
     };
     $scope.Model = tournament;
     
-    $scope.Actions.registerUsersToTournament = function(){
-        var userIdList = [];
-        for( var i in $scope.Model.selectedUsers ){
-            userIdList.push( $scope.Model.selectedUsers[i]._id);
-        }
-        
-        var RegisterUsersRequest = {
-            method: 'POST',
-            url: $scope.Model.selectedTournament.href + '/registerUsers',
-            data: {
-                usersList: userIdList
-            }
-        };
-		
-        FrameworkAJAX.sendRequest(RegisterUsersRequest, function(data){
-			fetchTournaments();
-        }, function(){
-            console.log('error registering users');
-        });
-        
-    };
-    
     $scope.Actions.setStatus = function( status ){
         var request = {
             method: 'POST',
@@ -40,11 +18,29 @@ app.controller('TournamentModalController', function($scope, FrameworkAJAX, tour
 		
         FrameworkAJAX.sendRequest(request, function(data){
 			console.log('updated status');
+            $modalInstance.dismiss();  
         }, function(){
             console.log('error registering users');
         }); 
     };
     
+    
+       
+    $scope.Actions.register = function(){
+        
+		var request = {
+			method: 'POST',
+			url: '/api/v0/registrations',
+			data: {tournamentId: $scope.Model._id}
+		};
+        
+        FrameworkAJAX.sendRequest( request, function( data ){
+            console.log('registration added');
+            $modalInstance.dismiss();  
+        }, function(){
+            console.log('failed to register');
+        });
+    };
     
 });
 

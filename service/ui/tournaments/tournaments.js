@@ -16,6 +16,7 @@ app.controller('TournamentsController', function($scope, FrameworkAJAX, $statePa
     }    
     
     
+    
     if( $stateParams && $stateParams.id && $stateParams.id.length ){
         $scope.Model.selectedId = $stateParams.id;
     }
@@ -58,6 +59,12 @@ app.controller('TournamentsController', function($scope, FrameworkAJAX, $statePa
         });  
     };
     
+    $scope.Actions.refresh = function(){
+        for( var i in tournamentStatusList ){
+            fetchTournaments( tournamentStatusList[i] );
+        }  
+    }
+    
     $scope.Actions.viewTournamentDetails = function( tournament ){
         $scope.Model.selectedTournament = tournament;  
         var modalInstance = $modal.open({
@@ -70,26 +77,15 @@ app.controller('TournamentsController', function($scope, FrameworkAJAX, $statePa
                 }
             }
         });
+        
+        function callback(){
+            $scope.Actions.refresh();
+        }
+        
+        modalInstance.result.then( callback, callback );
     };
     
-    $scope.Actions.register = function( tournament ){
-        
-		var request = {
-			method: 'POST',
-			url: '/api/v0/registrations',
-			data: {tournamentId: tournament._id}
-		};
-        
-        FrameworkAJAX.sendRequest( request, function( data ){
-            console.log('registration added');
-        }, function(){
-            console.log('failed to register');
-        });
-    };
+    $scope.Actions.refresh();
     
-    
-    for( var i in tournamentStatusList ){
-        fetchTournaments( tournamentStatusList[i] );
-    }  
 });
 
