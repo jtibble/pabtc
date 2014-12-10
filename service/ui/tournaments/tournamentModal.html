@@ -1,6 +1,8 @@
 <div class="container">
     <h3>{{Model.name}} Tournament</h3>
     <p>Created by {{Model.createdBy}}</p>
+    <p>Registration Status: {{Model.status}}</p>
+    <p>Prize: {{Model.prizeAmount}} {{Model.prizeCurrency}}</p>
     <p>
         Registered Players: {{Model.registrations.length}} / {{Model.totalPlayers}}
     
@@ -22,11 +24,11 @@
         <button ng-click="Actions.setStatus('finished')" class="btn btn-default">Finished</button>
     </p>
 
-    <button ng-show="Model.registrations.length < Model.totalPlayers" class="btn btn-primary" ng-click="Actions.register()">
+    <button ng-show="Model.status == 'open' && Model.registrations.length < Model.totalPlayers" class="btn btn-primary" ng-click="Actions.register()">
         Register
     </button>
 
-    <button ng-show="Model.registrations.length == Model.totalPlayers" disabled class="btn btn-primary">
+    <button ng-show="Model.status == 'open' && Model.registrations.length == Model.totalPlayers" disabled class="btn btn-primary">
         Registration Full
     </button>
 <br>

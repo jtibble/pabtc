@@ -57,6 +57,12 @@ app.controller('TournamentsController', function($scope, FrameworkAJAX, $statePa
             controller: 'NewTournamentModalController',
             size: 'lg'
         });  
+        
+        function callback(){
+            $scope.Actions.refresh();
+        }
+        
+        modalInstance.result.then( callback, callback );
     };
     
     $scope.Actions.refresh = function(){
