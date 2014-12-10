@@ -8,4 +8,5 @@ before_script:
 after_script:
   - "pm2 stop all"
   - cat ~/.pm2/logs/commonlog.log
+  - cat commonlog.log
 services: mongodb
