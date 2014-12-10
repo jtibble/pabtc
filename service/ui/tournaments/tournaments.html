@@ -48,9 +48,9 @@
     </thead>
     <tbody>
         <tr ng-repeat="tournament in Model.newTournaments.concat(Model.openTournaments).concat(Model.closedTournaments)">
-            <td><a href="#/tournaments/{{tournament._id}}">{{tournament.name}}</a>
+            <td>{{tournament.name}}</td>
             <td>{{tournament.dateCreated | date: 'MMM d, y h:mm a'}}</td>
-            <td><!--<a href="#/users/{{tournament.createdBy}}">-->{{tournament.createdBy}}<!--</a>--></td>
+            <td>{{tournament.createdBy}}</td>
             <td>
                 {{tournament.registrations.length}} / {{tournament.totalPlayers}}<br>
                 <table>
