@@ -7,5 +7,5 @@ before_script:
   - "sleep 3"
 after_script:
   - "pm2 stop all"
-  - cat commonlog.log
+  - cat ~/.pm2/logs/commonlog.log
 services: mongodb
