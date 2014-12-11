@@ -52,8 +52,12 @@ module.exports = {
             }
             
             // Check that the user is not already registered for this tournament
-            // TODO
-                
+            for( var i in registrationList ){
+                if( registrationList[i].username == username ){
+                    deferred.reject( new Error('cannot register for tournament twice'));
+                    return;
+                }
+            }
             
             // TODO change the status depending on tournament type!
             RegistrationsDao.create( username, tournamentId, 'paid' ).then( function(registration){

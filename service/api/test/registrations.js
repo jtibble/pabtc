@@ -107,12 +107,36 @@ describe('Registrations', function(){
             }, function(){
                 done();
             }).fail( function( error ){
-                done( 'failed full-tournament registration test becasue: ' + error.message );    
+                done( 'failed full-tournament registration test because: ' + error.message );    
             }); 
         });
         
-        xit('Should not be able to register for a tournament twice', function(done){
+        it('Should not be able to register for a tournament twice', function(done){
+             
+            var tournament;
+            var user;
             
+            RESTService.TournamentHelper.createNoPrizeTournament().then( function( newTournament){
+                tournament = newTournament;
+                return RESTService.changeTournamentStatus( tournament._id, 'open' );                
+            })
+            .then( function(){
+                return RESTService.UserHelper.createAndSignIn();
+            })
+            .then( function(newUser){
+                user = newUser;
+                return RESTService.registerUserForTournament( tournament._id );
+            })
+            .then( function(){
+                return RESTService.registerUserForTournament( tournament._id );
+            })
+            .then( function(){
+                done('user should not have been able to register for tournament twice');
+            }, function(){
+                done();
+            }).fail( function( error ){
+                done( 'failed double-registration test because: ' + error.message );    
+            }); 
         });
         
         xit('Should not be able to register for tournament that is not open', function(done){
