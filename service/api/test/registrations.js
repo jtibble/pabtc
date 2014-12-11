@@ -165,7 +165,7 @@ describe('Registrations', function(){
 	});
     
     describe('Register Users For Prize Tournament', function(){
-        xit('Should register user for prize tournament', function(done){
+        it('Should register user for prize tournament', function(done){
             
             var tournament;
             var user;
@@ -191,17 +191,22 @@ describe('Registrations', function(){
         it('Should fail to register for prize tournament (missing receiving address)', function(done){
               
             var tournament;
-            var user;
+            var user = {
+                username: 'missingReceivingAddressUser' + + Math.floor(Math.random()*100000000).toString(),
+                password: 'password'
+            };
             
             RESTService.TournamentHelper.createPrizeTournament().then( function( newTournament){
                 tournament = newTournament;
                 return RESTService.changeTournamentStatus( tournament._id, 'open' );                
             })
             .then( function(){
-                return RESTService.UserHelper.createAndSignIn();
+                return RESTService.createUser(user);
             })
-            .then( function(newUser){
-                user = newUser;
+            .then( function(){
+                return RESTService.loginUser( user.username, user.password );  
+            })
+            .then( function(){
                 return RESTService.registerUserForTournament( tournament._id );
             })
             .then( function(){
