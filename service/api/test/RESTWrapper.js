@@ -178,7 +178,7 @@ module.exports = {
         },
         createPrizeTournament: function(){
 
-            var currencyAmount = Math.foor( Math.random()*1000 );
+            var currencyAmount = Math.floor( Math.random()*1000 );
             var currencyIndex = Math.floor( Math.random()*4 );
 
             var currencyList = ['USD', 'BTC', 'mBTC', 'uBTC'];

@@ -139,8 +139,26 @@ describe('Registrations', function(){
             }); 
         });
         
-        xit('Should not be able to register for tournament that is not open', function(done){
+        it('Should not be able to register for tournament that is not open', function(done){
             
+            var tournament;
+            var user;
+            
+            RESTService.TournamentHelper.createNoPrizeTournament().then( function( newTournament){
+                tournament = newTournament;
+                return RESTService.UserHelper.createAndSignIn();
+            })
+            .then( function(newUser){
+                user = newUser;
+                return RESTService.registerUserForTournament( tournament._id );
+            })
+            .then( function(){
+                done('user should not have been able to register for non-open tournament');
+            }, function(){
+                done();
+            }).fail( function( error ){
+                done( 'failed non-open-registration test because: ' + error.message );    
+            }); 
         });
         
         
