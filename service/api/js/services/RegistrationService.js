@@ -3,6 +3,7 @@ var Q = require('q');
 var RegistrationsDao = require('../dao/RegistrationDao');
 var TournamentsDao = require('../dao/TournamentsDao');
 var UserDao = require('../dao/UserDao');
+var BitcoinDao = require('../dao/BitcoinDao');
 
 var RegistrationStatus = require('../model/RegistrationStatus');
 
