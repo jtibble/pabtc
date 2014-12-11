@@ -214,7 +214,7 @@ describe('Registrations', function(){
             }, function(){
                 done();
             }).fail( function( error ){
-                done('failed with error');    
+                done('failed with error: ' + error.message);    
             }); 
         });
     });
@@ -232,8 +232,29 @@ describe('Registrations', function(){
         
     });
     describe('Payment', function(){
-        xit('Registration to free tournament should change status to \'paid\'', function(done){
+        it('Registration to free tournament should change status to \'paid\'', function(done){
+                
+            var tournament;
             
+            RESTService.TournamentHelper.createNoPrizeTournament().then( function( newTournament){
+                tournament = newTournament;
+                return RESTService.changeTournamentStatus( tournament._id, 'open' );                
+            })
+            .then( function(){
+                return RESTService.UserHelper.createAndSignIn();
+            })
+            .then( function(){
+                return RESTService.registerUserForTournament( tournament._id );
+            })
+            .then( function( registration ){
+                if( registration.status == 'paid' ){
+                    done();
+                } else {
+                    done('registration status is not changed to paid for free tournament');   
+                };
+            }).fail( function( error ){
+                done('failed with error: ' + error.message);    
+            }); 
         });
         
         xit('Registration to buyin tournament should change status to \'invoice\'', function(done){
@@ -241,13 +262,6 @@ describe('Registrations', function(){
         });
         
         xit('Should provide payment and have registration status changed to \'paid\'', function(done){
-            
-        });
-        
-        xit('Should provide payment and have registration status changed', function(done){
-            
-        });
-        xit('Should provide payment and have registration status changed', function(done){
             
         });
     });
