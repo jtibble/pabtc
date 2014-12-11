@@ -6,7 +6,8 @@ module.exports = {
         _id: '',
         dateCreated: '',
         username: '',
-        password: '' 
+        password: '',
+        receivingAddress: undefined
     },
     tournament: {
         _id: '',
@@ -24,10 +25,6 @@ module.exports = {
     session: {
         _id: '',
         username: ''
-    },
-    event: {
-        _id: '',
-        dateCreated: ''
     },
     registration: {
         _id: '',

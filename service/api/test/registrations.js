@@ -31,8 +31,8 @@ describe('Registrations', function(){
     });
     
     
-    describe('Register Users For Tournament', function(){
-        it('Should create tournament, and register user for it', function(done){
+    describe('Register Users For No-Prize Tournament', function(){
+        it('Should create no-prize tournament, and register user for it', function(done){
 
             var tournament;
             var user;
@@ -163,6 +163,56 @@ describe('Registrations', function(){
         
         
 	});
+    
+    describe('Register Users For Prize Tournament', function(){
+        xit('Should register user for prize tournament', function(done){
+            
+            var tournament;
+            var user;
+            
+            RESTService.TournamentHelper.createPrizeTournament().then( function( newTournament){
+                tournament = newTournament;
+                return RESTService.changeTournamentStatus( tournament._id, 'open' );                
+            })
+            .then( function(){
+                return RESTService.UserHelper.createAndSignIn();
+            })
+            .then( function(newUser){
+                user = newUser;
+                return RESTService.registerUserForTournament( tournament._id );
+            })
+            .then( function(){
+                done();
+            }).fail( function( error ){
+                done( error.message );    
+            }); 
+        });
+        
+        it('Should fail to register for prize tournament (missing receiving address)', function(done){
+              
+            var tournament;
+            var user;
+            
+            RESTService.TournamentHelper.createPrizeTournament().then( function( newTournament){
+                tournament = newTournament;
+                return RESTService.changeTournamentStatus( tournament._id, 'open' );                
+            })
+            .then( function(){
+                return RESTService.UserHelper.createAndSignIn();
+            })
+            .then( function(newUser){
+                user = newUser;
+                return RESTService.registerUserForTournament( tournament._id );
+            })
+            .then( function(){
+                done('should fail to create registration because no receiving address set');
+            }, function(){
+                done();
+            }).fail( function( error ){
+                done('failed with error');    
+            }); 
+        });
+    });
     
     describe('Cancellation', function(){
         xit('Cancelling registration to free tournament should change status to \'cancelled\'', function(done){

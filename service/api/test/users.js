@@ -77,25 +77,4 @@ describe('Users', function(){
             
         });
     });
-    
-    /*describe('Get User', function(){
-        it('Should get a specific user', function(done){
-            
-            var user = { name: 'John Tibble'};
-            var createdUser;
-            
-            RESTService.createUser( user ).then( function(storedUser) {
-                createdUser = storedUser;
-                return RESTService.getByHREF(createdUser.href);
-            })
-            .then( function( userList ){
-                if( userList && userList.length && userList[0].href && userList[0].href == createdUser.href ){
-                    done();
-                } else {
-                    done( 'bad data retrieved for user' );   
-                }
-            });
-
-        });
-    });*/
 });

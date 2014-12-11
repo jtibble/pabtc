@@ -1,5 +1,6 @@
 var request = require('request');
 var Q = require('q');
+var bitcoin = require('bitcoinjs-lib');
 
 var serviceURL = 'http://localhost:8080/api/v0/';
 
@@ -149,7 +150,8 @@ module.exports = {
             
             var user = {
                 username: name ? name : ('testUser' + Math.floor(Math.random()*100000000).toString()) ,
-                password: 'password'
+                password: 'password',
+                receivingAddress: bitcoin.ECKey.makeRandom().pub.getAddress().toString()
             };
             
             postToService( endpointURLs.users, user ).then( function(){

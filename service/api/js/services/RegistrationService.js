@@ -2,6 +2,7 @@ var Q = require('q');
 
 var RegistrationsDao = require('../dao/RegistrationDao');
 var TournamentsDao = require('../dao/TournamentsDao');
+var UserDao = require('../dao/UserDao');
 
 var RegistrationStatus = require('../model/RegistrationStatus');
 
@@ -10,12 +11,23 @@ module.exports = {
         var deferred = Q.defer();
         
         Q.all([
+            UserDao.find( 'username', username ),
             TournamentsDao.find( {_id: tournamentId} ),
             RegistrationsDao.find( 'tournamentId', tournamentId )
         ])
-        .then( function( resolvedPromises ){            
-            var tournamentList = resolvedPromises[0];
-            var registrationList = resolvedPromises[1];
+        .then( function( resolvedPromises ){
+            var userList = resolvedPromises[0];
+            var tournamentList = resolvedPromises[1];
+            var registrationList = resolvedPromises[2];
+            
+            // Check that there is only one user returned
+            if( userList.length != 1 ){
+                console.log( JSON.stringify( userList ));
+                deferred.reject( new Error('More than one matching user found'));
+                return;
+            }
+            
+            var user = userList[0];
             
             // Check that the tournament exists
             if( tournamentList.length == 0 ){
@@ -58,6 +70,15 @@ module.exports = {
                     return;
                 }
             }
+            
+            // If the tournament has a prize or a buyin, make sure the user included a bitcoin address
+            if( ((tournament.prizeAmount && tournament.prizeAmount > 0) ||
+                (tournament.buyinAmount && tournament.buyinAmount > 0)) &&
+                !user.receivingAddress ){
+                deferred.reject( new Error('user requires a receiving address to register for this tournament'));
+                return;                   
+            }
+            
             
             // TODO change the status depending on tournament type!
             RegistrationsDao.create( username, tournamentId, 'paid' ).then( function(registration){

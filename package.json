@@ -27,7 +27,8 @@
 		"cookie-parser": "*",
         "request": "2.40.0",
         "mocha": "1.21.4",
-        "q": "1.0.1"
+        "q": "1.0.1",
+        "bitcoinjs-lib": "1.4.2"
     },
     "engines": {
         "node": ">=0.6"
