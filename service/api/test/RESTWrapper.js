@@ -140,5 +140,71 @@ module.exports = {
     },
     registerUserForTournament: function( tournamentId ){
         return postToService( endpointURLs.registration, {tournamentId: tournamentId});   
+    },
+    
+    
+    UserHelper: {
+        createAndSignIn: function(name){
+            var deferred = Q.defer();
+            
+            var user = {
+                username: name ? name : ('testUser' + Math.floor(Math.random()*100000000).toString()) ,
+                password: 'password'
+            };
+            
+            postToService( endpointURLs.users, user ).then( function(){
+                postToService( endpointURLs.login, user).then( function(){
+                    deferred.resolve(user);
+                }).fail( function(error){
+                    deferred.reject( new Error('could not sign in user: ' + error.message));
+                });
+            }).fail( function(error){
+                deferred.reject( new Error('could not create user: ' + error.message ));
+            });
+            
+            return deferred.promise;
+        }
+    },
+    
+    TournamentHelper: {
+        createNoPrizeTournament: function(){
+            
+            var tournament = {
+                name: 'testFreeTournament' + Math.floor(Math.random()*100000000).toString(),
+                totalPlayers: 2
+            };
+
+            return postToService( endpointURLs.tournaments, tournament );
+        },
+        createPrizeTournament: function(){
+
+            var currencyAmount = Math.foor( Math.random()*1000 );
+            var currencyIndex = Math.floor( Math.random()*4 );
+
+            var currencyList = ['USD', 'BTC', 'mBTC', 'uBTC'];
+            var currency = currencyList[ currencyIndex ];
+
+            var tournament = {
+                name: 'testPrizeTournament' + Math.floor(Math.random()*100000000).toString(),
+                totalPlayers: 2,
+                prizeCurrency: currency,
+                prizeAmount: currencyAmount
+            };
+
+            return postToService( endpointURLs.tournaments, tournament );
+        },
+        createBuyinTournament: function(){
+            
+            var tournament = {
+                name: 'testBuyinTournament' + Math.floor(Math.random()*100000000).toString(),
+                totalPlayers: 2,
+                prizeAmount: 0,
+                prizeCurrency: 'BTC',
+                buyinCurrency: 'USD',
+                buyinAmount: 1
+            };
+
+            return postToService( endpointURLs.tournaments, tournament );
+        }
     }
 };

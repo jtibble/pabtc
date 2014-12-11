@@ -31,15 +31,22 @@ describe('Tournaments', function(){
     
         it('Should create tournament', function(done){
 
-            var tournament = {name: 'test tournament'};
+            var tournament = {
+                name: 'test tournament',
+                prizeAmount: 1.0,
+                prizeCurrency: 'BTC'
+            };
 
             RESTService.createTournament( tournament )
-            .then( function(tournament){
-                if( tournament && tournament.name && tournament.dateCreated ){
-                    done();
-                } else {
-                    done('tournament did not contain all the expected properties');   
-                }
+            .then( function(createdTournament){
+                
+                assert( createdTournament, 'tournament not created');
+                assert.equal(createdTournament.name, tournament.name, 'name incorrect');
+                assert.equal(createdTournament.prizeAmount, tournament.prizeAmount, 'prize amount incorrect');
+                assert.equal(createdTournament.prizeCurrency, tournament.prizeCurrency, 'prize currency');
+                
+                done();
+                
             }, function(error){
                 done('could not create tournament: ' + error);
             });

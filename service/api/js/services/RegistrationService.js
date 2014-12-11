@@ -40,22 +40,23 @@ module.exports = {
             var numFinalizedRegistrations = 0;
             
             registrationList.forEach( function(r){
-                if( r.status == 'finalized'){
+                if( r.status == 'paid'){
                     numFinalizedRegistrations++;
                 }
             });
             
             // Check that there is an open spot to register
             if( numFinalizedRegistrations >= tournament.totalPlayers ){   
-                deferred.reject( new Error('Tournament is full of finalized players already'));
+                deferred.reject( new Error('Tournament is full'));
                 return;
             }
             
             // Check that the user is not already registered for this tournament
             // TODO
                 
-                
-            RegistrationsDao.create( username, tournamentId ).then( function( registration ){
+            
+            // TODO change the status depending on tournament type!
+            RegistrationsDao.create( username, tournamentId, 'paid' ).then( function(registration){
                 deferred.resolve( registration );
                 return;
             });

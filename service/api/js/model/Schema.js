@@ -15,6 +15,8 @@ module.exports = {
         createdBy: '',
         totalPlayers: 0,
         registrations: [],
+        buyinCurrency: '',
+        buyinAmount: 0,
         prizeCurrency: '',
         prizeAmount: 0,
         status: 'new'

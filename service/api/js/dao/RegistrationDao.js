@@ -10,13 +10,13 @@ var registrationCollection = db.collection('registrations');
 var RegistrationStatusList = require('../model/RegistrationStatus');
 
 module.exports = {
-    create: function( username, tournamentId ){
+    create: function( username, tournamentId, status ){
         var deferred = Q.defer();
         
         var newRegistration = Schema.create('registration');
         newRegistration.username = username;
         newRegistration.tournamentId = tournamentId;
-        newRegistration.status = RegistrationStatusList[0];
+        newRegistration.status = status;
                 
         registrationCollection.save( newRegistration, function(error, registration){
             if( error ){
@@ -28,7 +28,7 @@ module.exports = {
         });
         
         return deferred.promise;
-    },
+    },  
     find: function( parameterName, value ){
         var deferred = Q.defer();        
         var query = {};

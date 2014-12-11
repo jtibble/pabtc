@@ -1,42 +1,51 @@
 var RESTService = require('./RESTWrapper');
+
+var Q = require('q');
+
 describe('Registrations', function(){
     
-    var user;
+    var tournamentCreator = {
+        username: 'tournamentCreator' + Math.floor(Math.random()*100000000).toString(),
+        password: 'password'
+    };
     
-    beforeEach( function(done){
-        user = {
-            username: 'registrationtestuser' + Math.floor(Math.random()*100000000).toString(),
-            password: 'password'
-        };
+    before( function(done){
         
         RESTService.enableCookies();
         
-        RESTService.createUser( user )
+        RESTService.createUser( tournamentCreator )
         .then( function(storedUser){
-            user = storedUser;
-            return RESTService.loginUser( user.username, user.password );
-        }, function(){
-            done('could not create user');   
-        })
-        .then( function(){
+            tournamentCreator = storedUser;
             done();
-        }, function(){
-            done('could not log in user');   
-        })
+        }).fail( function(error){
+            done('failed to create tournamentCreator user');    
+        });
     });
+    
+    beforeEach( function(done){
+        RESTService.loginUser( tournamentCreator.username, tournamentCreator.password).then( function(){
+            done();
+        }).fail(function(){
+            done('could not log in tournamentcreator before test'); 
+        });
+    });
+    
     
     describe('Register Users For Tournament', function(){
         it('Should create tournament, and register user for it', function(done){
 
-              
-            var tournament = {name: 'Registration Tournament'};
+            var tournament;
+            var user;
             
-            RESTService.createTournament( tournament )
-            .then( function( newTournament){
+            RESTService.TournamentHelper.createNoPrizeTournament().then( function( newTournament){
                 tournament = newTournament;
-                return RESTService.changeTournamentStatus( newTournament._id, 'open' );                
+                return RESTService.changeTournamentStatus( tournament._id, 'open' );                
             })
             .then( function(){
+                return RESTService.UserHelper.createAndSignIn();
+            })
+            .then( function(newUser){
+                user = newUser;
                 return RESTService.registerUserForTournament( tournament._id );
             })
             .then( function(){
@@ -58,9 +67,92 @@ describe('Registrations', function(){
                 return;
             }).fail( function( error ){
                 done( error.message );    
-            });; 
+            }); 
           
-        });	
+        });
+        
+        it('Should not be able to register for full tournament', function(done){
+            
+            var tournament;
+            var user1;
+            var user2;
+            
+            RESTService.TournamentHelper.createNoPrizeTournament().then( function( newTournament){
+                tournament = newTournament;
+                return RESTService.changeTournamentStatus( tournament._id, 'open' );                
+            })
+            .then( function(){
+                return RESTService.UserHelper.createAndSignIn();
+            })
+            .then( function(newUser){
+                user1 = newUser;
+                return RESTService.registerUserForTournament( tournament._id );
+            })
+            .then( function(){
+                return RESTService.UserHelper.createAndSignIn();
+            })
+            .then( function(newUser){
+                user2 = newUser;
+                return RESTService.registerUserForTournament( tournament._id );
+            })
+            .then( function(){
+                return RESTService.UserHelper.createAndSignIn();
+            })
+            .then( function(newUser){
+                user3 = newUser;
+                return RESTService.registerUserForTournament( tournament._id );
+            })
+            .then( function(){
+                done('third user should not have been allowed to register for tournament');
+            }, function(){
+                done();
+            }).fail( function( error ){
+                done( 'failed full-tournament registration test becasue: ' + error.message );    
+            }); 
+        });
+        
+        xit('Should not be able to register for a tournament twice', function(done){
+            
+        });
+        
+        xit('Should not be able to register for tournament that is not open', function(done){
+            
+        });
+        
+        
 	});
+    
+    describe('Cancellation', function(){
+        xit('Cancelling registration to free tournament should change status to \'cancelled\'', function(done){
+            
+        });
+        xit('Cancelling registration to paid tournament should refund and change status to \'cancelled\'', function(done){
+            
+        });
+        xit('Should not be able to cancel registration when tournament is \'active\'', function(done){
+            
+        });
+        
+    });
+    describe('Payment', function(){
+        xit('Registration to free tournament should change status to \'paid\'', function(done){
+            
+        });
+        
+        xit('Registration to buyin tournament should change status to \'invoice\'', function(done){
+            
+        });
+        
+        xit('Should provide payment and have registration status changed to \'paid\'', function(done){
+            
+        });
+        
+        xit('Should provide payment and have registration status changed', function(done){
+            
+        });
+        xit('Should provide payment and have registration status changed', function(done){
+            
+        });
+    });
     
 });
