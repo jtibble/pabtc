@@ -8,11 +8,12 @@ var UsersController = require('./api/js/controllers/UsersController');
 var TournamentsController = require('./api/js/controllers/TournamentsController');
 var AuthenticationController = require('./api/js/controllers/AuthenticationController');
 var RegistrationCollection = require('./api/js/controllers/RegistrationController');
+var InvoiceController = require('./api/js/controllers/InvoiceController');
 
 var servicesConfig = {
     'staticContentPath': '/ui',
     'apiPath': '/api/v0/',
-    'endpoints': AuthenticationController.concat(UsersController).concat(TournamentsController).concat(RegistrationCollection)
+    'endpoints': AuthenticationController.concat(UsersController).concat(TournamentsController).concat(RegistrationCollection).concat(InvoiceController)
 };
 
 

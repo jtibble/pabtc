@@ -8,7 +8,8 @@ app.controller('RegistrationController', function($scope, FrameworkAJAX, $state)
             url: '/api/v0/users',
             data: {
                 username: $scope.Model.username,
-                password: $scope.Model.password
+                password: $scope.Model.password,
+                receivingAddress: $scope.Model.receivingAddress
             }
         };
         FrameworkAJAX.sendRequest(newUserRequest, function(data){

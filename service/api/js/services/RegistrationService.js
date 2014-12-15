@@ -80,11 +80,14 @@ module.exports = {
                 return;                   
             }
             
-            
-            // TODO change the status depending on tournament type!
-            RegistrationsDao.create( username, tournamentId, 'paid' ).then( function(registration){
-                deferred.resolve( registration );
-                return;
+            // Try to create the invoice
+            // TODO send the correct invoice info 
+            BitcoinDao.createInvoice( 1, 'USD').then(function(invoice){
+                return RegistrationsDao.create( username, tournamentId, invoice );
+            }).then( function(registration){
+                deferred.resolve( registration );  
+            }).fail( function(error){
+                deferred.reject( new Error('failed to create invoice with bitpay and registration: ' + error.message));
             });
         
         })
@@ -92,6 +95,15 @@ module.exports = {
             deferred.reject( new Error('Failed to fetch previous registrations and tournament info from db: ' + error.message));
         });
         
+        
+        return deferred.promise;
+    },
+    
+    // TODO finish
+    updateRegistrationStatus: function( invoiceId, invoiceStatus ){
+        var deferred = Q.defer();
+        
+        deferred.resolve();
         
         return deferred.promise;
     }

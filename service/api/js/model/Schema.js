@@ -7,7 +7,7 @@ module.exports = {
         dateCreated: '',
         username: '',
         password: '',
-        receivingAddress: undefined
+        receivingAddress: ''
     },
     tournament: {
         _id: '',
@@ -31,7 +31,8 @@ module.exports = {
         dateCreated: '',
         status: '',
         username: '',
-        tournamentId: ''
+        tournamentId: '',
+        invoiceId: ''
     },
     
     create: function( objectName ){

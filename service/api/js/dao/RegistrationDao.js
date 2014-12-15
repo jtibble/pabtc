@@ -10,13 +10,14 @@ var registrationCollection = db.collection('registrations');
 var RegistrationStatusList = require('../model/RegistrationStatus');
 
 module.exports = {
-    create: function( username, tournamentId, status ){
+    create: function( username, tournamentId, invoice ){
         var deferred = Q.defer();
         
         var newRegistration = Schema.create('registration');
         newRegistration.username = username;
         newRegistration.tournamentId = tournamentId;
-        newRegistration.status = status;
+        newRegistration.invoiceId = invoice.id;
+        newRegistration.status = 'new';
                 
         registrationCollection.save( newRegistration, function(error, registration){
             if( error ){

@@ -14,7 +14,7 @@ module.exports = [
         'type': 'POST',
         'name': 'users',
         'response': function (req, res) {
-            var requiredProperties = ['username', 'password'];
+            var requiredProperties = ['username', 'password', 'receivingAddress'];
 
             var responseBody = {};
 
