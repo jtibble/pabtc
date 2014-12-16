@@ -183,7 +183,7 @@ module.exports = {
             var currencyAmount = Math.floor( Math.random()*1000 );
             var currencyIndex = Math.floor( Math.random()*4 );
 
-            var currencyList = ['USD', 'BTC', 'mBTC', 'uBTC'];
+            var currencyList = ['USD', 'BTC', 'mBTC', 'μBTC'];
             var currency = currencyList[ currencyIndex ];
 
             var tournament = {

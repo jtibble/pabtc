@@ -1,4 +1,5 @@
 var Q = require('q');
+var UUID = require('node-uuid');
 
 var RegistrationsDao = require('../dao/RegistrationDao');
 var TournamentsDao = require('../dao/TournamentsDao');
@@ -72,6 +73,7 @@ module.exports = {
                 }
             }
             
+            
             // If the tournament has a prize or a buyin, make sure the user included a bitcoin address
             if( ((tournament.prizeAmount && tournament.prizeAmount > 0) ||
                 (tournament.buyinAmount && tournament.buyinAmount > 0)) &&
@@ -80,15 +82,35 @@ module.exports = {
                 return;                   
             }
             
-            // Try to create the invoice
-            // TODO send the correct invoice info 
-            BitcoinDao.createInvoice( 1, 'USD').then(function(invoice){
-                return RegistrationsDao.create( username, tournamentId, invoice );
-            }).then( function(registration){
-                deferred.resolve( registration );  
-            }).fail( function(error){
-                deferred.reject( new Error('failed to create invoice with bitpay and registration: ' + error.message));
-            });
+            if( tournament.buyinAmount == 0 ){
+                RegistrationsDao.createPaid( username, tournamentId ).then(function(registration){
+                    deferred.resolve(registration);
+                    return;
+                });
+            } else {
+                
+                var invoiceGUID = UUID.v4({rng: UUID.nodeRNG});
+                var invoiceAmount = tournament.buyinAmount;
+                var invoiceCurrency = tournament.buyinCurrency;
+                
+                if( invoiceCurrency == 'mBTC' ){
+                    invoiceAmount /= 1000;
+                    invoiceCurrency = 'BTC'
+                } else if ( invoiceCurrency == 'μBTC' ){
+                    invoiceAmount /= 1000000;  
+                    invoiceCurrency = 'BTC' 
+                }
+                
+                BitcoinDao.createInvoice( invoiceAmount, invoiceCurrency, invoiceGUID).then(function(invoice){
+                    return RegistrationsDao.createWithInvoice( username, tournamentId, invoice );
+                }).then( function(registration){
+                    deferred.resolve( registration ); 
+                }).fail( function(error){
+                    deferred.reject( new Error('failed to create invoice with bitpay and registration: ' + error.message));
+                });
+            }
+            
+            
         
         })
         .fail( function(error){
@@ -108,3 +130,10 @@ module.exports = {
         return deferred.promise;
     }
 };
+
+
+
+
+
+
+

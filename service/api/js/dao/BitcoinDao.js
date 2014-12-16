@@ -38,13 +38,14 @@ var APIWrapper = {
 
 
 module.exports = {
-    createInvoice: function(amount, currency){
+    createInvoice: function(amount, currency, guid){
         
         var invoice = {
             price: amount.toString(),
             currency: currency,
             itemDesc: 'PA-BTC Tournament Registration Fee',
-            notificationURL: 'https://pa-btc.com/api/v0/invoices'
+            notificationURL: 'https://pa-btc.com/api/v0/invoices',
+            posData: guid
         };
         
         return APIWrapper.post( 'invoice', invoice );

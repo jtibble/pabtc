@@ -1,4 +1,5 @@
 var RESTService = require('./RESTWrapper');
+var bitcoin = require('bitcoinjs-lib');
 
 describe('Users', function(){
     describe('Create User', function(){
@@ -6,7 +7,8 @@ describe('Users', function(){
             
             var user = {
                 username: 'testuser' + Math.floor(Math.random()*100000000).toString(),
-                password: 'password'
+                password: 'password',
+                receivingAddress: bitcoin.ECKey.makeRandom().pub.getAddress().toString()
             };
             
             RESTService.createUser( user ).then( function(user){
@@ -46,7 +48,8 @@ describe('Users', function(){
             var user = {
                 name: 'TestUser',
                 username: 'testuser' + Math.floor(Math.random()*100000000).toString(),
-                password: 'password'
+                password: 'password',
+                receivingAddress: bitcoin.ECKey.makeRandom().pub.getAddress().toString()
             };
             var numUsers;
             

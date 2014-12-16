@@ -35,8 +35,8 @@ app.controller('TournamentModalController', function($scope, FrameworkAJAX, tour
 		};
         
         FrameworkAJAX.sendRequest( request, function( data ){
-            if( data.invoiceUrl ){
-                window.open( data.invoiceUrl, '_blank');   
+            if( data.bitpayId ){
+                window.open( 'http://test.bitpay.com/invoice?id=' + data.bitpayId, '_blank');   
             }
             $modalInstance.dismiss();  
         }, function(data, status, headers, config){
