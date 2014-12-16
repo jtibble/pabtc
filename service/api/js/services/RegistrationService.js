@@ -123,11 +123,16 @@ module.exports = {
         return deferred.promise;
     },
     
-    // TODO finish
     updateRegistrationStatus: function( invoiceId, invoiceStatus ){
         var deferred = Q.defer();
         
-        deferred.resolve();
+        // TODO: Also update tournament prize if it's a buyin tournament
+        
+        RegistrationsDao.findAndUpdateStatusByBitpayId( invoiceId, invoiceStatus ).then(function(registration){
+            deferred.resolve(registration);
+        }).fail(function(error){
+            deferred.reject( new Error('could not find registration with that invoice id: ' + error.message)); 
+        });
         
         return deferred.promise;
     }

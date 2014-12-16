@@ -65,5 +65,31 @@ module.exports = {
         });
         
         return deferred.promise;
+    },
+    
+    findAndUpdateStatusByBitpayId: function( bitpayId, newStatus){
+        var deferred = Q.defer();   
+        
+        var query = {
+            bitpayId: bitpayId  
+        };
+        
+        var updateKeys = {
+            status: newStatus  
+        };
+          
+        registrationCollection.findAndModify( {
+            query: { bitpayId: bitpayId },
+            update: { $set: {status: newStatus} },
+            new: true
+        }, function(error, updatedRegistration){
+            if( !error && updatedRegistration ){
+                deferred.resolve(updatedRegistration);
+            } else {
+                deferred.reject( new Error('could not update registration in db'));   
+            }
+        });
+        
+        return deferred.promise;
     }
 };

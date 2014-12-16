@@ -21,21 +21,30 @@ module.exports = [
                 
                 var IPList = body.split('|').concat('127.0.0.1');
                 
-                if( IPList.indexOf( req.ip ) != -1 ){
-                    
-                    var invoiceId = req.body.id;
-                    var invoiceStatus = req.body.status;
-                    
-                    RegistrationService.updateRegistrationStatus( invoiceId, invoiceStatus ).then( function(){
-                        res.status(200).send(); 
-                    }).fail( function(error){
-                        console.log('failed update registration from bitpay callback: ' + error.message);
-                        res.status(500).send();
-                    });
-                } else {
-                    console.log('Unauthorized attempt to change registration status!');
+                if( IPList.indexOf( req.ip ) == -1 ){
+                    console.log('Unauthorized attempt to change registration status! IP address ' + req.ip);
                     res.status(403).send('Unauthorized attempt to change registration status!');
+                    return;
                 }
+                    
+                var invoiceId = req.body.data.id;
+                var invoiceStatus = req.body.data.status;
+
+                console.log('Received BitPay notification: id ' + invoiceId + ' has status ' + invoiceStatus);
+
+                if( invoiceStatus != 'complete' ){
+                    console.log('sending acknowledgement');
+                    res.status(200).send();
+                    return;
+                }
+
+                RegistrationService.updateRegistrationStatus( invoiceId, 'paid' ).then( function(){
+                    console.log('updated registration');
+                    res.status(200).send(); 
+                }).fail( function(error){
+                    console.log('failed update registration from bitpay callback: ' + error.message);
+                    res.status(500).send();
+                });
             });
         }
     }
