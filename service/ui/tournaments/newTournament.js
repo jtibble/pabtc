@@ -6,7 +6,11 @@ app.controller('NewTournamentModalController', function($scope, FrameworkAJAX, $
         }
     };
     $scope.Model = {
-        currencyOptions: ['USD', 'BTC', 'mBTC', 'μBTC']
+        currencyOptions: ['USD', 'BTC', 'mBTC', 'μBTC'],
+        prizeAmount: 0,
+        prizeCurrency: 'BTC',
+        buyinAmount: 0,
+        buyinCurrency: 'BTC'
     };
     
     
@@ -21,13 +25,10 @@ app.controller('NewTournamentModalController', function($scope, FrameworkAJAX, $
         };
         
         if( $scope.Model.prizeToggle ){
-            if( $scope.Model.prizeType == 'creatorFunded' ){
-                tournament.prizeAmount = $scope.Model.prizeAmount;
-                tournament.prizeCurrency = $scope.Model.prizeCurrency;
-            } else if( $scope.Model.prizeType == 'participantFunded' ){
-                tournament.buyinAmount = $scope.Model.buyinAmount;
-                tournament.buyinCurrency = $scope.Model.buyinCurrency;
-            }
+            tournament.prizeAmount = $scope.Model.prizeAmount;
+            tournament.prizeCurrency = $scope.Model.prizeCurrency;
+            tournament.buyinAmount = $scope.Model.buyinAmount;
+            tournament.buyinCurrency = $scope.Model.buyinCurrency;
         }
         
         var APIKeyRequest = {

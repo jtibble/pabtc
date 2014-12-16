@@ -123,13 +123,52 @@ module.exports = {
         return deferred.promise;
     },
     
-    updateRegistrationStatus: function( invoiceId, invoiceStatus ){
+    updateRegistrationStatus: function( invoice ){
         var deferred = Q.defer();
         
         // TODO: Also update tournament prize if it's a buyin tournament
+        if( invoice.status == 'complete' ){
+            invoice.status = 'paid';   
+        }
         
-        RegistrationsDao.findAndUpdateStatusByBitpayId( invoiceId, invoiceStatus ).then(function(registration){
-            deferred.resolve(registration);
+        var registration;
+        var tournament;
+        
+        RegistrationsDao.findAndUpdateStatusByBitpayId( invoice.id, 
+                                                        invoice.status ).then( function( fetchedRegistration ){
+            
+            registration = fetchedRegistration;
+            return TournamentsDao.findById( registration.tournamentId );
+            
+        }).then( function(fetchedTournament){
+
+            tournament = fetchedTournament;
+            
+            if( tournament.buyinAmount > 0 ){
+
+                var bitcoinPaid = invoice.btcPaid;
+                var paidAmountInCorrectCurrency = bitcoinPaid;
+
+
+                if( tournament.prizeCurrency == 'USD' ){
+                    paidAmountInCorrectCurrency = bitcoinPaid * invoice.exRates.USD;
+                } else if( tournament.prizeCurrency == 'mBTC' ){
+                    paidAmountInCorrectCurrency = bitcoinPaid * 1000;   
+                } else if (tournament.prizeCurrency == 'μBTC' ){
+                    paidAmountInCorrectCurrency = bitcoinPaid * 1000000;   
+                }
+
+                TournamentsDao.addPrizeAmountToTournamentById( registration.tournamentId, 
+                                                               paidAmountInCorrectCurrency ).then( function(){
+                    console.log('updated tournament prize');
+                    deferred.resolve();
+                }).fail( function(error){
+                    deferred.reject( new Error('Failed to add prize amount to tournament: ' + error.message));
+                });
+            } else {
+                deferred.resolve();
+            }
+            
         }).fail(function(error){
             deferred.reject( new Error('could not find registration with that invoice id: ' + error.message)); 
         });

@@ -32,7 +32,7 @@ module.exports = {
         status: '',
         username: '',
         tournamentId: '',
-        invoiceId: ''
+        bitpayId: ''
     },
     
     create: function( objectName ){

@@ -17,13 +17,12 @@ module.exports = {
         newRegistration.username = username;
         newRegistration.tournamentId = tournamentId;
         newRegistration.bitpayId = invoice.id;
-        newRegistration.status = 'new';
+        newRegistration.status = 'invoice';
     
         registrationCollection.save( newRegistration , function(error, registration){
             if( error ){
                 deferred.reject('could not save registration');
-            } else {
-                console.log(username + ' registered for tournament');                
+            } else {              
                 deferred.resolve( registration );
             }
         });
@@ -68,15 +67,7 @@ module.exports = {
     },
     
     findAndUpdateStatusByBitpayId: function( bitpayId, newStatus){
-        var deferred = Q.defer();   
-        
-        var query = {
-            bitpayId: bitpayId  
-        };
-        
-        var updateKeys = {
-            status: newStatus  
-        };
+        var deferred = Q.defer();
           
         registrationCollection.findAndModify( {
             query: { bitpayId: bitpayId },

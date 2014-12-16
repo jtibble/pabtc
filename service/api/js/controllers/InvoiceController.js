@@ -1,6 +1,5 @@
 var RegistrationService = require('../services/RegistrationService');
 var RequestValidator = require('./RequestValidator');
-
 var request = require('request');
 
 module.exports = [
@@ -27,18 +26,17 @@ module.exports = [
                     return;
                 }
                     
-                var invoiceId = req.body.data.id;
-                var invoiceStatus = req.body.data.status;
+                var invoice = req.body.data;
 
-                console.log('Received BitPay notification: id ' + invoiceId + ' has status ' + invoiceStatus);
+                console.log('Received BitPay notification: id ' + invoice.id + ' has status ' + invoice.status);
 
-                if( invoiceStatus != 'complete' ){
-                    console.log('sending acknowledgement');
+                if( invoice.status != 'complete' ){
+                    console.log('sending acknowledgement of status ' + invoice.status);
                     res.status(200).send();
                     return;
                 }
 
-                RegistrationService.updateRegistrationStatus( invoiceId, 'paid' ).then( function(){
+                RegistrationService.updateRegistrationStatus( invoice ).then( function(){
                     console.log('updated registration');
                     res.status(200).send(); 
                 }).fail( function(error){

@@ -259,8 +259,30 @@ describe('Registrations', function(){
             }); 
         });
         
-        xit('Registration to buyin tournament should change status to \'invoice\'', function(done){
+        it('Registration to buyin tournament should change status to \'invoice\'', function(done){
+              
+            var tournament;
             
+            RESTService.TournamentHelper.createBuyinTournament().then( function( newTournament){
+                tournament = newTournament;
+                return RESTService.changeTournamentStatus( tournament._id, 'open' );                
+            })
+            .then( function(){
+                return RESTService.UserHelper.createAndSignIn();
+            })
+            .then( function(){
+                return RESTService.registerUserForTournament( tournament._id );
+            })
+            .then( function( registration ){
+                if( registration.status == 'invoice' ){
+                    done();
+                } else {
+                    console.log( JSON.stringify( registration ));
+                    done('registration status is not correct for buyin tournament');   
+                };
+            }).fail( function( error ){
+                done('failed with error: ' + error.message);    
+            }); 
         });
         
         xit('Should provide payment and have registration status changed to \'paid\'', function(done){
