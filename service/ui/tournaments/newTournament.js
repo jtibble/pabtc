@@ -6,7 +6,7 @@ app.controller('NewTournamentModalController', function($scope, FrameworkAJAX, $
         }
     };
     $scope.Model = {
-        prizeCurrencyOptions: ['USD', 'BTC', 'mBTC', 'μBTC']
+        currencyOptions: ['USD', 'BTC', 'mBTC', 'μBTC']
     };
     
     

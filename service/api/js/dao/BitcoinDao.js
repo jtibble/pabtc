@@ -1,5 +1,5 @@
 var Q = require('q');
-var bitpay = require('bitpay');
+//var bitpay = require('bitpay');
 
 module.exports = {
     createInvoice: function(amount, currency){
@@ -15,5 +15,5 @@ module.exports = {
         deferred.resolve( );
         
         return deferred.promise;
-    },
+    }
 };
