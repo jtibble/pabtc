@@ -17,18 +17,13 @@ module.exports = {
         newRegistration.username = username;
         newRegistration.tournamentId = tournamentId;
         newRegistration.bitpayId = invoice.id;
-        newRegistration.bitpaySecret = invoice.posData;
         newRegistration.status = 'new';
     
         registrationCollection.save( newRegistration , function(error, registration){
             if( error ){
                 deferred.reject('could not save registration');
             } else {
-                console.log('registration for tournament created');
-                
-                // Erase the secret so the user can't change the status themselves
-                newRegistration.bitpaySecret = undefined;
-                
+                console.log(username + ' registered for tournament');                
                 deferred.resolve( registration );
             }
         });
@@ -48,7 +43,6 @@ module.exports = {
             if( error ){
                 deferred.reject('could not save registration');
             } else {
-                console.log('registration for tournament created');
                 deferred.resolve( registration );
             }
         });

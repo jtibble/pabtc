@@ -1,6 +1,8 @@
 var Q = require('q');
 var UUID = require('node-uuid');
 var fs = require('fs');
+
+console.log('Loading Bitpay API key');
 var APIKey = fs.readFileSync('api.key').toString();
 
 var request = require('request');
@@ -38,14 +40,14 @@ var APIWrapper = {
 
 
 module.exports = {
-    createInvoice: function(amount, currency, guid){
+    createBuyinInvoice: function(amount, currency, description, username){
         
         var invoice = {
             price: amount.toString(),
             currency: currency,
-            itemDesc: 'PA-BTC Tournament Registration Fee',
+            itemDesc: 'PA-BTC Tournament Registration Fee: ' + description,
             notificationURL: 'https://pa-btc.com/api/v0/invoices',
-            posData: guid
+            buyerName: username
         };
         
         return APIWrapper.post( 'invoice', invoice );

@@ -79,7 +79,7 @@ module.exports = {
                 (tournament.buyinAmount && tournament.buyinAmount > 0)) &&
                 !user.receivingAddress ){
                 deferred.reject( new Error('user requires a receiving address to register for this tournament'));
-                return;                   
+                return;              
             }
             
             if( tournament.buyinAmount == 0 ){
@@ -89,7 +89,6 @@ module.exports = {
                 });
             } else {
                 
-                var invoiceGUID = UUID.v4({rng: UUID.nodeRNG});
                 var invoiceAmount = tournament.buyinAmount;
                 var invoiceCurrency = tournament.buyinCurrency;
                 
@@ -101,7 +100,10 @@ module.exports = {
                     invoiceCurrency = 'BTC' 
                 }
                 
-                BitcoinDao.createInvoice( invoiceAmount, invoiceCurrency, invoiceGUID).then(function(invoice){
+                BitcoinDao.createBuyinInvoice( invoiceAmount, 
+                                               invoiceCurrency,
+                                               tournament.name,
+                                               username ).then(function(invoice){
                     return RegistrationsDao.createWithInvoice( username, tournamentId, invoice );
                 }).then( function(registration){
                     deferred.resolve( registration ); 
