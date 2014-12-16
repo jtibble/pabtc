@@ -1,0 +1,61 @@
+  <form class="bitpay-donate" action="https://bitpay.com/checkout" method="post" onsubmit="return checkRequiredFields(this);">
+    <input name="action" type="hidden" value="checkout">
+    <fieldset>
+      <ul>
+        
+        <li class="bitpay-donate-field">
+          <label>Email:</label>
+          <input class="bitpay-donate-field-email" name="orderID" type="email" placeholder="Email address (optional)" maxlength=50 autocapitalize=off autocorrect=off><br>
+        </li>
+        
+        
+        <li class="bitpay-donate-field">
+          <label>Amount:</label>
+          <input class="bitpay-donate-field-price" name="price" type="number" value="10.00" placeholder="Amount" maxlength="10" min="0.01" step="0.01"/>
+          <select class="bitpay-donate-field-currency" name="currency" value="">
+            <option selected="selected" value="USD">USD</option>
+            <option value="BTC">BTC</option>
+            <option value="EUR">EUR</option>
+            <option value="GBP">GBP</option>
+            <option value="AUD">AUD</option>
+            <option value="BGN">BGN</option>
+            <option value="BRL">BRL</option>
+            <option value="CAD">CAD</option>
+            <option value="CHF">CHF</option>
+            <option value="CNY">CNY</option>
+            <option value="CZK">CZK</option>
+            <option value="DKK">DKK</option>
+            <option value="HKD">HKD</option>
+            <option value="HRK">HRK</option>
+            <option value="HUF">HUF</option>
+            <option value="IDR">IDR</option>
+            <option value="ILS">ILS</option>
+            <option value="INR">INR</option>
+            <option value="JPY">JPY</option>
+            <option value="KRW">KRW</option>
+            <option value="LTL">LTL</option>
+            <option value="LVL">LVL</option>
+            <option value="MXN">MXN</option>
+            <option value="MYR">MYR</option>
+            <option value="NOK">NOK</option>
+            <option value="NZD">NZD</option>
+            <option value="PHP">PHP</option>
+            <option value="PLN">PLN</option>
+            <option value="RON">RON</option>
+            <option value="RUB">RUB</option>
+            <option value="SEK">SEK</option>
+            <option value="SGD">SGD</option>
+            <option value="THB">THB</option>
+            <option value="TRY">TRY</option>
+            <option value="ZAR">ZAR</option>
+          </select>
+        </li>
+        
+        
+      </ul>
+      <input type="hidden" name="data" value="8kxFrd2AfC+lrXQrraJJ2DJEHBB8GY0BlPrGCPd+ZwrBmPSrvMJh3dfqO8pNSFPBos0h20hFAzhFsMRyjhxClNNB78E9wRUAJKHW77m02ohjGBL0U/E/GfYIU0YtAQuColGcWH2bcCpy63ZqlfSt4r+jsgE03KSlqZXnUhBJDv34C+2tixiMZA4K4b2AR9VwWl+oX1i5NHxLqKg/XgBuNg=="> 
+      <div class="bitpay-donate-button-wrapper">
+        <input class="bitpay-donate-button" name="submit" src="https://bitpay.com/img/donate-button.svg" onerror="this.onerror=null; this.src='https://bitpay.com/img/donate-button-md.png'" width="126" height="48" type="image" alt="BitPay, the easy way to pay with bitcoins." border="0">
+      </div>
+    </fieldset>
+  </form>
