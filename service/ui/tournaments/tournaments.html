@@ -61,9 +61,8 @@
         <tr>
             <th>Name</th>
             <th>Start Date</th>
-            <th>Created By</th>
             <th>Registered Players</th>
-            <th>Prizes</th>
+            <th>Prize / Buy-In</th>
             <th>Details</th>
             <th>Status</th>
         </tr>
@@ -72,7 +71,6 @@
         <tr ng-repeat="tournament in Model.newTournaments.concat(Model.openTournaments).concat(Model.closedTournaments)">
             <td>{{tournament.name}}</td>
             <td>{{tournament.dateCreated | date: 'MMM d, y h:mm a'}}</td>
-            <td>{{tournament.createdBy}}</td>
             <td>
                 {{tournament.registrations.length}} / {{tournament.totalPlayers}}<br>
                 <table>
@@ -106,7 +104,10 @@
                 </div>
             </td>
             <td>
-                <button class="btn btn-default" ng-click="Actions.viewTournamentDetails(tournament)">
+                <button ng-show="tournament.status == 'open'" class="btn btn-success" ng-click="Actions.viewTournamentDetails(tournament)">
+                    Details
+                </button>
+                <button ng-show="tournament.status != 'open'"class="btn btn-default" ng-click="Actions.viewTournamentDetails(tournament)">
                     Details
                 </button>
             </td>
@@ -130,7 +131,7 @@
             <th>Name</th>
             <th>Date</th>
             <th>Winner</th>
-            <th>Prizes</th>
+            <th>Prize</th>
         </tr>
     </thead>
     <tbody>

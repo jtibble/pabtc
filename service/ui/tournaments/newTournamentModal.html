@@ -92,5 +92,11 @@
 </div>
 
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="Actions.createTournament()">Create Tournament</button>
+    <span class="text-danger" ng-show="Model.errorText">{{Model.errorText}}</span>
+    <button class="btn btn-success" ng-show="Model.prizeToggle == 'true' && Model.prizeType == 'creatorFunded'" ng-click="Actions.createTournamentWithFunding()">
+        Create and Fund Tournament
+    </button>
+    <button class="btn btn-success" ng-show="Model.prizeToggle != 'true' || Model.prizeType == 'participantFunded'" ng-click="Actions.createTournament()">
+        Create Tournament
+    </button>
 </div>
