@@ -93,12 +93,14 @@ module.exports = {
                 var invoiceCurrency = tournament.buyinCurrency;
                 
                 if( invoiceCurrency == 'mBTC' ){
-                    invoiceAmount /= 1000;
+                    invoiceAmount = parseFloat((invoiceAmount/1000).toPrecision(8));
                     invoiceCurrency = 'BTC'
                 } else if ( invoiceCurrency == 'μBTC' ){
-                    invoiceAmount /= 1000000;  
-                    invoiceCurrency = 'BTC' 
+                    invoiceAmount = parseFloat((invoiceAmount/1000000).toPrecision(8));  
+                    invoiceCurrency = 'BTC';
                 }
+                
+                
                 
                 BitcoinDao.createBuyinInvoice( invoiceAmount, 
                                                invoiceCurrency,

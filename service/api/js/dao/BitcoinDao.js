@@ -24,7 +24,10 @@ var APIWrapper = {
             }
         };
         
+        console.log('bitpay request: ' + JSON.stringify(body));
         request( options, function(error, response, body){
+            console.log('bitpay response: ' + JSON.stringify(body));
+            
             if( error || (body && body.error) ){
                 deferred.reject( new Error( error || body.error ) );
                 return;

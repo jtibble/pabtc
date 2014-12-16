@@ -25,10 +25,17 @@ app.controller('NewTournamentModalController', function($scope, FrameworkAJAX, $
         };
         
         if( $scope.Model.prizeToggle ){
-            tournament.prizeAmount = $scope.Model.prizeAmount;
-            tournament.prizeCurrency = $scope.Model.prizeCurrency;
-            tournament.buyinAmount = $scope.Model.buyinAmount;
-            tournament.buyinCurrency = $scope.Model.buyinCurrency;
+            if( $scope.Model.prizeType == 'creatorFunded'){
+                tournament.buyinAmount = 0;
+                tournament.buyinCurrency = 'BTC';
+                tournament.prizeAmount = $scope.Model.prizeAmount;
+                tournament.prizeCurrency = $scope.Model.prizeCurrency;
+            } else {
+                tournament.buyinAmount = $scope.Model.buyinAmount;
+                tournament.buyinCurrency = $scope.Model.buyinCurrency;
+                tournament.prizeAmount = 0;
+                tournament.prizeCurrency = 'BTC';
+            }
         }
         
         var APIKeyRequest = {
@@ -42,8 +49,8 @@ app.controller('NewTournamentModalController', function($scope, FrameworkAJAX, $
                 window.open( data.invoiceUrl, '_blank');   
             }
             $modalInstance.dismiss();
-        }, function(){
-            $scope.Model.errorText = 'Please complete the form';
+        }, function(data, status, headers){
+            $scope.Model.errorText = data.message;
             console.log('error creating tournament');
         });
     };

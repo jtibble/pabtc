@@ -67,6 +67,9 @@
                 <div class="col-xs-2">
                     <select ng-model="Model.buyinCurrency" class="form-control" ng-options="value for value in Model.currencyOptions"></select>
                 </div>
+                <div class="col-xs-4">
+                    (100 μBTC Minimum)
+                </div>
             </div>
             
             <div class="row form-group">
@@ -93,7 +96,7 @@
 
 <div class="modal-footer">
     <span class="text-danger" ng-show="Model.errorText">{{Model.errorText}}</span>
-    <button class="btn btn-success" ng-show="Model.prizeToggle == 'true' && Model.prizeType == 'creatorFunded'" ng-click="Actions.createTournamentWithFunding()">
+    <button class="btn btn-success" ng-show="Model.prizeToggle == 'true' && Model.prizeType == 'creatorFunded'" ng-click="Actions.createTournament()">
         Create and Fund Tournament
     </button>
     <button class="btn btn-success" ng-show="Model.prizeToggle != 'true' || Model.prizeType == 'participantFunded'" ng-click="Actions.createTournament()">
