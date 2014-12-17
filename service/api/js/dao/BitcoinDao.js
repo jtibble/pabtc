@@ -42,8 +42,8 @@ module.exports = {
             }
             
             if (!error && response.statusCode == 200) {
-                console.log(JSON.stringify(body.data))
-                deferred.resolve(body.data);
+                console.log(JSON.stringify(body))
+                deferred.resolve(body);
             } else {
                 var errorMessages = 'Bitpay service returned HTTP ' + response.statusCode;
                 if( response.body && response.body.length ){

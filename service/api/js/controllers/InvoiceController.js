@@ -33,7 +33,9 @@ module.exports = [
                     return;
                 }
                     
-                var invoice = req.body.data;
+                var invoice = req.body;
+                
+                console.log('invoice: ' + JSON.stringify(invoice));
 
                 console.log('Received BitPay notification: id ' + invoice.id + ' has status ' + invoice.status);
 
