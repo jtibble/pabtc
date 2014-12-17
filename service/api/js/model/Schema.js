@@ -6,7 +6,8 @@ module.exports = {
         _id: '',
         dateCreated: '',
         username: '',
-        password: '' 
+        password: '',
+        receivingAddress: ''
     },
     tournament: {
         _id: '',
@@ -15,6 +16,8 @@ module.exports = {
         createdBy: '',
         totalPlayers: 0,
         registrations: [],
+        buyinCurrency: '',
+        buyinAmount: 0,
         prizeCurrency: '',
         prizeAmount: 0,
         status: 'new'
@@ -23,16 +26,13 @@ module.exports = {
         _id: '',
         username: ''
     },
-    event: {
-        _id: '',
-        dateCreated: ''
-    },
     registration: {
         _id: '',
         dateCreated: '',
         status: '',
         username: '',
-        tournamentId: ''
+        tournamentId: '',
+        bitpayId: ''
     },
     
     create: function( objectName ){

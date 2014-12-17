@@ -1,58 +1,87 @@
 var RESTService = require('./RESTWrapper');
+var bitcoin = require('bitcoinjs-lib');
 var assert = require('assert');
 
 describe('Tournaments', function(){
+        
+    var tournamentCreator = {
+        username: 'tournamentCreator' + Math.floor(Math.random()*100000000).toString(),
+        password: 'password',
+        receivingAddress: bitcoin.ECKey.makeRandom().pub.getAddress().toString()
+    };
     
-    var user;
-    
-    beforeEach( function(done){
-        var user = {
-            username: 'tournamenttestuser' + Math.floor(Math.random()*100000000).toString(),
-            password: 'password'
-        };
+    before( function(done){
         
         RESTService.enableCookies();
-        
-        RESTService.createUser( user )
+        RESTService.createUser( tournamentCreator )
         .then( function(storedUser){
-            user = storedUser;
-            return RESTService.loginUser( user.username, user.password );
-        }, function(){
-            done('could not create user');   
-        })
-        .then( function(){
+            tournamentCreator = storedUser;
             done();
-        }, function(){
-            done('could not log in user');   
-        })
+        }).fail( function(error){
+            done('failed to create tournamentCreator user');    
+        });
+    });
+    
+    beforeEach( function(done){
+        RESTService.enableCookies();
+        RESTService.loginUser( tournamentCreator.username, tournamentCreator.password).then( function(){
+            done();
+        }).fail(function(){
+            done('could not log in tournamentcreator before test'); 
+        });
     });
     
     describe('Create Basic Tournament', function(){
     
-        it('Should create tournament', function(done){
+        it('Should create no-prize tournament', function(done){
 
-            var tournament = {name: 'test tournament'};
+            RESTService.TournamentHelper.createNoPrizeTournament()
+            .then( function(createdTournament){
+                assert( createdTournament, 'tournament not created');
+                assert.ok(createdTournament.name);
+                done();
+            }).fail( function(error){
+                done('could not create tournament: ' + error.message);
+            });
 
-            RESTService.createTournament( tournament )
-            .then( function(tournament){
-                if( tournament && tournament.name && tournament.dateCreated ){
-                    done();
-                } else {
-                    done('tournament did not contain all the expected properties');   
-                }
-            }, function(error){
-                done('could not create tournament: ' + error);
+        });
+    
+        it('Should create prize tournament', function(done){
+
+            RESTService.TournamentHelper.createPrizeTournament()
+            .then( function(createdTournament){
+                assert( createdTournament, 'tournament not created');
+                assert.ok(createdTournament.name);
+                assert.ok(createdTournament.prizeAmount != undefined );
+                assert.ok(createdTournament.prizeCurrency);
+                done();
+            }).fail( function(error){
+                done('could not create tournament: ' + error.message);
+            });
+
+        });
+    
+        it('Should create buyin tournament', function(done){
+
+            RESTService.TournamentHelper.createBuyinTournament()
+            .then( function(createdTournament){
+                assert( createdTournament, 'tournament not created');
+                assert.ok(createdTournament.name);
+                assert.ok(createdTournament.prizeAmount != undefined );
+                assert.ok(createdTournament.prizeCurrency);
+                assert.ok(createdTournament.buyinAmount != undefined );
+                assert.ok(createdTournament.buyinCurrency);
+                done();
+            }).fail( function(error){
+                done('could not create tournament: ' + error.message);
             });
 
         });
         
         it('Should not be able to create tournament (no session)', function(done){
 
-            var tournament = {name: 'test tournament (no session)'};
-
             RESTService.disableCookies();
-            RESTService.createTournament( tournament )
-            .then( function(tournament){
+            RESTService.TournamentHelper.createNoPrizeTournament().then( function(tournament){
                 if( tournament && tournament.name && tournament.dateCreated ){
                     done('should not have been able to create the tournament');
                 } else {
@@ -85,14 +114,12 @@ describe('Tournaments', function(){
     
     describe('Get Tournaments List', function(){
         it('Should get list of tournaments', function(done){
-
-            var tournament = {name: 'test tournament for GET'};
             var numTournaments;
             
             RESTService.getTournaments()
             .then( function(tournamentsList){
                 numTournaments = tournamentsList.length;
-                return RESTService.createTournament( tournament );
+                return RESTService.TournamentHelper.createNoPrizeTournament();
             })
             .then( function(tournament){
                 return RESTService.getTournaments();                
@@ -113,12 +140,9 @@ describe('Tournaments', function(){
     
     describe('Change Tournament Status', function(){
         it('Should create tournament and change its status', function(done){
-            
-            var tournament = {name: 'Status Change Tournament'};
             var newStatus = 'open'
             
-            RESTService.createTournament( tournament )
-            .then( function(tournament){
+            RESTService.TournamentHelper.createNoPrizeTournament().then( function(tournament){
                 return RESTService.changeTournamentStatus( tournament._id, newStatus );                
             })
             .then( function(){

@@ -56,6 +56,12 @@ app.directive('header', function(){
   };
 });
 
+app.directive('bitpaydonate', function(){
+    return {
+        templateUrl: '/bitpaydonate/bitpaydonate.html'
+    };
+});
+
 app.provider('SessionService', function(){
     return {
         $get: function(FrameworkAJAX){

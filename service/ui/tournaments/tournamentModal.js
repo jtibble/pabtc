@@ -35,10 +35,16 @@ app.controller('TournamentModalController', function($scope, FrameworkAJAX, tour
 		};
         
         FrameworkAJAX.sendRequest( request, function( data ){
-            console.log('registration added');
+            if( data.bitpayId ){
+                window.open( 'http://test.bitpay.com/invoice?id=' + data.bitpayId, '_blank');   
+            }
             $modalInstance.dismiss();  
-        }, function(){
-            console.log('failed to register');
+        }, function(data, status, headers, config){
+            if( status == 403 ){
+                $scope.Model.errorText = 'Please sign in before registering';
+            } else {
+                $scope.Model.errorText = 'Error. Please contact admin@pa-btc.com or create an issue on Github';
+            }
         });
     };
     

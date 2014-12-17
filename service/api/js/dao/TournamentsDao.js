@@ -26,7 +26,7 @@ module.exports = {
 
         tournamentsCollection.save(newTournament, function(error, tournament){
             if( error ){
-                deferred.reject('could not create tournament');
+                deferred.reject(new Error('could not create tournament'));
             } else {
                 deferred.resolve(tournament);
             }
@@ -42,7 +42,21 @@ module.exports = {
             if( !error && tournamentsList ){
                 deferred.resolve( tournamentsList );
             } else {
-                deferred.reject( 'Could not fetch tournaments' );
+                deferred.reject( new Error('Could not fetch tournaments' ));
+            }
+        });
+
+        return deferred.promise;
+    },
+    findById: function( tournamentId ){
+        var deferred = Q.defer();
+        var projection = {};
+
+        tournamentsCollection.find({_id: tournamentId}, projection, function(error, tournamentsList){
+            if( !error && tournamentsList.length == 1 ){
+                deferred.resolve( tournamentsList[0] );
+            } else {
+                deferred.reject( new Error('Could not fetch tournaments - error or too many returned' ));
             }
         });
 
@@ -69,8 +83,6 @@ module.exports = {
             }
         }
         
-        console.log('TournamentDao updating tournament ' + tournamentId);
-        
         tournamentsCollection.findAndModify( {
             query: {_id: tournamentId },
             update: { 
@@ -86,6 +98,24 @@ module.exports = {
         });
         
         
+        
+        return deferred.promise;
+    },
+    
+    addPrizeAmountToTournamentById: function( tournamentId, amount ){
+        var deferred = Q.defer();
+        
+        tournamentsCollection.findAndModify( {
+            query: { _id: tournamentId },
+            update: { $inc: {prizeAmount: Number(amount)} },
+            new: true
+        }, function(error, updatedTournament){
+            if( !error && updatedTournament ){
+                deferred.resolve(updatedTournament);
+            } else {
+                deferred.reject( new Error('could not update tournament prize in db: ' + JSON.stringify(error)));   
+            }
+        });
         
         return deferred.promise;
     }

@@ -1,20 +1,105 @@
-<div class="container">
+<div class="modal-header">
     <h3>Create New Tournament</h3>
-    <div style="display:inline-block; min-height:290px;">
-    <form> 
-        
-        Tournament Name: <input ng-model="Model.name" type="text"/><br>
-        Total Players: <input ng-model="Model.totalPlayers" type="number"/><br><br>
+</div>
 
-        Prize Amount: <input ng-model="Model.prizeAmount" type="number"/><br>
-        Price Currency: <select ng-model="Model.prizeCurrency" ng-options="value for value in Model.prizeCurrencyOptions"></select><br><br>
+<div class="modal-body">
+        <form role="form">
+            <div class="row form-group">
+                <div class="col-xs-2">
+                    <label for="tournamentName">Tournament Name</label>
+                </div>
+                <div class="col-xs-8">
+                    <input ng-model="Model.name" type="text" class="form-control" id="tournamentName" placeholder="Enter tournament name">
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-xs-2">
+                    <label for="totalPlayers">Total Players</label>
+                </div>
+                <div class="col-xs-2">
+                    <input ng-model="Model.totalPlayers" type="number" class="form-control" id="totalPlayers" placeholder="16">
+                </div>
+            </div>
+            
+            <div class="row form-group">
+                <div class="col-xs-2">
+                    <label for="tourneyTypeRadio">Tournament Type</label>
+                </div>
+                <label class="radio-inline">
+                    <input type="radio" id="tourneyTypeRadio" ng-model="Model.prizeToggle" value="true"> Prize
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" id="tourneyTypeRadio2" ng-model="Model.prizeToggle" value="false"> No Prize
+                </label>
+            </div>
+            
+            <div ng-show="Model.prizeToggle" class="row form-group">
+                <div class="col-xs-2">
+                    <label for="prizeTypeRadio">Prize Structure</label>
+                </div>
+                <label class="radio-inline">
+                    <input type="radio" id="prizeTypeRadio" ng-model="Model.prizeType" value="creatorFunded"> Funded by Tournament Creator
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" id="prizeTypeRadio" ng-model="Model.prizeType" value="participantFunded"> Funded by Participant Buy-Ins
+                </label>
+            </div>
+            
+            <div ng-show="Model.prizeToggle == 'true' && Model.prizeType == 'creatorFunded'" class="row form-group">
+                <div class="col-xs-2">
+                    <label for="prizeAmount">Prize</label>
+                </div>
+                <div class="col-xs-2">
+                    <input ng-model="Model.prizeAmount" class="form-control" id="prizeAmount" type="number">
+                </div>
+                <div class="col-xs-2">
+                    <select ng-model="Model.prizeCurrency" class="form-control" ng-options="value for value in Model.currencyOptions"></select>
+                </div>
+            </div>
+            
+            <div ng-show="Model.prizeToggle == 'true' && Model.prizeType == 'participantFunded'" class="row form-group">
+                <div class="col-xs-2">
+                    <label for="buyinAmount">Buy-In</label>
+                </div>
+                <div class="col-xs-2">
+                    <input ng-model="Model.buyinAmount" class="form-control" id="buyinAmount" type="number">
+                </div>
+                <div class="col-xs-2">
+                    <select ng-model="Model.buyinCurrency" class="form-control" ng-options="value for value in Model.currencyOptions"></select>
+                </div>
+                <div class="col-xs-4">
+                    (100 μBTC Minimum)
+                </div>
+            </div>
+            
+            <div class="row form-group">
+                <div class="col-md-2">
+                    <label for="registrationStart">Registration Begin/End</label>
+                </div>
+                <div class="col-md-5">
+                    <datepicker ng-model="Model.registrationBeginDate" min-date="minDate" show-weeks="true" class="well well-sm"></datepicker>
+                </div>
+                <div class="col-md-5">
+                    <datepicker ng-model="Model.registrationCloseDate" min-date="minDate" show-weeks="true" class="well well-sm"></datepicker>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-2">
+                    <label for="tournamentStart">Tournament Start</label>
+                </div>
+                <div class="col-md-5">
+                    <datepicker ng-model="Model.date" min-date="minDate" show-weeks="true" class="well well-sm"></datepicker>
+                </div>
+            </div>
+        </form>
+</div>
 
-        Registration Begin Date: <datepicker ng-model="Model.registrationBeginDate" min-date="minDate" show-weeks="true" class="well well-sm"></datepicker><br>
-        Registration End Date: <datepicker ng-model="Model.registrationCloseDate" min-date="minDate" show-weeks="true" class="well well-sm"></datepicker><br>
-
-        Begin Date: <datepicker ng-model="Model.date" min-date="minDate" show-weeks="true" class="well well-sm"></datepicker><br><br>
-        
-        <button class="btn btn-default" ng-click="Actions.createTournament()">Create</button>
-    </form>
-    </div>
+<div class="modal-footer">
+    <span class="text-danger" ng-show="Model.errorText">{{Model.errorText}}</span>
+    <button class="btn btn-success" ng-show="Model.prizeToggle == 'true' && Model.prizeType == 'creatorFunded'" ng-click="Actions.createTournament()">
+        Create and Fund Tournament
+    </button>
+    <button class="btn btn-success" ng-show="Model.prizeToggle != 'true' || Model.prizeType == 'participantFunded'" ng-click="Actions.createTournament()">
+        Create Tournament
+    </button>
 </div>

@@ -1,11 +1,12 @@
 var RESTService = require('./RESTWrapper');
-//var assert = require('assert');
+var bitcoin = require('bitcoinjs-lib');
 
 describe('Authentication', function(){
     
     var user = {
-        "username": "authuser" + Math.floor(Math.random()*10000000).toString(),
-        "password": "password"
+        username: 'testUser' + Math.floor(Math.random()*100000000).toString(),
+        password: 'password',
+        receivingAddress: bitcoin.ECKey.makeRandom().pub.getAddress().toString()
     };
     
     before( function(done){

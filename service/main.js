@@ -2,42 +2,38 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var request = require('request');
+var fs = require('fs');
+var mongojs = require('mongojs');
+var Q = require('q');
 
-//Services Definitions
-var UsersController = require('./api/js/controllers/UsersController');
-var TournamentsController = require('./api/js/controllers/TournamentsController');
-var AuthenticationController = require('./api/js/controllers/AuthenticationController');
-var RegistrationCollection = require('./api/js/controllers/RegistrationController');
+// Get ENV variable and initialize config
+global.config = JSON.parse(fs.readFileSync('service/config/' + process.env.ENV + '.json').toString());
 
-var servicesConfig = {
-    'staticContentPath': '/ui',
-    'apiPath': '/api/v0/',
-    'endpoints': AuthenticationController.concat(UsersController).concat(TournamentsController).concat(RegistrationCollection)
-};
+// Retrieve BitPay API key from database before proceeding
+var db = mongojs('test');
+var keysCollection = db.collection('keys');
+var deferred = Q.defer();
 
-
-var port = 80;
-
-// Pull port out of argv if it was passed
-if( process.argv.length > 2 ){
-    for( var i = 1; i< process.argv.length; i++){
-        var param = process.argv[i];
-        
-        if( param.match(/-port=[\d]+/) != 0 ){
-            port = param.split('=')[1];
-            console.log('setting port to ' + port);
-        }
+keysCollection.find({}, function(error, keyList){
+    if( !error && keyList.length == 1 ){
+        global.config.bitpayAPIKey = keyList[0].key;
+        console.log('Configured for ' + process.env.ENV + ' environment');
+        deferred.resolve();
+    } else {
+        process.exit(1);   
     }
-}
+});
 
-var Service = function (config) {
+
+// Service-generator helper function
+var Service = function (serviceDefinitions) {
     var server = express();
     server.use(bodyParser.json());
     server.use(cookieParser());
     console.log('dirname: ' + __dirname);
-    server.use(express.static(__dirname + config.staticContentPath));
+    server.use(express.static(__dirname + global.config.staticContentPath));
 
-    var apiPath = config.apiPath;
+    var apiPath = global.config.servicesPath;
     console.log('Creating Services');
     return {
         
@@ -59,18 +55,40 @@ var Service = function (config) {
         
         initialize: function () {
 
-            for (var i = 0; i < config.endpoints.length; i++) {
-                var serviceMethod = config.endpoints[i].type;
-                var serviceName = config.endpoints[i].name;
-                var serviceResponse = config.endpoints[i].response;
+            for (var i = 0; i < serviceDefinitions.length; i++) {
+                var serviceMethod = serviceDefinitions[i].type;
+                var serviceName = serviceDefinitions[i].name;
+                var serviceResponse = serviceDefinitions[i].response;
                 this.addEndpoint(serviceMethod, serviceName, serviceResponse);
             }
 
-            server.listen(port);
-            console.log('%s listening on port %s \n=========', server.name, port);
+            server.listen( global.config.port );
+            console.log('server listening on port %s \n=========', global.config.port);
         }
     };
 };
 
-var service = Service(servicesConfig);
-service.initialize();
+
+deferred.promise.then( function(){
+    
+    //Services Definitions
+    var UsersController = require('./api/js/controllers/UsersController');
+    var TournamentsController = require('./api/js/controllers/TournamentsController');
+    var AuthenticationController = require('./api/js/controllers/AuthenticationController');
+    var RegistrationCollection = require('./api/js/controllers/RegistrationController');
+    var InvoiceController = require('./api/js/controllers/InvoiceController');
+
+    var servicesArray = AuthenticationController.concat(UsersController).concat(TournamentsController).concat(RegistrationCollection).concat(InvoiceController);
+
+
+    // Mock BitPay integration if requested by config
+    if( global.config.mockBitpay ){
+        console.log('loading bitpay mock');
+        var BitPayController = require('./api/js/controllers/mock/BitPay.js');
+        servicesArray = servicesArray.concat(BitPayController);
+    }
+
+    
+    var service = Service(servicesArray);
+    service.initialize();
+});

@@ -1,0 +1,11 @@
+{
+    "ssl": true,
+    "domain": "pa-btc.com",
+    "port": 80,
+    "servicesPath": "/api/v0/",
+    "staticContentPath": "/ui/",
+    "bitpayURL": "https://bitpay.com/api/",
+    "bitpayIPAddresses": "https://bitpay.com/ipAddressList.txt",
+    "bitpayNotificationEndpoint": "invoices",
+    "sessionLength": 900000
+}

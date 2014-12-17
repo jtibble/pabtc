@@ -35,7 +35,7 @@ module.exports = [
                 
                 RegistrationService.create( username, req.body.tournamentId ).then( function(registration){
                     console.log('User ' + registration.username + ' registered for tournament ' + registration.tournamentId );
-                    res.status(200).send();
+                    res.status(200).send(registration);
                 }).fail( function(error){
                     console.log( error.message );
                     responseBody = {message: error.message};

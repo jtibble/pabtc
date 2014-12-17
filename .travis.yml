@@ -2,8 +2,12 @@ language: node_js
 node_js:
   - "0.10"
 before_script:
+  - "mongo --eval \"db.keys.insert({key: 'mockKey'})\""
+  - "ENV='local'"
+  - "export ENV"
+  - "echo $ENV"
   - "npm install -g pm2"
-  - "pm2 start service/main.js --name pabtc-api -o commonlog.log -e commonlog.log -- -port=8080"
+  - "pm2 start service/main.js --name pa-btc"
   - "sleep 3"
 after_script:
   - "pm2 stop all"

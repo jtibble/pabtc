@@ -1,7 +1,15 @@
-<div class="container">
+
+    
+    
+
+
+<div class="modal-header">
     <h3>{{Model.name}} Tournament</h3>
+</div>
+
+<div class="modal-body">
     <p>Created by {{Model.createdBy}}</p>
-    <p>Registration Status: {{Model.status}}</p>
+    <p>Tournament Registration: {{Model.status}}</p>
     <p>Prize: {{Model.prizeAmount}} {{Model.prizeCurrency}}</p>
     <p>
         Registered Players: {{Model.registrations.length}} / {{Model.totalPlayers}}
@@ -13,6 +21,8 @@
         </ol>
     
     </p>
+
+
     <p>
     </p>
     <p>
@@ -24,12 +34,15 @@
         <button ng-click="Actions.setStatus('finished')" class="btn btn-default">Finished</button>
     </p>
 
-    <button ng-show="Model.status == 'open' && Model.registrations.length < Model.totalPlayers" class="btn btn-primary" ng-click="Actions.register()">
-        Register
+</div>
+
+<div class="modal-footer">
+    <span class="text-danger" ng-show="Model.errorText">{{Model.errorText}}</span>
+    <button ng-show="Model.status == 'open' && Model.registrations.length < Model.totalPlayers" class="btn btn-success" ng-click="Actions.register()">
+        Register For Tournament
     </button>
 
     <button ng-show="Model.status == 'open' && Model.registrations.length == Model.totalPlayers" disabled class="btn btn-primary">
         Registration Full
     </button>
-<br>
 </div>

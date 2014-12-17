@@ -17,6 +17,29 @@ module.exports = [
                 return;
             }
             
+            if( req.body.buyinAmount > 0){            
+                if( req.body.buyinCurrency == 'USD' && req.body.buyinAmount < 0.01 ||
+                    req.body.buyinCurrency == 'BTC' && req.body.buyinAmount < 0.0001 ||
+                    req.body.buyinCurrency == 'mBTC' && req.body.buyinAmount < 0.1 ||
+                    req.body.buyinCurrency == 'μBTC' && req.body.buyinAmount < 100 ){
+                    responseBody = {message: 'Buyin amount too small. Must be more than 100 μBTC'};
+                    res.status(400).send(responseBody);
+                    return;
+                }
+            }
+            
+            if( req.body.prizeAmount > 0 ){
+                if( req.body.prizeCurrency == 'USD' && req.body.prizeAmount < 0.01 ||
+                    req.body.prizeCurrency == 'BTC' && req.body.prizeAmount < 0.0001 ||
+                    req.body.prizeCurrency == 'mBTC' && req.body.prizeAmount < 0.1 ||
+                    req.body.prizeCurrency == 'μBTC' && req.body.prizeAmount < 100 ){
+                    responseBody = {message: 'Prize amount too small. Must be more than 100 μBTC'};
+                    res.status(400).send(responseBody);
+                    return;
+                }
+            }
+            
+            
             var sessionId = req.cookies.sessionId;
             
             if( !sessionId ){
