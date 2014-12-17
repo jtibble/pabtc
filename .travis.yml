@@ -5,9 +5,7 @@ before_script:
   - "mongo --eval \"db.keys.insert({key: 'mockKey'})\""
   - "set ENV='local'"
   - "export ENV"
-  - "npm install -g pm2"
-  - "pm2 start service/main.js --name pabtc-api"
+  - "node service/main.js"
   - "sleep 3"
 after_script:
-  - "pm2 stop all"
 services: mongodb
