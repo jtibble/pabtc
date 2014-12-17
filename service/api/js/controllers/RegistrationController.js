@@ -39,7 +39,7 @@ module.exports = [
                 }).fail( function(error){
                     console.log( error.message );
                     responseBody = {message: error.message};
-                    res.status(403).send(responseBody);
+                    res.status(500).send(responseBody);
                     return;
                 });
                 

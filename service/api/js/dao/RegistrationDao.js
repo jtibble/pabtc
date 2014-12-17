@@ -18,6 +18,11 @@ module.exports = {
         newRegistration.tournamentId = tournamentId;
         newRegistration.bitpayId = invoice.id;
         newRegistration.status = 'invoice';
+        
+        if( !invoice.id ){
+            console.log('bitpay invoice id missing!');
+            deferred.reject(new Error('bitpay invoice id missing'));
+        }
     
         registrationCollection.save( newRegistration , function(error, registration){
             if( error ){

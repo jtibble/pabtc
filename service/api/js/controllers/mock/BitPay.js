@@ -13,18 +13,17 @@ module.exports = [
         'type': 'POST',
         'name': 'bitpay/invoice',
         'response': function (req, res) {
-
-            var replyURL = req.body.notificationURL;
+            
             
             var mockInvoice = {
                 "facade": "public/invoice",
                 "data": {
                     "url": "https://test.bitpay.com/invoice?id=AKCduGiqD7Cj7x7cTs3ngL",
                     "status": "new",
-                    "btcPrice": "3.3000",
+                    "btcPrice": req.body.price.toString(),
                     "btcDue": "0.0000",
-                    "price": 3.3,
-                    "currency": "BTC",
+                    "price": req.body.price,
+                    "currency": req.body.currency,
                     "exRates": {
                         "USD": 332.62
                     },
@@ -33,7 +32,7 @@ module.exports = [
                     "expirationTime": 1418764645361,
                     "currentTime": 1418785976719,
                     "id": Math.floor(Math.random()*100000000),
-                    "btcPaid": "3.3000",
+                    "btcPaid": "0",
                     "rate": 1,
                     "exceptionStatus": false,
                     "token": "A3o6wwJ8s7xpfSbT3ivimTXQGtGNAt595b5FHyaDwDKagkA2GN5QqguKhSyCxKMJwD"
@@ -44,22 +43,24 @@ module.exports = [
                 
                 var mockUpdatedInvoice = JSON.parse(JSON.stringify(mockInvoice));
                 mockUpdatedInvoice.data.status = 'complete';
+                mockUpdatedInvoice.data.btcPaid = req.body.price;
                 
                 var options = {
-                    url: replyURL,
+                    url: req.body.notificationURL,
                     method: 'POST',
                     json: true,
                     body: mockUpdatedInvoice
                 };
                 
-                console.log('calling notification endpoint');
+                console.log('Mock Bitpay is calling notification endpoint ' + options.url);
                 request( options, function(error, response, body){
                     if( error ){
-                        console.log('Mock Bitpay got error from calling notification endpoint ' + options.url);
+                        console.log('Mock Bitpay got error from calling notification endpoint');
                         console.log('error: ' + JSON.stringify(error) + '    response: ' + JSON.stringify(response));
-                    } else {
-                        console.log('Mock Bitpay got 200 OK from the notification endpoint');
+                        return;
                     }
+                    
+                    
                 });
                 
                 clearTimeout(timeout);

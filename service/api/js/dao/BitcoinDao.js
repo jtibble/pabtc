@@ -14,7 +14,7 @@ module.exports = {
             price: amount.toString(),
             currency: currency,
             itemDesc: 'PA-BTC Tournament Registration Fee: ' + description,
-            notificationURL: 'http' + (global.config.ssl ? 's' : '') + '://' + global.config.domain + ':' + global.config.port + global.config.servicesPath + global.config.bitpayNotificationEndpoint,
+            notificationURL: 'http' + (global.config.ssl ? 's' : '') + '://' + global.config.domain + ':' + global.config.port + global.config.servicesPath + global.config.notificationEndpoint,
             buyerName: username
         };
         
@@ -30,16 +30,31 @@ module.exports = {
             }
         };
         
-        console.log('bitpay request: ' + JSON.stringify(options.body));
+    
+        console.log('BitcoinDao requesting invoice from Bitpay');
+        console.log('BitcoinDao: ' + JSON.stringify(options));
+        
         request( options, function(error, response, body){
-            console.log('bitpay response: ' + JSON.stringify(body));
             
-            if( error ){
-                deferred.reject( new Error( 'could not call bitpay at ' + options.url + ' to create invoice' ) );
-            } else {
-                console.log('Bitpay invoice ' + body.data.id + ' created');
-                deferred.resolve( body.data );
+            if( error || !response || !response.statusCode ){
+                deferred.reject('service returned bad response: ' + error);
+                return;
             }
+            
+            if (!error && response.statusCode == 200) {
+                console.log(JSON.stringify(body.data))
+                deferred.resolve(body.data);
+            } else {
+                var errorMessages = 'Bitpay service returned HTTP ' + response.statusCode;
+                if( response.body && response.body.length ){
+                    errorMessages += ' ' + JSON.stringify(response.body);   
+                }
+                if( body ){
+                    errorMessages += ' ' + JSON.stringify(body);   
+                }
+                deferred.reject( new Error(errorMessages));
+            }
+            
         });
         
         return deferred.promise;

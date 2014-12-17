@@ -6,8 +6,16 @@ var fs = require('fs');
 var mongojs = require('mongojs');
 var Q = require('q');
 
+// Check environment variable
+if( !process.env.NODE_ENV ){
+    console.log('set NODE_ENV = "local", "dev", or "prod"');
+    process.exit(1);
+}
+
 // Get ENV variable and initialize config
-global.config = JSON.parse(fs.readFileSync('service/config/' + process.env.ENV + '.json').toString());
+global.config = JSON.parse(fs.readFileSync('service/config/' + process.env.NODE_ENV + '.json').toString());
+
+console.log('config file loaded');
 
 // Retrieve BitPay API key from database before proceeding
 var db = mongojs('test');
@@ -17,9 +25,10 @@ var deferred = Q.defer();
 keysCollection.find({}, function(error, keyList){
     if( !error && keyList.length == 1 ){
         global.config.bitpayAPIKey = keyList[0].key;
-        console.log('Configured for ' + process.env.ENV + ' environment');
+        console.log('Configured for ' + process.env.NODE_ENV + ' environment');
         deferred.resolve();
     } else {
+        console.log('could not find API key in db');
         process.exit(1);   
     }
 });

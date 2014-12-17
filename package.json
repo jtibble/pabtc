@@ -10,7 +10,8 @@
         }
     ],
     "scripts": {
-        "test": "mocha ./service/api/test"
+        "test": "mocha ./service/api/test",
+        "start": "node service/main.js"
     },
     "repository": {
         "type": "git",
@@ -25,7 +26,7 @@
         "node-uuid": "*",
         "body-parser": "*",
 		"cookie-parser": "*",
-        "request": "2.40.0",
+        "request": "*",
         "mocha": "1.21.4",
         "q": "1.0.1",
         "bitcoinjs-lib": "1.4.2"

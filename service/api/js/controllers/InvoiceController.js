@@ -5,16 +5,23 @@ var request = require('request');
 module.exports = [
     {
         'type': 'POST',
-        'name': 'invoices',
+        'name': 'invoice',
         'response': function (req, res){
             var responseBody = {};
+            
+            console.log('BitPay notification incoming');
             
             // Validate that the request came from a white-listed IP address!
             // GET https://bitpay.com/ipAddressList.txt, split['|'].contains(), add localhost
             // If good, then update registration status
-            request( {url: 'https://bitpay.com/ipAddressList.txt', method: 'GET'}, function(error, response, body){
+            
+            console.log('fetching bitpay ip whitelist from ' + global.config.bitpayIPAddresses);
+            
+            request( {url: global.config.bitpayIPAddresses, method: 'GET'}, function(error, response, body){
                 if( error ){
-                    res.status(500).send();
+                    console.log('could not fetch bitpay IP address whitelist');
+                    console.log('error: ' + JSON.stringify(error));
+                    res.status(500).send( error );
                     return;
                 }
                 
@@ -41,7 +48,7 @@ module.exports = [
                     res.status(200).send(); 
                 }).fail( function(error){
                     console.log('failed update registration from bitpay callback: ' + error.message);
-                    res.status(500).send();
+                    res.status(500).send('could not update registration');
                 });
             });
         }
