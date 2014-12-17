@@ -29,10 +29,8 @@ module.exports = {
                 pass: ""
             }
         };
-        
     
         console.log('BitcoinDao requesting invoice from Bitpay');
-        console.log('BitcoinDao: ' + JSON.stringify(options));
         
         request( options, function(error, response, body){
             
@@ -42,7 +40,6 @@ module.exports = {
             }
             
             if (!error && response.statusCode == 200) {
-                console.log(JSON.stringify(body))
                 deferred.resolve(body);
             } else {
                 var errorMessages = 'Bitpay service returned HTTP ' + response.statusCode;

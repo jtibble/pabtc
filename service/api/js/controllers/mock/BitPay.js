@@ -46,15 +46,13 @@ module.exports = [
                     body: mockUpdatedInvoice
                 };
                 
-                console.log('Mock Bitpay is calling notification endpoint ' + options.url);
+                console.log('Mock Bitpay is calling notification endpoint');
                 request( options, function(error, response, body){
                     if( error ){
                         console.log('Mock Bitpay got error from calling notification endpoint');
                         console.log('error: ' + JSON.stringify(error) + '    response: ' + JSON.stringify(response));
                         return;
                     }
-                    
-                    
                 });
                 
                 clearTimeout(timeout);

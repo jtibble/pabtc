@@ -9,13 +9,12 @@ module.exports = [
         'response': function (req, res){
             var responseBody = {};
             
-            console.log('BitPay notification incoming');
+            console.log('BitPay notification received');
             
             // Validate that the request came from a white-listed IP address!
             // GET https://bitpay.com/ipAddressList.txt, split['|'].contains(), add localhost
             // If good, then update registration status
             
-            console.log('fetching bitpay ip whitelist from ' + global.config.bitpayIPAddresses);
             
             request( {url: global.config.bitpayIPAddresses, method: 'GET'}, function(error, response, body){
                 if( error ){
@@ -34,22 +33,18 @@ module.exports = [
                 }
                     
                 var invoice = req.body;
-                
-                console.log('invoice: ' + JSON.stringify(invoice));
-
-                console.log('Received BitPay notification: id ' + invoice.id + ' has status ' + invoice.status);
 
                 if( invoice.status != 'complete' ){
-                    console.log('sending acknowledgement of status ' + invoice.status);
+                    console.log('Sending 200 OK to Bitpay for status ' + invoice.status);
                     res.status(200).send();
                     return;
                 }
 
                 RegistrationService.updateRegistrationStatus( invoice ).then( function(){
-                    console.log('updated registration');
+                    console.log('Registration updated');
                     res.status(200).send(); 
                 }).fail( function(error){
-                    console.log('failed update registration from bitpay callback: ' + error.message);
+                    console.log('Failed update registration from bitpay callback: ' + error.message);
                     res.status(500).send('could not update registration');
                 });
             });
