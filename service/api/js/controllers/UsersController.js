@@ -3,10 +3,6 @@
 var RequestValidator = require('./RequestValidator');
 var UsersService = require('../services/UsersService');
 
-function createHREF( id ){
-    var domain = 'users';
-    return 'http://localhost:8080/api/v0/' + domain + '/' + id;
-}
 
 module.exports = [
 
@@ -62,34 +58,5 @@ module.exports = [
                 res.status(404).send(responseBody);
             });
         }
-    }/*,
-    {
-        'type': 'POST',
-        'name': 'users/:id/generateAPIKey',
-        'response': function (req, res) {
-
-            var responseBody = {};
-			
-            if( !req.params || !req.params.id ){
-				responseBody = {message: 'UserID is required to create an API Key'};
-				res.status(400).send(responseBody);
-            }
-
-            storage.users.createAPIKey( req.params.id ).then( function(APIKey){
-                if( APIKey ){
-					responseBody = {
-						message: 'WARNING: Do not lose this API key. It can only be generated once. No exceptions.',
-						key: APIKey
-					};
-					res.status(201).send(responseBody);
-                } else {
-                	responseBody.issues = ['Error Creating API Key', error];
-                    res.status(500).send(responseBody);
-                }
-            }, function(error){
-                responseBody.issues = ['Error Creating API Key', error];
-                res.status(500).send(responseBody);
-            });
-        }
-    }*/
+    }
 ];

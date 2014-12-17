@@ -1,6 +1,5 @@
 var AuthenticationService = require('../services/AuthenticationService');
 var RequestValidator = require('./RequestValidator');
-var cookieAge = 900000; // 15 minutes
 
 module.exports = [
     {
@@ -11,7 +10,7 @@ module.exports = [
             
             AuthenticationService.login( req.body.username, req.body.password ).then( function(sessionId){
                 console.log('User ' + req.body.username + ' logged in');
-                res.cookie('sessionId', sessionId, {maxAge: cookieAge});
+                res.cookie('sessionId', sessionId, {maxAge: global.config.sessionLength});
                 res.status(200).send(responseBody);
             }, function(error){
                 console.log('User ' + req.body.username + ' failed to log in because ' + error.message);
@@ -44,7 +43,7 @@ module.exports = [
             }
             
             AuthenticationService.checkAuthorization( req.cookies.sessionId ).then( function(session){
-                res.cookie('sessionId', req.cookies.sessionId, {maxAge: cookieAge});
+                res.cookie('sessionId', req.cookies.sessionId, {maxAge: global.config.sessionLength});
                 res.status(200).send(session);
             }, function(){
                 res.status(500).send();
