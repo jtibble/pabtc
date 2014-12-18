@@ -5,7 +5,33 @@
 <div class="modal-body">
     <p>Created by {{Model.createdBy}}</p>
     <p>Tournament Registration: {{Model.status}}</p>
-    <p>Prize: {{Model.prizeCurrency}} {{Model.prizeAmount}} </p>
+    
+    
+    <p> 
+        <div ng-show="Model.prizeCurrency == 'BTC'">
+            Prize: <i class="fa fa-btc"></i>
+            {{Model.prizeAmount | number:8}}
+            <a ng-href="https://www.google.com/search?q={{Model.prizeAmount}}+BTC+in+USD" target="_blank">
+                <i class="fa fa-question"></i>
+            </a>
+        </div>
+        <div ng-show="Model.prizeCurrency == 'mBTC'">
+            Prize: m<i class="fa fa-btc"></i>{{Model.prizeAmount | number:5}}
+            <a ng-href="https://www.google.com/search?q={{Model.prizeAmount/1000}}+BTC+in+USD" target="_blank">
+                <i class="fa fa-question"></i>
+            </a>
+        </div>
+        <div ng-show="Model.prizeCurrency == 'μBTC'">
+            Prize: &mu;<i class="fa fa-btc"></i>{{Model.prizeAmount | number:2}}
+            <a ng-href="https://www.google.com/search?q={{Model.prizeAmount/1000000}}+BTC+in+USD" target="_blank">
+                <i class="fa fa-question"></i>
+            </a>
+        </div>
+        <div ng-show="Model.prizeCurrency == 'USD'">
+            Prize: <i class="fa fa-dollar"></i>{{Model.prizeAmount | number:2}}
+        </div>
+    </p>
+
     <p>
         Registered Players: {{Model.registrations.length}} / {{Model.totalPlayers}}
     

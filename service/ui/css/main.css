@@ -12,3 +12,7 @@
 .bitpay-donate-field-currency {width:40%;}
 .bitpay-donate-button-wrapper {clear:both;margin:auto;text-align:center;}
 input.bitpay-donate-error {border:2px solid red;}
+
+.mainContent{
+    margin-bottom: 100px;
+}
