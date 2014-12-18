@@ -2,6 +2,8 @@ var Q = require('q');
 
 var RegistrationsDao = require('../dao/RegistrationDao');
 var TournamentsDao = require('../dao/TournamentsDao');
+var BitcoinDao = require('../dao/BitcoinDao');
+
 var tournamentStatusList = require('../model/TournamentStatus.js');
 
 function isValidStateTransition( currentState, futureState ){
@@ -24,7 +26,50 @@ function isValidStateTransition( currentState, futureState ){
 
 module.exports = {
     create: function( newTournament ){
-        return TournamentsDao.create( newTournament );
+        var deferred = Q.defer();
+        
+        if( newTournament.prizeAmount > 0 ){
+           
+            BitcoinDao.createInvoice( newTournament.prizeAmount, 
+                                       newTournament.prizeCurrency,
+                                       newTournament.name,
+                                       newTournament.createdBy,
+                                       'prize'  ).then(function(invoice){
+            
+                // Attach bitpay invoice number to tournament before storing it (for updating later)
+                newTournament.bitpayId = invoice.id;
+                
+                // Un-set the prize amount until the invoice is paid
+                newTournament.prizeAmount = 0;
+            
+                TournamentsDao.create( newTournament ).then( function(newTournament){
+
+                    // Return the invoice URL to the UI so the user can pay
+                    newTournament.invoiceUrl = invoice.url;
+                    deferred.resolve(newTournament);
+
+                }).fail(function(error){
+                    deferred.reject( new Error('could not create tournament: ' + error.message)); 
+                });
+            
+            
+            }).fail(function(error){
+                deferred.reject( new Error('Could not create BitPay invoice: ' + error.message)); 
+            });
+            
+        } else {
+            
+            TournamentsDao.create( newTournament ).then( function(newTournament){
+               
+                deferred.resolve( newTournament );
+           
+            }).fail(function(error){
+                deferred.reject( new Error('could not create tournament: ' + error.message)); 
+            });
+           
+        }
+        
+        return deferred.promise;
     },
     find: function( query ){
         var deferred = Q.defer();
@@ -83,5 +128,8 @@ module.exports = {
         
         return deferred.promise;
         
+    },
+    updatePrize: function( invoice ){
+        return TournamentsDao.findAndUpdatePrizeByInvoice( invoice );        
     }
 };

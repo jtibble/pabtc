@@ -20,7 +20,8 @@ module.exports = {
         buyinAmount: 0,
         prizeCurrency: '',
         prizeAmount: 0,
-        status: 'new'
+        status: 'new',
+        bitpayId: ''
     },
     session: {
         _id: '',

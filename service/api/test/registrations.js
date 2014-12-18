@@ -300,7 +300,7 @@ describe('Registrations', function(){
                 return RESTService.registerUserForTournament( tournament._id );
             })
             .then( function( registration ){
-                return RESTService.fakePaymentForBitpayId( registration.bitpayId, tournament.buyinAmount, tournament.buyinCurrency );
+                return RESTService.fakePaymentForBitpayId( registration.bitpayId, tournament.buyinAmount, tournament.buyinCurrency, 'registration' );
             })
             .then( function(){
                 return RESTService.getTournaments( '_id=' + tournament._id );   

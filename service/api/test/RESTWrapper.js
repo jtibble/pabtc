@@ -142,18 +142,18 @@ module.exports = {
     registerUserForTournament: function( tournamentId ){
         return postToService( endpointURLs.registration, {tournamentId: tournamentId});   
     },
-    fakePaymentForBitpayId: function( bitpayId, buyinAmount, buyinCurrency ){
+    fakePaymentForBitpayId: function( bitpayId, amount, currency, type ){
         var notification = {
             "id": bitpayId,
             "url": "https://test.bitpay.com/invoice?id=" + bitpayId,
             "status": "complete",
-            "btcPrice": buyinAmount.toString(),
-            "price": buyinAmount,
-            "currency": buyinCurrency,
+            "btcPrice": amount.toString(),
+            "price": amount,
+            "currency": currency,
             "invoiceTime": 1418833532976,
             "expirationTime": 1418834432976,
             "currentTime": 1418833533001,
-            "btcPaid": buyinAmount.toString(),
+            "btcPaid": amount.toString(),
             "rate": 1,
             "exceptionStatus": false,
             "buyerFields": {
@@ -161,7 +161,7 @@ module.exports = {
             }
         }; 
         
-        return postToService( 'invoice', notification );        
+        return postToService( 'invoice/' + type, notification );        
     },
     
     

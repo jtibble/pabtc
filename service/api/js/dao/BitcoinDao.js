@@ -6,15 +6,30 @@ var request = require('request');
 
 
 module.exports = {
-    createBuyinInvoice: function(amount, currency, description, username){
-        
+    createInvoice: function(amount, currency, description, username, type){
         var deferred = Q.defer();
+        
+        var url = 'http' + (global.config.ssl ? 's' : '') + '://' + global.config.domain + ':' + global.config.port + global.config.servicesPath + global.config.notificationEndpoint;
+        
+        if( !type ){
+            deferred.reject( new Error('missing invoice type'));
+            return;
+        }
+        
+        if( type == 'registration' ){
+            url += 'registration';
+        } else if( type == 'prize' ){
+            url += 'prize';   
+        } else {
+            deferred.reject( new Error('unknown Bitpay invoice type ' + type) );   
+            return;
+        }
         
         var invoice = {
             price: amount.toString(),
             currency: currency,
             itemDesc: 'PA-BTC Tournament Registration Fee: ' + description,
-            notificationURL: 'http' + (global.config.ssl ? 's' : '') + '://' + global.config.domain + ':' + global.config.port + global.config.servicesPath + global.config.notificationEndpoint,
+            notificationURL: url,
             buyerName: username
         };
         

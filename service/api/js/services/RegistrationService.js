@@ -102,10 +102,11 @@ module.exports = {
                 
                 
                 
-                BitcoinDao.createBuyinInvoice( invoiceAmount, 
-                                               invoiceCurrency,
-                                               tournament.name,
-                                               username ).then(function(invoice){
+                BitcoinDao.createInvoice( invoiceAmount, 
+                                           invoiceCurrency,
+                                           tournament.name,
+                                           username,
+                                           'registration'     ).then(function(invoice){
                     console.log('BitPay created invoice ' + invoice.id);
                     return RegistrationsDao.createWithInvoice( username, tournamentId, invoice );
                 }).then( function(registration){

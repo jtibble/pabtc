@@ -1,13 +1,19 @@
 var RegistrationService = require('../services/RegistrationService');
+var TournamentsService = require('../services/TournamentsService');
 var RequestValidator = require('./RequestValidator');
 var request = require('request');
 
 module.exports = [
     {
         'type': 'POST',
-        'name': 'invoice',
+        'name': 'invoice/:invoiceType',
         'response': function (req, res){
             var responseBody = {};
+            
+            if( !req.params.invoiceType ){
+                res.status(404).send('Unknown invoice type!');
+                return;
+            }
             
             console.log('BitPay notification received');
             
@@ -39,14 +45,33 @@ module.exports = [
                     res.status(200).send();
                     return;
                 }
-
-                RegistrationService.updateRegistrationStatus( invoice ).then( function(){
-                    console.log('Registration updated for BitPay invoice ' + invoice.id);
-                    res.status(200).send(); 
-                }).fail( function(error){
-                    console.log('Failed update registration from bitpay callback: ' + error.message);
-                    res.status(500).send('could not update registration');
-                });
+                
+                if( req.params.invoiceType == 'registration' ){
+                    
+                    console.log('Updating registration status');
+                    RegistrationService.updateRegistrationStatus( invoice ).then( function(){
+                        console.log('Registration updated for BitPay invoice ' + invoice.id);
+                        res.status(200).send(); 
+                    }).fail( function(error){
+                        console.log('Failed to update registration from bitpay callback: ' + error.message);
+                        res.status(500).send('could not update registration');
+                    });
+                    
+                } else if( req.params.invoiceType == 'prize' ){
+                 
+                    console.log('Updating tournament prize');
+                    TournamentsService.updatePrize( invoice ).then( function(){
+                        console.log('Tournament prize updated for BitPay invoice ' + invoice.id);
+                        res.status(200).send();
+                    }).fail( function(error){
+                        console.log('Failed to update tournament from bitpay callback: ' + error.message);
+                        res.status(500).send('could not update tournament prize');
+                    });
+                    
+                } else {
+                    var errorText = 'Unknown or missing invoiceType: ' + req.params.invoiceType;
+                    res.status(403).send(errorText);
+                }
             });
         }
     }

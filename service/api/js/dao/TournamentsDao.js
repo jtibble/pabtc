@@ -101,6 +101,27 @@ module.exports = {
         
         return deferred.promise;
     },
+    findAndUpdatePrizeByInvoice: function( invoice ){
+        var deferred = Q.defer();
+        
+        tournamentsCollection.findAndModify( {
+            query: {bitpayId: invoice.id },
+            update: { 
+                $set: {
+                    prizeAmount: invoice.btcPaid   
+                }
+            },
+            new: true
+        }, function(error, updatedTournament){
+            if( !error ){
+                deferred.resolve(updatedTournament);
+            } else {
+                deferred.reject( new Error('could not update tournament prize in db'));   
+            }
+        });
+        
+        return deferred.promise;
+    },
     
     addPrizeAmountToTournamentById: function( tournamentId, amount ){
         var deferred = Q.defer();

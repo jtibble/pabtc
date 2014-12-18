@@ -56,7 +56,7 @@ module.exports = [
                 TournamentsService.create( req.body ).then( function(tournament){
                     console.log('Tournament \'' + tournament.name + '\' created by user \'' + session.username + '\'');
                     res.status(201).send(tournament);
-                }, function(error){
+                }).fail( function(error){
                     responseBody = {message: error.message};
                     res.status(403).send(responseBody);
                 });

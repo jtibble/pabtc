@@ -14,10 +14,11 @@ module.exports = [
         'name': 'bitpay/invoice',
         'response': function (req, res) {
             
+            var randomId = Math.floor(Math.random()*10000000).toString()
             
             var mockInvoice = {
-                "id": Math.floor(Math.random()*10000000).toString(),
-                "url": "https://test.bitpay.com/invoice?id=8G53RAT3cGpwPvFSXYfr2W",
+                "id": randomId,
+                "url": "https://test.bitpay.com/invoice?id=" + randomId,
                 "status": "new",
                 "btcPrice": req.body.price.toString(),
                 "price": req.body.price,
@@ -46,7 +47,7 @@ module.exports = [
                     body: mockUpdatedInvoice
                 };
                 
-                console.log('Mock Bitpay is calling notification endpoint');
+                console.log('Mock Bitpay is calling notification endpoint ' + options.url);
                 request( options, function(error, response, body){
                     if( error ){
                         console.log('Mock Bitpay got error from calling notification endpoint');
