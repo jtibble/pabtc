@@ -10,7 +10,7 @@ app.controller('TournamentModalController', function($scope, FrameworkAJAX, tour
     $scope.Actions.setStatus = function( status ){
         var request = {
             method: 'POST',
-            url: 'http://localhost:8080/api/v0/tournaments/' + $scope.Model._id,
+            url: '/api/v0/tournaments/' + $scope.Model._id,
             data: {
                 status: status
             }
