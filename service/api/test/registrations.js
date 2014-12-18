@@ -285,8 +285,42 @@ describe('Registrations', function(){
             }); 
         });
         
-        xit('Should provide payment and have registration status changed to \'paid\'', function(done){
+        it('Should provide payment and have registration status changed to \'paid\'', function(done){
             
+            var tournament;
+            
+            RESTService.TournamentHelper.createBuyinTournament().then( function( newTournament){
+                tournament = newTournament;
+                return RESTService.changeTournamentStatus( tournament._id, 'open' );                
+            })
+            .then( function(){
+                return RESTService.UserHelper.createAndSignIn();
+            })
+            .then( function(){
+                return RESTService.registerUserForTournament( tournament._id );
+            })
+            .then( function( registration ){
+                return RESTService.fakePaymentForBitpayId( registration.bitpayId, tournament.buyinAmount, tournament.buyinCurrency );
+            })
+            .then( function(){
+                return RESTService.getTournaments( '_id=' + tournament._id );   
+            })
+            .then( function(tournamentsList){
+                if( tournamentsList.length != 1 ){
+                    done('wrong number of tournaments returned: ' + tournamentsList.length);
+                    return;
+                }
+                
+                var registrationStatus = tournamentsList[0].registrations[0].status
+                if( registrationStatus == 'paid'){
+                    done();
+                } else {
+                    done('status is incorrect: ' + registrationStatus );   
+                }
+                
+            }).fail( function( error ){
+                done('failed with error: ' + error.message);    
+            }); 
         });
     });
     

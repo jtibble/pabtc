@@ -16,7 +16,7 @@ module.exports = [
             
             
             var mockInvoice = {
-                "id": "8G53RAT3cGpwPvFSXYfr2W",
+                "id": Math.floor(Math.random()*10000000).toString(),
                 "url": "https://test.bitpay.com/invoice?id=8G53RAT3cGpwPvFSXYfr2W",
                 "status": "new",
                 "btcPrice": req.body.price.toString(),

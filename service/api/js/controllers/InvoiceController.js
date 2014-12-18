@@ -41,7 +41,7 @@ module.exports = [
                 }
 
                 RegistrationService.updateRegistrationStatus( invoice ).then( function(){
-                    console.log('Registration updated');
+                    console.log('Registration updated for BitPay invoice ' + invoice.id);
                     res.status(200).send(); 
                 }).fail( function(error){
                     console.log('Failed update registration from bitpay callback: ' + error.message);

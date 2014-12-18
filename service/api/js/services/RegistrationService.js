@@ -106,6 +106,7 @@ module.exports = {
                                                invoiceCurrency,
                                                tournament.name,
                                                username ).then(function(invoice){
+                    console.log('BitPay created invoice ' + invoice.id);
                     return RegistrationsDao.createWithInvoice( username, tournamentId, invoice );
                 }).then( function(registration){
                     deferred.resolve( registration ); 
