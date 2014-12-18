@@ -1,8 +1,3 @@
-
-    
-    
-
-
 <div class="modal-header">
     <h3>{{Model.name}} Tournament</h3>
 </div>
@@ -10,7 +5,7 @@
 <div class="modal-body">
     <p>Created by {{Model.createdBy}}</p>
     <p>Tournament Registration: {{Model.status}}</p>
-    <p>Prize: {{Model.prizeAmount}} {{Model.prizeCurrency}}</p>
+    <p>Prize: {{Model.prizeCurrency}} {{Model.prizeAmount}} </p>
     <p>
         Registered Players: {{Model.registrations.length}} / {{Model.totalPlayers}}
     
@@ -22,16 +17,20 @@
     
     </p>
 
-
-    <p>
-    </p>
-    <p>
-        Set tournament status:<br>
-        <button ng-click="Actions.setStatus('new')" class="btn btn-default">New</button>
-        <button ng-click="Actions.setStatus('open')" class="btn btn-default">Registration Open</button>
-        <button ng-click="Actions.setStatus('closed')" class="btn btn-default">Registration Closed</button>
-        <button ng-click="Actions.setStatus('active')" class="btn btn-default">Active</button>
-        <button ng-click="Actions.setStatus('finished')" class="btn btn-default">Finished</button>
+    <p ng-show="Model.status != 'finished'">
+        Change tournament status:<br>
+        <button ng-show="Model.status == 'new' || Model.status == 'closed'" ng-click="Actions.setStatus('open')" class="btn btn-default">
+            Registration Open
+        </button>
+        <button ng-show="Model.status == 'new' || Model.status == 'open'" ng-click="Actions.setStatus('closed')" class="btn btn-default">
+            Registration Closed
+        </button>
+        <button ng-show="Model.status == 'new' || Model.status == 'closed' || Model.status == 'open'" ng-click="Actions.setStatus('active')" class="btn btn-default">
+            Active
+        </button>
+        <button ng-show="Model.status != 'finished'" ng-click="Actions.setStatus('finished')" class="btn btn-default">
+            Finished
+        </button>
     </p>
 
 </div>
