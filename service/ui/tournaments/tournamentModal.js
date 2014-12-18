@@ -17,15 +17,13 @@ app.controller('TournamentModalController', function($scope, FrameworkAJAX, tour
         };
 		
         FrameworkAJAX.sendRequest(request, function(data){
-			console.log('updated status');
             $modalInstance.dismiss();  
-        }, function(){
-            console.log('error registering users');
+        }, function(data){
+            $scope.Model.errorText = 'Error updating tournament status: ' + data;
         }); 
     };
     
-    
-       
+     
     $scope.Actions.register = function(){
         
 		var request = {

@@ -78,6 +78,26 @@ describe('Tournaments', function(){
 
         });
         
+        it('Should not be able to create tournament (too small buyin amount)', function(done){
+
+            var tournament = {
+                name: 'testBuyinTournament' + Math.floor(Math.random()*100000000).toString(),
+                totalPlayers: 2,
+                prizeAmount: 0,
+                prizeCurrency: 'BTC',
+                buyinCurrency: 'μBTC',
+                buyinAmount: 99
+            };
+
+            RESTService.createTournament( tournament)
+            .then( function(createdTournament){
+                done('should not have been able to create the tournament');
+            }).fail( function(error){
+                done();
+            });
+
+        });
+        
         it('Should not be able to create tournament (no session)', function(done){
 
             RESTService.disableCookies();
@@ -140,9 +160,11 @@ describe('Tournaments', function(){
     
     describe('Change Tournament Status', function(){
         it('Should create tournament and change its status', function(done){
-            var newStatus = 'open'
+            var newStatus = 'open';
+            var tournament;
             
-            RESTService.TournamentHelper.createNoPrizeTournament().then( function(tournament){
+            RESTService.TournamentHelper.createNoPrizeTournament().then( function(newTournament){
+                tournament = newTournament;
                 return RESTService.changeTournamentStatus( tournament._id, newStatus );                
             })
             .then( function(){
@@ -162,6 +184,62 @@ describe('Tournaments', function(){
             .fail( function(error){
                 done('failed with error ' + error.message);    
             });    
+        });
+        
+        it('Should not be able to change tournament status (wrong user)', function(done){
+            
+            var newStatus = 'open';
+            var tournament;
+            
+            RESTService.TournamentHelper.createNoPrizeTournament().then( function(newTournament){
+                tournament = newTournament;
+                return RESTService.UserHelper.createAndSignIn();
+            }).then(function(){
+                return RESTService.changeTournamentStatus( tournament._id, newStatus );                
+            })
+            .then( function(tournamentsList){
+                done('failed to prevent random user from changing tournament status');
+            }, function(){
+                done();   
+            })
+            .fail( function(error){
+                done('failed with error: ' + error.message);    
+            }); 
+        });
+        
+        it('Should not be able to change tournament status (illegal state change)', function(done){
+            
+            var openForRegistrationStatus = 'open';
+            var closedForRegistrationStatus = 'closed';
+            var activeRegistrationStatus = 'active';
+            var finishedRegistrationStatus = 'finished';
+            
+            var tournament;
+            
+            RESTService.TournamentHelper.createNoPrizeTournament().then( function(newTournament){
+                tournament = newTournament;
+                return RESTService.changeTournamentStatus( tournament._id, openForRegistrationStatus );                
+            })
+            .then( function(){
+                return RESTService.changeTournamentStatus( tournament._id, closedForRegistrationStatus );
+            })
+            .then( function(){
+                return RESTService.changeTournamentStatus( tournament._id, openForRegistrationStatus );
+            })
+            .then( function(){
+                return RESTService.changeTournamentStatus( tournament._id, activeRegistrationStatus );
+            })
+            .then( function(){
+                return RESTService.changeTournamentStatus( tournament._id, openForRegistrationStatus );
+            })
+            .then( function(){
+                done('should not have been able to transition to that tournament status');
+            }, function(){
+                done();   
+            })
+            .fail( function(error){
+                done('failed with error: ' + error.message);    
+            }); 
         });
     });
 

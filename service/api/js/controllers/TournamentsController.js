@@ -94,28 +94,32 @@ module.exports = [
         'response': function (req, res) {      
             var responseBody = {};
             
-            TournamentsService.update( req.params.id, req.body ).then( function(){
-                res.status(200).send();
-            }, function(error){
-                res.status(500).send( error.message ); 
+            var sessionId = req.cookies.sessionId;
+            var tournamentId = req.params.id;
+            
+            if( !sessionId ){
+                console.log('Tournament \'' + req.body.name + '\' not updated for user with missing sessionId');
+                res.status(403).send(responseBody);
+                return;   
+            }
+            
+            AuthenticationService.checkAuthorization(sessionId).then( function(session){
+                
+                var username = session.username;
+                
+                TournamentsService.update( tournamentId, req.body, username ).then( function(updatedTournament){
+                    console.log('tournament ' + tournamentId + ' was updated');
+                    res.status(200).send(updatedTournament);
+                }, function(error){
+                    console.log('user ' + username + ' could not update tournament ' + tournamentId);
+                    res.status(403).send( error.message ); 
+                });
+            }).fail( function(){
+                responseBody.message = 'Tournament \'' + req.body.name + '\' not updated for user with invalid or expired session';
+                console.log(responseBody.message);
+                res.status(403).send(responseBody);
+                return; 
             });
         }
     }
-    /*,
-    {
-        'type': 'POST',
-        'name': 'tournaments/:id/beginTournament',
-        'response': function (req, res) {            
-            var responseBody = {};
-            res.status(501).send({message: 'beginTournament service is not available yet'});
-        }
-    },
-    {
-        'type': 'POST',
-        'name': 'tournaments/:id/concludeTournament',
-        'response': function (req, res) {            
-            var responseBody = {};
-            res.status(501).send({message: 'concludeTournament service is not available yet'});
-        }
-    }*/
 ];

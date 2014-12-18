@@ -59,7 +59,7 @@ function postToService( endpoint, body ){
             if( response.body && response.body.length ){
                 errorMessages += ' ' + JSON.stringify(response.body);   
             }
-            deferred.reject(errorMessages);
+            deferred.reject( new Error(errorMessages));
             return;
         }
     });
@@ -201,7 +201,7 @@ module.exports = {
         },
         createPrizeTournament: function(){
 
-            var currencyAmount = Math.floor( Math.random()*1000 );
+            var currencyAmount = Math.floor( Math.random()*900 + 100 ); // keep within the range of valid amounts
             var currencyIndex = Math.floor( Math.random()*4 );
 
             var currencyList = ['USD', 'BTC', 'mBTC', 'μBTC'];
