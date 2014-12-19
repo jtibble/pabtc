@@ -9,7 +9,7 @@ module.exports = {
     createInvoice: function(amount, currency, description, username, type){
         var deferred = Q.defer();
         
-        var notificationURL = 'http' + (global.config.ssl ? 's' : '') + '://' + global.config.domain + ':' + global.config.port + global.config.servicesPath + global.config.notificationEndpoint;
+        var notificationURL = 'http' + (global.config.ssl ? 's' : '') + '://' + global.config.domain + (global.config.port ? (':' + global.config.port) : '') + global.config.servicesPath + global.config.notificationEndpoint;
         
         if( !type ){
             deferred.reject( new Error('missing invoice type'));
@@ -47,6 +47,7 @@ module.exports = {
         };
     
         console.log('BitcoinDao requesting invoice from Bitpay');
+        console.log('BitcoinDao notification URL: ' + notificationURL);
         
         request( options, function(error, response, body){
             

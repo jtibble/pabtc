@@ -1,7 +1,6 @@
 {
     "ssl": true,
     "domain": "pa-btc.com",
-    "port": 443,
     "servicesPath": "/api/v0/",
     "staticContentPath": "/ui/",
     "sessionLength": 900000,
