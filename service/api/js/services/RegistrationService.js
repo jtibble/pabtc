@@ -131,7 +131,7 @@ module.exports = {
         var deferred = Q.defer();
         
         // TODO: Also update tournament prize if it's a buyin tournament
-        if( invoice.status == 'complete' ){
+        if( invoice.status == 'confirmed' ){
             invoice.status = 'paid';   
         }
         

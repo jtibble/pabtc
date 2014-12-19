@@ -146,7 +146,7 @@ module.exports = {
         var notification = {
             "id": bitpayId,
             "url": "https://test.bitpay.com/invoice?id=" + bitpayId,
-            "status": "complete",
+            "status": "confirmed",
             "btcPrice": amount.toString(),
             "price": amount,
             "currency": currency,

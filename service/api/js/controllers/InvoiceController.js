@@ -40,7 +40,7 @@ module.exports = [
                     
                 var invoice = req.body;
 
-                if( invoice.status != 'complete' ){
+                if( invoice.status != 'confirmed' ){
                     console.log('Sending 200 OK to Bitpay for status ' + invoice.status);
                     res.status(200).send();
                     return;

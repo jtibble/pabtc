@@ -44,10 +44,7 @@ var InvoiceController = require('./api/js/controllers/InvoiceController');
 
 var servicesArray = AuthenticationController.concat(UsersController).concat(TournamentsController).concat(RegistrationCollection).concat(InvoiceController);
 
-var httpsCredentials = {
-    key: fs.readFileSync('key.key'),
-    cert: fs.readFileSync('pa-btc_com.crt')
-};
+var httpsCredentials;
     
 var server = express();
 server.use(bodyParser.json());
@@ -55,6 +52,16 @@ server.use(cookieParser());
 console.log('dirname: ' + __dirname);
 
 configPromise.promise.then( function(){
+    
+    if( global.config.ssl ){
+        httpsCredentials= {
+            key: fs.readFileSync('key.key'),
+            cert: fs.readFileSync('pa-btc_com.crt')
+        };
+        console.log('SSL certificate and key loaded from disk');
+    } else {
+        console.log('SSL certificate and key not loaded');   
+    }
 
     server.use(express.static(__dirname + global.config.staticContentPath));
 
@@ -87,12 +94,16 @@ configPromise.promise.then( function(){
         }
     }
 
-    // server.listen( global.config.port );
-    var httpsServer = https.createServer( httpsCredentials, server);
+    //  );
     
     var port = global.config.port ? global.config.port : (global.config.ssl ? 443 : 80);
     
-    httpsServer.listen( port );
+    if( global.config.ssl ){
+        var httpsServer = https.createServer( httpsCredentials, server);
+        httpsServer.listen( port );
+    } else {
+        server.listen( port ); 
+    }
     console.log('server listening on port %s \n=========', port);
 
 }).fail( function(error){

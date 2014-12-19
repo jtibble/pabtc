@@ -37,7 +37,7 @@ module.exports = [
             var timeout = setTimeout( function(){
                 
                 var mockUpdatedInvoice = JSON.parse(JSON.stringify(mockInvoice));
-                mockUpdatedInvoice.status = 'complete';
+                mockUpdatedInvoice.status = 'confirmed';
                 mockUpdatedInvoice.btcPaid = req.body.price;
                 
                 var options = {
