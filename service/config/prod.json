@@ -6,5 +6,5 @@
     "sessionLength": 900000,
     "notificationEndpoint": "invoice/",
     "bitpayURL": "https://test.bitpay.com/api/",
-    "bitpayIPAddresses": "https://bitpay.com/ipAddressList.txt"
+    "bitpayIPAddresses": "https://test.bitpay.com/ipAddressList.txt"
 }
