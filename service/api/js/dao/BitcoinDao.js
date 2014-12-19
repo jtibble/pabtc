@@ -9,7 +9,7 @@ module.exports = {
     createInvoice: function(amount, currency, description, username, type){
         var deferred = Q.defer();
         
-        var url = 'http' + (global.config.ssl ? 's' : '') + '://' + global.config.domain + ':' + global.config.port + global.config.servicesPath + global.config.notificationEndpoint;
+        var notificationURL = 'http' + (global.config.ssl ? 's' : '') + '://' + global.config.domain + ':' + global.config.port + global.config.servicesPath + global.config.notificationEndpoint;
         
         if( !type ){
             deferred.reject( new Error('missing invoice type'));
@@ -17,9 +17,9 @@ module.exports = {
         }
         
         if( type == 'registration' ){
-            url += 'registration';
+            notificationURL += 'registration';
         } else if( type == 'prize' ){
-            url += 'prize';   
+            notificationURL += 'prize';   
         } else {
             deferred.reject( new Error('unknown Bitpay invoice type ' + type) );   
             return;
@@ -29,8 +29,9 @@ module.exports = {
             price: amount.toString(),
             currency: currency,
             itemDesc: 'PA-BTC Tournament Registration Fee: ' + description,
-            notificationURL: url,
-            buyerName: username
+            notificationURL: notificationURL,
+            buyerName: username,
+            fullNotifications: true
         };
         
         

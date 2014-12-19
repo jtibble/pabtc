@@ -1,6 +1,6 @@
 {
-    "ssl": false,
-    "domain": "pa-btc.com",
+    "ssl": true,
+    "domain": "dev.pa-btc.com",
     "port": 80,
     "servicesPath": "/api/v0/",
     "staticContentPath": "/ui/",

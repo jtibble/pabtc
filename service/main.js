@@ -1,3 +1,4 @@
+var https = require('https');
 var express = require('express');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
@@ -20,84 +21,77 @@ console.log('config file loaded');
 // Retrieve BitPay API key from database before proceeding
 var db = mongojs('test');
 var keysCollection = db.collection('keys');
-var deferred = Q.defer();
+var configPromise = Q.defer();
 
 keysCollection.find({}, function(error, keyList){
     if( !error && keyList.length == 1 ){
         global.config.bitpayAPIKey = keyList[0].key;
         console.log('Configured for ' + process.env.NODE_ENV + ' environment');
-        deferred.resolve();
+        configPromise.resolve();
     } else {
-        console.log('could not find API key in db');
+        console.log('Error! Could not find API key in db');
         process.exit(1);   
     }
 });
 
 
-// Service-generator helper function
-var Service = function (serviceDefinitions) {
-    var server = express();
-    server.use(bodyParser.json());
-    server.use(cookieParser());
-    console.log('dirname: ' + __dirname);
+//Services Definitions
+var UsersController = require('./api/js/controllers/UsersController');
+var TournamentsController = require('./api/js/controllers/TournamentsController');
+var AuthenticationController = require('./api/js/controllers/AuthenticationController');
+var RegistrationCollection = require('./api/js/controllers/RegistrationController');
+var InvoiceController = require('./api/js/controllers/InvoiceController');
+
+var servicesArray = AuthenticationController.concat(UsersController).concat(TournamentsController).concat(RegistrationCollection).concat(InvoiceController);
+
+var httpsCredentials = {
+    key: fs.readFileSync('key.key'),
+    cert: fs.readFileSync('certificate.crt')
+};
+    
+var server = express();
+server.use(bodyParser.json());
+server.use(cookieParser());
+console.log('dirname: ' + __dirname);
+
+configPromise.promise.then( function(){
+
     server.use(express.static(__dirname + global.config.staticContentPath));
 
+    // Mock BitPay integration if requested by config
+    if( global.config.mockBitpay ){
+        console.log('Loading bitpay mock');
+        var BitPayController = require('./api/js/controllers/mock/BitPay.js');
+        servicesArray = servicesArray.concat(BitPayController);
+    }
+    
     var apiPath = global.config.servicesPath;
-    console.log('Creating Services');
-    return {
+
+    for( var i in servicesArray ){
+        var serviceMethod = servicesArray[i].type;
+        var serviceName = servicesArray[i].name;
+        var serviceResponse = servicesArray[i].response;
         
-        addEndpoint: function (serviceMethod, serviceName, response) {
-            var fullServiceName = apiPath + serviceName;
-            switch (serviceMethod) {
+        var fullServiceName = apiPath + serviceName;
+        switch (serviceMethod) {
             case 'GET':
-                server.get(fullServiceName, response);
+                server.get(fullServiceName, serviceResponse);
                 console.log('Created GET \'' + fullServiceName + '\'');
                 break;
             case 'POST':
-                server.post(fullServiceName, response);
+                server.post(fullServiceName, serviceResponse);
                 console.log('Created POST \'' + fullServiceName + '\'');
                 break;
             default:
                 console.log('Unknown serviceMethod \'' + serviceMethod + '\'');
-            }
-        },
-        
-        initialize: function () {
-
-            for (var i = 0; i < serviceDefinitions.length; i++) {
-                var serviceMethod = serviceDefinitions[i].type;
-                var serviceName = serviceDefinitions[i].name;
-                var serviceResponse = serviceDefinitions[i].response;
-                this.addEndpoint(serviceMethod, serviceName, serviceResponse);
-            }
-
-            server.listen( global.config.port );
-            console.log('server listening on port %s \n=========', global.config.port);
         }
-    };
-};
-
-
-deferred.promise.then( function(){
-    
-    //Services Definitions
-    var UsersController = require('./api/js/controllers/UsersController');
-    var TournamentsController = require('./api/js/controllers/TournamentsController');
-    var AuthenticationController = require('./api/js/controllers/AuthenticationController');
-    var RegistrationCollection = require('./api/js/controllers/RegistrationController');
-    var InvoiceController = require('./api/js/controllers/InvoiceController');
-
-    var servicesArray = AuthenticationController.concat(UsersController).concat(TournamentsController).concat(RegistrationCollection).concat(InvoiceController);
-
-
-    // Mock BitPay integration if requested by config
-    if( global.config.mockBitpay ){
-        console.log('loading bitpay mock');
-        var BitPayController = require('./api/js/controllers/mock/BitPay.js');
-        servicesArray = servicesArray.concat(BitPayController);
     }
 
-    
-    var service = Service(servicesArray);
-    service.initialize();
+    // server.listen( global.config.port );
+    var httpsServer = https.createServer( httpsCredentials, server);
+    httpsServer.listen( global.config.port );
+    console.log('server listening on port %s \n=========', global.config.port);
+
+}).fail( function(error){
+    console.log('failed to initialize application: ' + error.message);  
 });
