@@ -46,7 +46,7 @@ var servicesArray = AuthenticationController.concat(UsersController).concat(Tour
 
 var httpsCredentials = {
     key: fs.readFileSync('key.key'),
-    cert: fs.readFileSync('certificate.crt')
+    cert: fs.readFileSync('pa-btc_com.crt.crt')
 };
     
 var server = express();
