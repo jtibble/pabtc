@@ -89,8 +89,11 @@ configPromise.promise.then( function(){
 
     // server.listen( global.config.port );
     var httpsServer = https.createServer( httpsCredentials, server);
-    httpsServer.listen( global.config.port );
-    console.log('server listening on port %s \n=========', global.config.port);
+    
+    var port = global.config.port ? global.config.port : (global.config.ssl ? 443 : 80);
+    
+    httpsServer.listen( port );
+    console.log('server listening on port %s \n=========', port);
 
 }).fail( function(error){
     console.log('failed to initialize application: ' + error.message);  
