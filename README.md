@@ -3,8 +3,6 @@ PABTC [![Build Status](https://travis-ci.org/jtibble/pabtc.svg?branch=master)](h
 
 BTC Engine for Planetary Annihilation Tournaments
 
-https://pa-btc.com
-
 
 Look at the Github issues for information about existing (and planned) services: https://github.com/jtibble/pabtc/issues
 Tests demonstrating existing services can be found at https://github.com/jtibble/pabtc/tree/master/service/api/test
